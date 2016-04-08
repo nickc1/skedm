@@ -19,8 +19,11 @@ class NonLin:
 		"""
 		Parameters
 		----------
-
-
+		max_nn : int
+			Maximum number of near neighbors to use
+		weights : string
+			-'uniform' : uniform weighting
+			-'distance' : weighted as 1/distance
 		"""
 		self.max_nn = max_nn
 		self.weights = weights
@@ -31,8 +34,8 @@ class NonLin:
 
 	def fit(self, Xtrain, ytrain):
 		"""
-		X : features (nsamples,nfeatures)
-		y : targets (nsamples,ntargets)
+		Xtrain : features (nsamples,nfeatures)
+		ytrain : targets (nsamples,ntargets)
 		"""
 		self.Xtrain = Xtrain
 		self.ytrain = ytrain
@@ -64,6 +67,11 @@ class NonLin:
 	def predict(self,nn):
 		"""
 		Make a prediction for a certain value of near neighbors
+
+		Parameters
+		----------
+		nn : int
+			How many near neighbors to use
 		"""
 
 		#check to see if distances have been calculated already
@@ -97,6 +105,14 @@ class NonLin:
 	def predict_range(self,nn_range):
 		"""
 		predict over a range of near neighbors
+		Parameters
+		----------
+		nn_range : 1d array
+			The number of near neighbors to test
+
+		Example : 
+		nn_range = np.arange(0,100,10) would calculate the
+		predictions at 0,10,20,...,90 near neighbors
 		"""
 
 		xsize = self.dist.shape[0]
@@ -117,6 +133,13 @@ class NonLin:
 	def score(self, ytest, how='score'):
 		"""
 		Evalulate the predictions
+		Parameters
+		----------
+		ytest : 2d array containing the targets
+		how : string
+			how to score the predictions
+			-'score' : see scikit-learn's score function
+			-'corrcoef' : correlation coefficient
 		"""
 
 		num_preds = ytest.shape[1]
@@ -137,7 +160,16 @@ class NonLin:
 
 	def score_range(self,ytest,how='score'):
 		"""
+		scores the predictions if they were calculated for numerous
+		values of near neighbors.
 
+		Parameters
+		----------
+		ytest : 2d array containing the targets
+		how : string
+			how to score the predictions
+			-'score' : see scikit-learn's score function
+			-'corrcoef' : correlation coefficient
 		"""
 
 
@@ -165,7 +197,11 @@ class NonLinDiscrete:
 		"""
 		Parameters
 		----------
-
+		max_nn : int
+			Maximum number of near neighbors to use
+		weights : string
+			-'uniform' : uniform weighting
+			-'distance' : weighted as 1/distance
 
 		"""
 		self.max_nn = max_nn
@@ -177,8 +213,8 @@ class NonLinDiscrete:
 
 	def fit(self, Xtrain, ytrain):
 		"""
-		X : features (nsamples,nfeatures)
-		y : targets (nsamples,ntargets)
+		Xtrain : features (nsamples,nfeatures)
+		ytrain : targets (nsamples,ntargets)
 		"""
 		self.Xtrain = Xtrain
 		self.ytrain = ytrain
@@ -210,6 +246,11 @@ class NonLinDiscrete:
 	def predict(self,nn):
 		"""
 		Make a prediction for a certain value of near neighbors
+
+		Parameters
+		----------
+		nn : int
+			How many near neighbors to use
 		"""
 
 		#check to see if distances have been calculated already
@@ -249,6 +290,14 @@ class NonLinDiscrete:
 	def predict_range(self,nn_range):
 		"""
 		predict over a range of near neighbors
+		Parameters
+		----------
+		nn_range : 1d array
+			The number of near neighbors to test
+
+		Example : 
+		nn_range = np.arange(0,100,10) would calculate the
+		predictions at 0,10,20,...,90 near neighbors
 		"""
 
 		xsize = self.dist.shape[0]
@@ -269,6 +318,13 @@ class NonLinDiscrete:
 	def score(self, ytest, how='classCompare'):
 		"""
 		Evalulate the predictions
+		Parameters
+		----------
+		ytest : 2d array containing the targets
+		how : string
+			how to score the predictions
+			-'classCompare' : percent correctly predicted
+			-'classError' : Dont use this
 		"""
 
 		num_preds = ytest.shape[1]
@@ -290,7 +346,14 @@ class NonLinDiscrete:
 
 	def score_range(self,ytest,how='classError'):
 		"""
-
+		Evalulate the predictions that were made for numerous nn values
+		Parameters
+		----------
+		ytest : 2d array containing the targets
+		how : string
+			how to score the predictions
+			-'classCompare' : percent correctly predicted
+			-'classError' : Dont use this
 		"""
 
 
