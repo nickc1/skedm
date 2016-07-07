@@ -14,7 +14,7 @@ def corrCoef(preds,actual):
 	----------
 
 	preds : array shape (num samples,num targets)
-		
+
 	test : array of shape (num samples, num targets)
 		actual values from the testing set
 
@@ -26,9 +26,9 @@ def corrCoef(preds,actual):
 	"""
 
 	cc = np.corrcoef(preds,actual)[0,1]
-	
+
 	return cc
-	
+
 
 def classCompare(preds,actual):
 	"""
@@ -38,7 +38,7 @@ def classCompare(preds,actual):
 	----------
 
 	preds : array shape (num samples,num targets)
-		
+
 	test : array of shape (num samples, num targets)
 		actual values from the testing set
 
@@ -49,7 +49,7 @@ def classCompare(preds,actual):
 		Returns the correlation coefficient
 	"""
 
-		
+
 	cc = np.mean( preds == actual )
 
 	return cc
@@ -63,7 +63,7 @@ def classificationError(preds,actual):
 	----------
 
 	preds : array shape (num samples,)
-		
+
 	test : array of shape (num samples,)
 		actual values from the testing set
 
@@ -83,6 +83,37 @@ def classificationError(preds,actual):
 
 	return cc
 
+def kleckas_tau(preds,actual):
+	"""
+	Calculates kleckas tau
+
+	Parameters
+	----------
+	preds : array shape (num samples,)
+	test : array of shape (num samples,)
+		actual values from the testing set
+
+	Returns
+	-------
+	cc : float
+		Returns the correlation coefficient
+	"""
+
+	ncorr = np.sum(preds == actual) #number correctly classified
+	cats_unique = np.unique(actual)
+
+	sum_t = 0
+	for cat in cats_unique:
+		ni = np.sum(cat==actual)
+		pi = float(ni)/len(preds)
+		sum_t += ni*pi
+
+
+	tau = (ncorr - sum_t) / (len(preds) - sum_t)
+
+	return tau
+
+
 def varianceExplained(preds,actual):
 	"""
 	Explained variance between predicted values and actual values scaled
@@ -92,7 +123,7 @@ def varianceExplained(preds,actual):
 	----------
 
 	preds : array shape (num samples,num targets)
-		
+
 	actual : array of shape (num samples, num targets)
 		actual values from the testing set
 
@@ -103,26 +134,26 @@ def varianceExplained(preds,actual):
 		Returns the correlation coefficient
 	"""
 
-	
+
 	cc = np.var(preds - actual) / np.var(actual)
 
 	return cc
-	
+
 
 
 
 def score(preds,actual):
 	"""
 	The coefficient R^2 is defined as (1 - u/v), where u is the regression
-	sum of squares ((y_true - y_pred) ** 2).sum() and v is the residual 
-	sum of squares ((y_true - y_true.mean()) ** 2).sum(). Best possible 
+	sum of squares ((y_true - y_pred) ** 2).sum() and v is the residual
+	sum of squares ((y_true - y_true.mean()) ** 2).sum(). Best possible
 	score is 1.0, lower values are worse.
 
 	Parameters
 	----------
 
 	preds : array shape (num samples,num targets)
-		
+
 	test : array of shape (num samples, num targets)
 		actual values from the testing set
 
@@ -229,7 +260,7 @@ def deterministic_metric(CC,lag):
 	CC : 2-D array
 		array of forecast skill for a given system
 	lag : int
-		lag value for the system which is calculated as the first minimum of the 
+		lag value for the system which is calculated as the first minimum of the
 		mutual information
 
 	Returns
@@ -251,10 +282,3 @@ def deterministic_metric(CC,lag):
 		s_min = np.min(right)
 		d_metric += (s_max-s_min)
 	return d_metric
-
-
-
-
-
-
-
