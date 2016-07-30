@@ -229,7 +229,7 @@ def weighted_mode(a, w, axis=0):
 		axis = axis
 
 	if a.shape != w.shape:
-		print 'both weights'
+		print('both weights')
 		w = np.zeros(a.shape, dtype=w.dtype) + w
 
 	scores = np.unique(np.ravel(a))       # get ALL unique values

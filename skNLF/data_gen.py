@@ -48,9 +48,9 @@ def logistic_map(sz=256,A=3.99,seed=36, noise=0):
 		size of the time series to be generated
 
 	A : float
-		Parameter for the logistic map. Values values beyond 3.56995 
+		Parameter for the logistic map. Values values beyond 3.56995
 		exhibit chaotic behaviour.
-	
+
 	seed : int
 		sets the random seed for the logistic map. Allows results to be
 		easily reproduced.
@@ -63,17 +63,17 @@ def logistic_map(sz=256,A=3.99,seed=36, noise=0):
 
 	X : 1D array
 		Logistic map of size (sz)
-	
+
 	"""
 
 	# set random seed
 	np.random.seed(seed=seed)
 
-	X = np.zeros((sz,))  
+	X = np.zeros((sz,))
 	X[0] = np.random.rand(1,)
 
 
-	for tt in xrange(sz-1):
+	for tt in range(sz-1):
 
 		# logistic equation in space
 		X[tt+1] = A*X[tt]*(1-X[tt])
@@ -87,7 +87,7 @@ def noisyPeriodic(sz=256,noise=.5,freq=52,seed=36):
 	A simple periodic equation with a a specified amplitude of noise.
 
 	X = sin(x) + .5cos(x) + random
-	
+
 	Parameters
 	----------
 
@@ -118,7 +118,7 @@ def noisyPeriodic(sz=256,noise=.5,freq=52,seed=36):
 
 	#all positive and between 0 and 1
 	X = X + np.abs(np.min(X))
-	X = X/np.max(X) 
+	X = X/np.max(X)
 	return X
 
 def noisyPeriodic_complicated(sz=256,noise=.5,freq=52,seed=36):
@@ -126,7 +126,7 @@ def noisyPeriodic_complicated(sz=256,noise=.5,freq=52,seed=36):
 	A more complicated periodic equation with a a specified amplitude of noise.
 
 	X = sin(x) + .5cos(.5x) + .25sin(.25x) + random
-	
+
 	Parameters
 	----------
 
@@ -157,16 +157,16 @@ def noisyPeriodic_complicated(sz=256,noise=.5,freq=52,seed=36):
 
 	#all positive and between 0 and 1
 	X = X + np.abs(np.min(X))
-	X = X/np.max(X) 
+	X = X/np.max(X)
 
 	return X
-	
+
 def noise(sz=256, seed=36):
 	"""
 	A random distribution of numbers.
 
 	X = random
-	
+
 	Parameters
 	----------
 
@@ -220,7 +220,7 @@ def lorenz(sz=10000,noise=0,max_t=100.):
 	return X
 
 
-def lorenz_deriv((x, y, z), t0, sigma=10., beta=8./3, rho=28.0):
+def lorenz_deriv(xyz, t0, sigma=10., beta=8./3, rho=28.0):
 	"""
 	Lorenz equations to be integrated in the function lorenz
 
@@ -232,6 +232,7 @@ def lorenz_deriv((x, y, z), t0, sigma=10., beta=8./3, rho=28.0):
 
 
 	"""
+	x,y,z = xyz
 	return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
 
 
@@ -255,9 +256,9 @@ def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=0):
 		row and column size of the spatio-temporal series to be generated
 
 	A : float
-		Parameter for the logistic map. Values beyond 3.56995 
+		Parameter for the logistic map. Values beyond 3.56995
 		exhibit chaotic behaviour.
-	
+
 	seed : int
 		sets the random seed for the logistic map. Allows results to be
 		easily reproduced.
@@ -270,17 +271,17 @@ def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=0):
 
 	X : 2D array
 		Spatiotemporal logistic map of size (sz)
-	
+
 	"""
 
 	# set random seed
 	np.random.seed(seed=seed)
 
-	X = np.zeros((sz,sz))  
+	X = np.zeros((sz,sz))
 	X[0,:] = np.random.rand(1,sz)
 
 
-	for tt in xrange(sz-1):
+	for tt in range(sz-1):
 		left_X = np.roll(X,1)  # shift it around for diffusion
 		right_X = np.roll(X,-1)
 
@@ -289,7 +290,7 @@ def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=0):
 
 		# logistic equation in space
 		X[tt+1,:] = ( (A/(1+4*eps))*
-		(X[tt,:]*(1-X[tt,:]) 
+		(X[tt,:]*(1-X[tt,:])
 		+ eps*left_X[tt,:]*(1-left_X[tt,:])
 		+ eps*right_X[tt,:]*(1-right_X[tt,:])
 		+ eps*right2_X[tt,:]*(1-right2_X[tt,:])
@@ -303,7 +304,7 @@ def periodic(sz=128,noise=0.5,freq=36):
 	A simple 2D periodic equation with a a specified amplitude of noise.
 
 	X = sin(y) + .5cos(x) + random
-	
+
 	Parameters
 	----------
 
@@ -336,7 +337,7 @@ def periodic(sz=128,noise=0.5,freq=36):
 	X = np.sin(yy) + .5*np.cos(xx) #+ np.cos(.5*yy)  + np.cos(.25*xx)
 
 	X += noise*np.random.rand(sz,sz)
-	
+
 
 	#normalize
 	X += np.abs(X.min())
@@ -351,7 +352,7 @@ def periodicBrown(sz=128,noise=1.5,freq=36):
 	Calls the function brownNoise
 
 	X = sin(y + noise*2pi)
-	
+
 	Parameters
 	----------
 
@@ -409,7 +410,7 @@ def brownNoise(sz=128,num_walks=500,walk_sz=100000,spread=1000,seed=3):
 	walk_sz : int
 		Length of the random walk to take
 
-	spread : int 
+	spread : int
 		normal distribution of walks sizes randn*spread
 
 	seed : int
@@ -424,7 +425,7 @@ def brownNoise(sz=128,num_walks=500,walk_sz=100000,spread=1000,seed=3):
 
 	for ii in range(num_walks):
 
-		x1 = np.random.randn(walk_sz,2) 
+		x1 = np.random.randn(walk_sz,2)
 		x1[0,:] = np.random.rand(2,)*spread  # start them at random locations
 		x = np.cumsum(x1,axis=0)
 
@@ -460,7 +461,7 @@ def noise(sz=128,seed=36):
 	A 2D random distribution of numbers.
 
 	X = random
-	
+
 	Parameters
 	----------
 
@@ -488,7 +489,7 @@ def noise(sz=128,seed=36):
 
 def chaos3D(sz=128,A=3.99,eps=1.,steps=100):
 	"""
-	Logistic map diffused in space and then taken through time. 
+	Logistic map diffused in space and then taken through time.
 	Chaos evolves in 3rd dimension.
 
 	Parameters
@@ -498,12 +499,12 @@ def chaos3D(sz=128,A=3.99,eps=1.,steps=100):
 		row and column size of the spatio-temporal series to be generated
 
 	A : float
-		Parameter for the logistic map. Values beyond 3.56995 
+		Parameter for the logistic map. Values beyond 3.56995
 		exhibit chaotic behaviour.
 
 	eps : float
 		Amount of coupling/diffusion between adjecent cells
-	
+
 	seed : int
 		sets the random seed for the logistic map. Allows results to be
 		easily reproduced.
@@ -513,9 +514,9 @@ def chaos3D(sz=128,A=3.99,eps=1.,steps=100):
 
 	X : 2D array
 		Spatiotemporal logistic map of size (sz)
-	
+
 	"""
-	
+
 	X = np.random.rand(sz,sz)
 
 
@@ -528,7 +529,7 @@ def chaos3D(sz=128,A=3.99,eps=1.,steps=100):
 
 		# logistic equation in space
 
-		X = (1/(1+4*eps))*(A*X*(1-X) 
+		X = (1/(1+4*eps))*(A*X*(1-X)
 		+ A*left_X*(1-left_X)
 		+ A*right_X*(1-right_X)
 		+ A*right2_X*(1-right2_X)
@@ -569,7 +570,7 @@ def randomCircles(sz=256,rad=20.,sigma=1,num_circles = 1000):
 
 	for ii in range(num_circles):
 
-		
+
 		r = np.floor(np.random.rand()*sz)
 		c = np.floor(np.random.rand()*sz)
 
@@ -657,7 +658,7 @@ def circleInCircle(sz=256,rad1 = 5, rad2 = 8,num_blobs=1000):
 	blob_count = 0
 
 	for ii in range(num_blobs):
-	    
+
 		r = np.around(np.random.rand()*sz)
 		c = np.around(np.random.rand()*sz)
 
@@ -677,8 +678,8 @@ def circleInCircle(sz=256,rad1 = 5, rad2 = 8,num_blobs=1000):
 
 			blob_count+=1
 
-	print 'Blobs Generated:',blob_count
-	
+	print('Blobs Generated:',blob_count)
+
 	return blobs
 
 
@@ -697,7 +698,7 @@ def blobber(r,c,rad1,rad2,sz):
 		Radius of the interior circle
 
 	rad2 : float
-		Radius of the exterior circle 
+		Radius of the exterior circle
 
 	sz : int
 		Size of the space to generated
@@ -745,11 +746,11 @@ def blobber2(r,c,rad1,sz):
 
 	y,x = np.ogrid[-r:sz-r, -c:sz-c]
 	mask1 = x*x + y*y <= rad1*rad1
-	
+
 
 	X = np.zeros((sz, sz))
 	X[mask1] = 1
-	
+
 
 	return X
 
@@ -784,14 +785,14 @@ def circlesWithStuff(sz=256,rad1 = 5, rad2 = 8,num_blobs=100):
 	blob_count = 0
 
 	for ii in range(num_blobs):
-	    
+
 		r1 = np.around(np.random.rand()*sz)
 		c1 = np.around(np.random.rand()*sz)
 
 		r2 = np.around(np.random.rand()*sz)
 		c2 = np.around(np.random.rand()*sz)
 
-		
+
 		new_blob1 = blobber2(r1,c1,rad1,sz)
 
 		new_blob2 = blobber2(r2,c2,rad2,sz)*2
@@ -815,8 +816,8 @@ def circlesWithStuff(sz=256,rad1 = 5, rad2 = 8,num_blobs=100):
 
 			blob_count+=1
 
-	print 'Number of blobs:',blob_count
-	
+	print('Number of blobs:',blob_count)
+
 	return blobs
 
 def randomSizedCircles(sz=1024,rad_max = 28 ,num_blobs=3000):
@@ -847,7 +848,7 @@ def randomSizedCircles(sz=1024,rad_max = 28 ,num_blobs=3000):
 	rad_store = np.zeros((num_blobs,))
 
 	for ii in range(num_blobs):
-	    
+
 		r = np.around(np.random.rand()*sz)
 		c = np.around(np.random.rand()*sz)
 
@@ -874,8 +875,8 @@ def randomSizedCircles(sz=1024,rad_max = 28 ,num_blobs=3000):
 	blobs -= 1
 	blobs[blobs<0] = 0
 
-	print blob_count
-	
+	print(blob_count)
+
 	return blobs
 
 
@@ -902,7 +903,7 @@ def voronoiMatrix(sz=512,percent=0.1,num_classes=27):
 	X : 2D array
 		Array containing all voronoi polygons
 	"""
-	
+
 
 	X = np.zeros((sz,sz))
 
@@ -934,17 +935,3 @@ def voronoiMatrix(sz=512,percent=0.1,num_classes=27):
 	X[locs[:,0],locs[:,1]] = preds
 
 	return X
-
-
-
-
-
-
-
-
-
-
-
-
-
-

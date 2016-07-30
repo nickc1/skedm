@@ -4,11 +4,11 @@ Scikit learn implementation of nonlinear forecasting.
 By Nick Cortale
 """
 
-import metrics as mets
+import skNLF.metrics as mets
 from scipy import stats as stats
 from sklearn import neighbors
 import numpy as np
-from sklearn import metrics
+from sklearn import metrics as skmetrics
 
 class NonLin:
 	"""
@@ -29,7 +29,7 @@ class NonLin:
 		self.weights = weights
 
 		self.knn = neighbors.KNeighborsRegressor(int(max_nn),
-			weights=weights,metric='minkowski') 
+			weights=weights,metric='minkowski')
 
 
 	def fit(self, Xtrain, ytrain):
@@ -110,7 +110,7 @@ class NonLin:
 		nn_range : 1d array
 			The number of near neighbors to test
 
-		Example : 
+		Example :
 		nn_range = np.arange(0,100,10) would calculate the
 		predictions at 0,10,20,...,90 near neighbors
 		"""
@@ -183,7 +183,7 @@ class NonLin:
 			self.y_pred = self.y_pred_range[:,:,ii]
 
 			sc[ii,:] = self.score(ytest,how=how)
-		
+
 		return sc
 
 
@@ -208,7 +208,7 @@ class NonLinDiscrete:
 		self.weights = weights
 
 		self.knn = neighbors.KNeighborsRegressor(int(max_nn),
-			weights=weights,metric='hamming') 
+			weights=weights,metric='hamming')
 
 
 	def fit(self, Xtrain, ytrain):
@@ -257,7 +257,7 @@ class NonLinDiscrete:
 
 		xsize = self.dist.shape[0]
 		ysize = self.ytrain.shape[1]
-	
+
 		y_pred = np.empty((xsize,ysize))
 
 		if self.weights =='uniform':
@@ -276,9 +276,9 @@ class NonLinDiscrete:
 
 			for j in range(self.ytrain.shape[1]):
 				mode, _ = mets.weighted_mode(self.ytrain[neigh_ind,j], W, axis=1)
-				
+
 				mode = np.asarray(mode.ravel(), dtype=np.intp)
-			
+
 				y_pred[:, j] = mode
 
 		self.y_pred = y_pred
@@ -295,7 +295,7 @@ class NonLinDiscrete:
 		nn_range : 1d array
 			The number of near neighbors to test
 
-		Example : 
+		Example :
 		nn_range = np.arange(0,100,10) would calculate the
 		predictions at 0,10,20,...,90 near neighbors
 		"""
@@ -367,7 +367,7 @@ class NonLinDiscrete:
 			self.y_pred = self.y_pred_range[:,:,ii]
 
 			sc[ii,:] = self.score(ytest,how=how)
-		
+
 		return sc
 
 
@@ -386,9 +386,9 @@ class embed:
 
 	def mutual_information(self,max_lag):
 		"""
-		Calculates the mutual information between the an unshifted time series and 
-		a shifted time series. Utilizes scikit-learn's implementation of the mutual
-		information found in sklearn.metrics.
+		Calculates the mutual information between the an unshifted time series
+		and a shifted time series. Utilizes scikit-learn's implementation of
+		the mutual information found in sklearn.metrics.
 
 		Parameters
 		----------
@@ -437,14 +437,14 @@ class embed:
 				bin_tracker_shift[locs_shift]=ii
 
 
-			m_score[jj] = metrics.mutual_info_score(bin_tracker,bin_tracker_shift)
+			m_score[jj] = skmetrics.mutual_info_score(bin_tracker,bin_tracker_shift)
 		return m_score
 
 
 	def mutual_information_spatial(self,max_lag,percent_calc=.5):
 		"""
 		Calculates the mutual information along the rows and columns at a
-		certain number of indices (percent_calc) and returns 
+		certain number of indices (percent_calc) and returns
 		the sum of the mutual informaiton along the columns and along the rows.
 
 		Parameters
@@ -452,7 +452,7 @@ class embed:
 
 		M : 2-D array
 			input two-dimensional image
-	 
+
 		max_lag : integer
 			maximum amount to shift the space
 
@@ -468,7 +468,7 @@ class embed:
 		C_mut : 1-D array
 			the mutual information across the columns (horizontal)
 
-		r_mi : 2-D array 
+		r_mi : 2-D array
 			the mutual information for down each row (vertical)
 
 		c_mi : 2-D array
@@ -525,7 +525,7 @@ class embed:
 
 		embed : int
 			embedding dimension, how many lag values to take
-			
+
 		predict : int
 			distance to forecast (see example)
 
@@ -533,7 +533,7 @@ class embed:
 		Returns
 		-------
 		features : array of shape [num_vectors,embed]
-			A 2-D array containing all of the embedded vectors	
+			A 2-D array containing all of the embedded vectors
 
 		targets : array of shape [num_vectors,predict]
 			A 2-D array containing the evolution of the embedded vectors
@@ -541,7 +541,7 @@ class embed:
 		Example
 		-------
 		X = [0,1,2,3,4,5,6,7,8,9,10]
-		
+
 		em = 3
 		lag = 2
 		predict=3
@@ -595,7 +595,7 @@ class embed:
 		Returns
 		-------
 		features : array of shape [num_vectors,r*c]
-			A 2-D array containing all of the embedded vectors	
+			A 2-D array containing all of the embedded vectors
 
 		targets : array of shape [num_vectors,predict]
 			A 2-D array containing the evolution of the embedded vectors
@@ -603,7 +603,7 @@ class embed:
 
 		Example:
 		lag = (3,4)
-		embed = (2,5) 
+		embed = (2,5)
 		predict = 2
 
 
@@ -636,7 +636,7 @@ class embed:
 		features = np.zeros((len(r_inds),rem*cem))
 
 
-		print("targets before loop: " + str(targets.shape))
+		print("targets before loop:", targets.shape)
 
 		for ii in range(features.shape[0]):
 
@@ -650,7 +650,7 @@ class embed:
 			part = self.X[rs : r_end_val, cs : c_end_val ]
 
 			features[ii,:] = part[::r_lag,::c_lag].ravel()
-			targets[ii,:] = self.X[r_end_val:r_end_val+predict,cs+ c_lag*(cem-1)/2]
+			targets[ii,:] = self.X[r_end_val:r_end_val+predict,cs + int(c_lag*(cem-1)/2)]
 
 
 		return features,targets
@@ -671,7 +671,7 @@ class embed:
 			row and column lag values (r,c) can think of as (height,width).
 
 		embed : tuple of ints (r,c,t)
-			row and column, and time embedding shape (r,c,t) can think of as 
+			row and column, and time embedding shape (r,c,t) can think of as
 			(height,width,time). c must be odd
 
 		predict : int
@@ -683,7 +683,7 @@ class embed:
 		Returns
 		-------
 		features : array of shape [num_vectors,r*c]
-			A 2-D array containing all of the embedded vectors	
+			A 2-D array containing all of the embedded vectors
 
 		targets : array of shape [num_vectors,predict]
 			A 2-D array containing the evolution of the embedded vectors
@@ -703,8 +703,8 @@ class embed:
 		 |         |         |
 		[f] _ _ _ [f] _ _ _ [f]
 
-		The targets would be directly below the center [f] 
-				
+		The targets would be directly below the center [f]
+
 		"""
 
 		rsize = X.shape[0]
@@ -737,7 +737,7 @@ class embed:
 
 
 
-		print 'targets before loop:', targets.shape
+		print('targets before loop:', targets.shape)
 
 		for ii in range(features.shape[0]):
 
@@ -757,28 +757,8 @@ class embed:
 
 			rs_target = rs + r_lag
 			cs_target = cs + c_lag
-			targets[ii,:] = X[rs + r_lag*(rem-1)/2, 
+			targets[ii,:] = X[rs + r_lag*(rem-1)/2,
 				cs+ c_lag*(cem-1)/2, t_end_val:t_end_val+predict].ravel()
 
 
 		return features,targets
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
