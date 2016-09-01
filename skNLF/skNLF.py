@@ -253,8 +253,6 @@ class NonLinDiscrete:
 			How many near neighbors to use
 		"""
 
-		#check to see if distances have been calculated already
-
 		xsize = self.dist.shape[0]
 		ysize = self.ytrain.shape[1]
 
@@ -265,8 +263,9 @@ class NonLinDiscrete:
 			neigh_ind = self.ind[:,0:nn]
 
 			for j in range(self.ytrain.shape[1]):
-				mode, _ = stats.mode(self.ytrain[neigh_ind,j], axis=1)
-				y_pred[:,j] = mode.ravel()
+				#mode, _ = stats.mode(self.ytrain[neigh_ind,j], axis=1)
+				mode = mets.quick_mode_axis1(self.ytrain[neigh_ind,j].astype(int))
+				y_pred[:,j] = mode# .ravel()
 
 
 		elif self.weights=='distance':
@@ -325,6 +324,7 @@ class NonLinDiscrete:
 			how to score the predictions
 			-'classCompare' : percent correctly predicted
 			-'classError' : Dont use this
+			-'tau' : kleckas tau
 		"""
 
 		num_preds = ytest.shape[1]
@@ -341,6 +341,10 @@ class NonLinDiscrete:
 			elif how == 'classError':
 				sc[0,ii] = mets.classificationError(p,ytest[:,ii])
 
+			elif how == 'tau':
+				sc[0,ii] = mets.kleckas_tau(p,ytest[:,ii])
+
+
 
 		return sc
 
@@ -354,6 +358,7 @@ class NonLinDiscrete:
 			how to score the predictions
 			-'classCompare' : percent correctly predicted
 			-'classError' : Dont use this
+			'tau' : kleckas tau
 		"""
 
 
@@ -463,13 +468,13 @@ class embed:
 		-------
 
 		R_mut : 1-D array
-			the mutual inforation down the rows (vertical)
+			the mutual inforation averaged down the rows (vertical)
 
 		C_mut : 1-D array
-			the mutual information across the columns (horizontal)
+			the mutual information averaged across the columns (horizontal)
 
 		r_mi : 2-D array
-			the mutual information for down each row (vertical)
+			the mutual information down each row (vertical)
 
 		c_mi : 2-D array
 			the mutual information across the columns (horizontal)

@@ -5,6 +5,7 @@ math needed for skNLF
 
 import numpy as np
 from scipy import stats as stats
+from numba import jit
 
 def corrCoef(preds,actual):
 	"""
@@ -112,6 +113,26 @@ def kleckas_tau(preds,actual):
 	tau = (ncorr - sum_t) / (len(preds) - sum_t)
 
 	return tau
+
+def cohens_kappa(preds,actual):
+	"""
+	Calculates cohens kappa
+
+	Parameters
+	----------
+	preds : array shape (num samples,)
+	test : array of shape (num samples,)
+		actual values from the testing set
+
+	Returns
+	-------
+	cc : float
+		Returns the correlation coefficient
+	"""
+
+	c = cohen_kappa_score(preds,actual)
+
+	return c
 
 
 def varianceExplained(preds,actual):
@@ -282,3 +303,69 @@ def deterministic_metric(CC,lag):
 		s_min = np.min(right)
 		d_metric += (s_max-s_min)
 	return d_metric
+
+
+@jit
+def quick_mode_axis1(X):
+	X = X.astype(int)
+	len_x = len(X)
+	mode = np.zeros(len_x)
+	for i in range(len_x):
+		mode[i] = np.bincount(X[i,:]).argmax()
+	return mode
+
+
+def auto_correlation(X,shift):
+	"""
+	Parameters
+	----------
+	X : 2d array to be shifted
+	frac_shift : what percent of length to shift the array
+	"""
+
+	r,c = X.shape
+	rshift,cshift = shift
+
+	rsum = np.zeros(rshift)
+	csum = np.zeros(cshift)
+	#shift horizontally
+	for i in range(rshift):
+
+		shifted = np.roll(X,i,axis=0)
+		rsum[i] = np.sum(shifted == X)
+
+	for i in range(cshift):
+		shifted = np.roll(X,i,axis=1)
+		csum[i] = np.sum(shifted == X)
+
+	return rsum,csum
+
+def keep_diversity(X,thresh=1.):
+	"""
+	Throws out rows of only one class.
+	X : 2d array of ints
+
+	Returns
+	keep : 1d boolean
+
+	ex:
+	[1 1 1 1]
+	[2 1 2 3]
+	[2 2 2 2]
+	[3 2 1 4]
+
+	returns:
+	[F]
+	[T]
+	[F]
+	[T]
+	"""
+
+	X = X.astype(int)
+	mode = quick_mode_axis1(X).reshape(-1,1)
+
+	compare = np.repeat(mode,X.shape[1],axis=1)
+	thresh = int(thresh*X.shape[1])
+	keep = np.sum(compare==X, axis=1) < X.shape[1]
+
+	return keep

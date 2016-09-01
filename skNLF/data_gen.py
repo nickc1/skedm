@@ -244,7 +244,7 @@ TWO DIMENSIONAL
 """
 
 
-def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=0):
+def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=None):
 	"""
 	Logistic map diffused in space. Refer to thesis for specifics.
 
@@ -289,14 +289,15 @@ def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=0):
 		right2_X = np.roll(X,-2)
 
 		# logistic equation in space
-		X[tt+1,:] = ( (A/(1+4*eps))*
-		(X[tt,:]*(1-X[tt,:])
-		+ eps*left_X[tt,:]*(1-left_X[tt,:])
-		+ eps*right_X[tt,:]*(1-right_X[tt,:])
-		+ eps*right2_X[tt,:]*(1-right2_X[tt,:])
-		+ eps*left2_X[tt,:]*(1-left2_X[tt,:])) )
+		reg = X[tt,:] * (1 - X[tt,:])
+		left = eps * left_X[tt,:] * ( 1 - left_X[tt,:])
+		right = eps * right_X[tt,:] * (1 - right_X[tt,:])
 
-	X += noise*np.random.rand(sz,sz)
+		X[tt+1,:] = (A/(1+2*eps)) * (reg + left + right)
+
+	if noise:
+		X += noise * np.random.rand(sz,sz)
+
 	return X
 
 def periodic(sz=128,noise=0.5,freq=36):
@@ -625,7 +626,7 @@ def circleCreate(r,c,sz,rad,sigma,gauss=True):
 	return array
 
 
-def circleInCircle(sz=256,rad1 = 5, rad2 = 8,num_blobs=1000):
+def circleInCircle(rad_list,sz=256,num_blobs=1000):
 	'''
 	Create circles inside larger circles. These circles cannot overlap.
 	Calls the function blobber
@@ -636,11 +637,8 @@ def circleInCircle(sz=256,rad1 = 5, rad2 = 8,num_blobs=1000):
 	sz : int
 		row and column size of the returned space
 
-	rad1 : float
-		radius of the interior circle
-
-	rad2 : float
-		radius of the exterior circle
+	rad_list : list of ints
+		radii of the circles
 
 	num_blobs : int
 		number of circles to create
@@ -659,10 +657,10 @@ def circleInCircle(sz=256,rad1 = 5, rad2 = 8,num_blobs=1000):
 
 	for ii in range(num_blobs):
 
-		r = np.around(np.random.rand()*sz)
-		c = np.around(np.random.rand()*sz)
+		r = int(np.around(np.random.rand()*sz))
+		c = int(np.around(np.random.rand()*sz))
 
-		new_blob = blobber(r,c,rad1,rad2,sz)
+		new_blob = blobber(r,c,rad_list,sz)
 
 		#check to see if there is any overlap
 
@@ -683,7 +681,7 @@ def circleInCircle(sz=256,rad1 = 5, rad2 = 8,num_blobs=1000):
 	return blobs
 
 
-def blobber(r,c,rad1,rad2,sz):
+def blobber(r,c,rad_list,sz):
 	"""
 	Creates a circle sorrounded by a larger circle.
 	To be used within circleInCircle.
@@ -691,14 +689,11 @@ def blobber(r,c,rad1,rad2,sz):
 	Parameters
 	----------
 
-	r,c : float
+	r,c : int
 		Center of the circles
 
-	rad1 : float
+	rad_list : list of ints
 		Radius of the interior circle
-
-	rad2 : float
-		Radius of the exterior circle
 
 	sz : int
 		Size of the space to generated
@@ -712,12 +707,16 @@ def blobber(r,c,rad1,rad2,sz):
 
 	"""
 	y,x = np.ogrid[-r:sz-r, -c:sz-c]
-	mask1 = x*x + y*y <= rad1*rad1
-	mask2 = x*x + y*y <= rad2*rad2
+	masks = []
+	for rad in rad_list:
+		mask = x*x + y*y <= rad*rad
+		masks.append(mask)
 
 	X = np.zeros((sz, sz))
-	X[mask2] = 1
-	X[mask1] = 2
+
+	# need to flip them so it fills from outside to inside
+	for i, mask in enumerate(masks[::-1]):
+		X[mask] = i +1
 
 	return X
 
@@ -820,7 +819,7 @@ def circlesWithStuff(sz=256,rad1 = 5, rad2 = 8,num_blobs=100):
 
 	return blobs
 
-def randomSizedCircles(sz=1024,rad_max = 28 ,num_blobs=3000):
+def randomSizedCircles(rad_list, val_list, sz=512, num_blobs=3000):
 	"""
 	Create random sized circles spread around randomly and assign them
 	to classes: 1:27
@@ -831,8 +830,10 @@ def randomSizedCircles(sz=1024,rad_max = 28 ,num_blobs=3000):
 	sz : int
 		row and column size of the space in which the circle is placed
 
-	rad_max : int
-		Radius of the largest circle
+	rad_list : list of ints
+		List of Radii
+	val_list : list ints
+		List of values associated with the radii
 
 	num_blobs : total number of circles to create
 
@@ -846,15 +847,15 @@ def randomSizedCircles(sz=1024,rad_max = 28 ,num_blobs=3000):
 	blobs = np.zeros((sz,sz))
 	blob_count = 0
 	rad_store = np.zeros((num_blobs,))
-
+	r_iter = 0
 	for ii in range(num_blobs):
 
 		r = np.around(np.random.rand()*sz)
 		c = np.around(np.random.rand()*sz)
 
-		rad = np.random.randint(2,high=rad_max+1)
+		rad = rad_list[r_iter]
 
-		new_blob = blobber2(r,c,rad,sz)*rad
+		new_blob = blobber2(r,c,rad,sz)*val_list[r_iter]
 
 		#check to see if there is any overlap
 
@@ -869,11 +870,16 @@ def randomSizedCircles(sz=1024,rad_max = 28 ,num_blobs=3000):
 
 			blobs+=new_blob
 
-			rad_store[blob_count] = rad
 			blob_count+=1
 
-	blobs -= 1
-	blobs[blobs<0] = 0
+		#update r_iter
+		r_iter += 1
+		if r_iter == len(rad_list):
+			r_iter=0
+
+
+	#blobs -= 1
+	#blobs[blobs<0] = 0
 
 	print(blob_count)
 
@@ -909,19 +915,19 @@ def voronoiMatrix(sz=512,percent=0.1,num_classes=27):
 
 	#fill in percentage of the space
 	locs = np.random.rand(sz,sz)<=percent
-	vals = np.random.randint(1,num_classes,size=(sz,sz))
+	vals = np.random.randint(0,num_classes,size=(sz,sz))
 	X[locs]=vals[locs]
 
 	#get all the indices of the matrix
 	cc,rr = np.meshgrid(np.arange(0,sz),np.arange(0,sz))
 
 	f = np.zeros((sz**2,2))
-	f[:,0]=rr.ravel()
-	f[:,1]=cc.ravel()
+	f[:,0]=rr.ravel() #feature1
+	f[:,1]=cc.ravel() #feature2
 
-	t = X.ravel()
+	t = X.ravel() #target
 
-	train_ind = t>0
+	train_ind = locs.ravel()
 
 	f_train = f[train_ind]
 	t_train = t[train_ind]
