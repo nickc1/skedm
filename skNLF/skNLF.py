@@ -193,7 +193,7 @@ class NonLinDiscrete:
 	Nonlinear forecasting
 	"""
 
-	def __init__(self,max_nn,weights):
+	def __init__(self,max_nn,weights='uniform'):
 		"""
 		Parameters
 		----------
@@ -314,6 +314,41 @@ class NonLinDiscrete:
 
 		return y_pred_range
 
+	def score_individual(self,ytest,how='tau'):
+		"""
+		Scores each individual near neighbor.
+
+		Returns
+		----------
+		dist : 1d array of the average distances for each near neighbor
+		score : 2d (num of NN, prediction distance) array of the score values
+		"""
+
+		num_neighbors = self.dist.shape[1]
+		num_preds = self.ytrain.shape[1]
+		score = np.zeros((num_neighbors, num_preds))
+
+		for i in range(num_neighbors):
+
+			ypred = self.ytrain[self.ind[:,i]] # grab all the 1st NN, then 2nd, etc...
+
+			for j in range(num_preds):
+
+
+				if how == 'classCompare':
+					score[i,j] = mets.classCompare(ypred[:,j], ytest[:,j])
+
+				elif how == 'classError':
+					score[i,j] = mets.classificationError(ypred[:,j], ytest[:,j])
+
+				elif how == 'tau':
+					score[i,j] = mets.kleckas_tau(ypred[:,j], ytest[:,j])
+
+		avg_dist = np.mean(self.dist,axis=0)
+		return avg_dist, score
+
+
+
 	def score(self, ytest, how='classCompare'):
 		"""
 		Evalulate the predictions
@@ -423,7 +458,7 @@ class embed:
 			lag = jj+1
 
 			ts = self.X[0:-lag]
-			ts_shift = self.X[lag::]
+			ts_shift = self.X[lag:]
 
 			min_ts = np.min(self.X)
 			max_ts = np.max(self.X)+.0001 #needed to bin them up
@@ -515,6 +550,7 @@ class embed:
 
 		self.X = M
 		return r_mut, c_mut, r_mi, c_mi
+
 
 	def embed_vectors_1d(self,lag,embed,predict):
 		"""

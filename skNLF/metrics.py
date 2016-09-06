@@ -134,6 +134,84 @@ def cohens_kappa(preds,actual):
 
 	return c
 
+def klekas_tau_spatial(X,max_lag,percent_calc=.5):
+	"""
+	Similar to mutual_information_spatial, it calculates the kleckas tau value
+	between a shifted and unshifted slice of the space. It makes slices in both
+	the rows and the columns.
+
+	Parameters
+	----------
+
+	X : 2-D array
+		input two-dimensional image
+
+	max_lag : integer
+		maximum amount to shift the space
+
+	percent_calc : float
+		How many rows and columns to use average over. Using the whole space
+		is overkill.
+
+	Returns
+	-------
+
+	R_mut : 1-D array
+		the mutual inforation averaged down the rows (vertical)
+
+	C_mut : 1-D array
+		the mutual information averaged across the columns (horizontal)
+
+	r_mi : 2-D array
+		the mutual information down each row (vertical)
+
+	c_mi : 2-D array
+		the mutual information across each columns (horizontal)
+
+
+	"""
+
+	rs, cs = np.shape(X)
+
+	rs_iters = int(rs*percent_calc)
+	cs_iters = int(cs*percent_calc)
+
+	r_picks = np.random.choice(np.arange(rs),size=rs_iters,replace=False)
+	c_picks = np.random.choice(np.arange(cs),size=cs_iters,replace=False)
+
+
+	# The r_picks are used to calculate the MI in the columns
+	# and the c_picks are used to calculate the MI in the rows
+
+	c_mi = np.zeros((max_lag,rs_iters))
+	r_mi = np.zeros((max_lag,cs_iters))
+
+	for ii in range(rs_iters):
+
+		m_slice = X[r_picks[ii],:]
+
+		for j in range(max_lag):
+
+			shift = j+1
+			new_m = m_slice[:-shift]
+			shifted = m_slice[shift:]
+			c_mi[j,ii] = kleckas_tau(new_m,shifted)
+
+	for ii in range(cs_iters):
+
+		m_slice = X[:,c_picks[ii]]
+
+		for j in range(max_lag):
+			shift = j+1
+			new_m = m_slice[:-shift]
+			shifted = m_slice[shift:]
+			r_mi[j,ii] = kleckas_tau(new_m,shifted)
+
+	r_mut = np.mean(r_mi,axis=1)
+	c_mut = np.mean(c_mi,axis=1)
+
+	return r_mut, c_mut, r_mi, c_mi
+
 
 def varianceExplained(preds,actual):
 	"""
