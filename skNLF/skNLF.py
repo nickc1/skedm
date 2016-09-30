@@ -4,7 +4,7 @@ Scikit learn implementation of nonlinear forecasting.
 By Nick Cortale
 """
 
-import skNLF.metrics as mets
+import skNLA.metrics as mets
 from scipy import stats as stats
 from sklearn import neighbors
 import numpy as np
