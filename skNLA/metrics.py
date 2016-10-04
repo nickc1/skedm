@@ -7,6 +7,30 @@ import numpy as np
 from scipy import stats as stats
 from numba import jit
 
+
+
+
+def weighted_mean(indices, distances, ytrain ):
+	"""
+	Transforms a list of distances into weights. Currently it is just
+	1/distance
+	"""
+
+	W = 1./distances
+
+	y_pred = np.empty((distances.shape[0], ytrain.shape[1]), dtype=np.float)
+	denom = np.sum(W, axis=1)
+
+	for i in range(ytrain.shape[1]):
+		num = np.sum(ytrain[indices, i] * W, axis=1)
+		y_pred[:, i] = num / denom
+
+	return y_pred
+
+
+
+
+
 def corrCoef(preds,actual):
 	"""
 	Correlation Coefficient of between predicted values and actual values

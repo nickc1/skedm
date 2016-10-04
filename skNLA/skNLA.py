@@ -15,22 +15,16 @@ class NonLin:
 	Nonlinear forecasting
 	"""
 
-	def __init__(self,max_nn,weights):
+	def __init__(self,weights):
 		"""
 		Parameters
 		----------
-		max_nn : int
-			Maximum number of near neighbors to use
 		weights : string
 			-'uniform' : uniform weighting
 			-'distance' : weighted as 1/distance
 		"""
-		self.max_nn = max_nn
+
 		self.weights = weights
-
-		self.knn = neighbors.KNeighborsRegressor(int(max_nn),
-			weights=weights,metric='minkowski')
-
 
 	def fit(self, Xtrain, ytrain):
 		"""
@@ -40,6 +34,9 @@ class NonLin:
 		self.Xtrain = Xtrain
 		self.ytrain = ytrain
 
+		max_nn = len(Xtrain)
+		# initiate the class and fit the data
+		self.knn = neighbors.KNeighborsRegressor(max_nn, weights=self.weights)
 		self.knn.fit(Xtrain,ytrain)
 
 	def dist_calc(self,Xtest):
@@ -49,7 +46,7 @@ class NonLin:
 
 		Parameters
 		----------
-		Xtest : test features (nsamples,nfeatures)
+		Xtest : test features (nsamples, nfeatures)
 
 		Returns
 		-------
@@ -62,103 +59,41 @@ class NonLin:
 		self.ind = i
 
 		self.Xtest = Xtest
-		print("distance calculated")
 
-	def predict(self,nn):
+	def predict(self,nn_list,Xtest):
 		"""
 		Make a prediction for a certain value of near neighbors
 
 		Parameters
 		----------
-		nn : int
-			How many near neighbors to use
+		nn_list : list
+			Values of NN to test
 		"""
 
-		#check to see if distances have been calculated already
+		#calculate distances first
+		self.dist_calc(Xtest)
 
-		if self.weights== 'uniform':
+		ypred = []
+
+		for nn in nn_list:
 
 			neigh_ind = self.ind[:,0:nn]
 
+			if self.weights == 'uniform':
 
-			y_pred = np.mean(self.ytrain[neigh_ind], axis=1)
+				ypred.append( np.mean(self.ytrain[neigh_ind], axis=1) )
 
+			elif self.weights =='distance':
 
-		elif self.weights =='distance':
-			dist = self.dist[:,0:nn]
-			neigh_ind = self.ind[:,0:nn]
-			W = 1./dist
+				p = mets.weighted_mean(neigh_ind, self.dist[:,0:nn], self.ytrain)
+				ypred.append( p )
 
-			y_pred = np.empty((dist.shape[0], self.ytrain.shape[1]), dtype=np.float)
-			denom = np.sum(W, axis=1)
-
-			for j in range(self.ytrain.shape[1]):
-				num = np.sum(self.ytrain[neigh_ind, j] * W, axis=1)
-				y_pred[:, j] = num / denom
-
-		self.y_pred = y_pred
-
-		return y_pred
+		self.ypred = ypred
+		self.nn_list = nn_list
+		return ypred
 
 
-
-	def predict_range(self,nn_range):
-		"""
-		predict over a range of near neighbors
-		Parameters
-		----------
-		nn_range : 1d array
-			The number of near neighbors to test
-
-		Example :
-		nn_range = np.arange(0,100,10) would calculate the
-		predictions at 0,10,20,...,90 near neighbors
-		"""
-
-		xsize = self.dist.shape[0]
-		ysize = self.ytrain.shape[1]
-		zsize = len(nn_range)
-		y_pred_range = np.empty((xsize,ysize,zsize))
-
-		for ii,nn in enumerate(nn_range):
-
-			y_p = self.predict(nn)
-
-			y_pred_range[:,:,ii] = y_p
-
-		self.y_pred_range = y_pred_range
-
-		return y_pred_range
-
-	def score(self, ytest, how='score'):
-		"""
-		Evalulate the predictions
-		Parameters
-		----------
-		ytest : 2d array containing the targets
-		how : string
-			how to score the predictions
-			-'score' : see scikit-learn's score function
-			-'corrcoef' : correlation coefficient
-		"""
-
-		num_preds = ytest.shape[1]
-
-		sc = np.empty((1,num_preds))
-
-		for ii in range(num_preds):
-
-			p = self.y_pred[:,ii]
-
-			if how == 'score':
-				sc[0,ii] = mets.score(p,ytest[:,ii])
-
-			if how == 'corrcoef':
-				sc[0,ii] = mets.corrcoef(p,ytest[:,ii])
-
-		return sc
-
-	def score_range(self,ytest,how='score'):
+	def score(self,ytest,how='score'):
 		"""
 		scores the predictions if they were calculated for numerous
 		values of near neighbors.
@@ -171,20 +106,47 @@ class NonLin:
 			-'score' : see scikit-learn's score function
 			-'corrcoef' : correlation coefficient
 		"""
+		scores = []
+		#iterate through each pred for each nn value
+		for pred in self.ypred:
+			sc = np.empty(pred.shape[1]) #need to store the scores
+
+			for i in range(pred.shape[1]):
+
+				p = pred[:,i]
+
+				if how == 'score':
+					sc[i] = mets.score(p, ytest[:,i])
+
+				if how == 'corrcoef':
+					sc[i] = mets.corrcoef(p, ytest[:,i])
+
+			scores.append(sc)
+
+		scores = np.vstack(scores)
+		return scores
 
 
-		num_preds = self.y_pred_range.shape[1]
-		nn_range_len = self.y_pred_range.shape[2]
+	def predict_individual(self,nn_list,Xtest):
+		"""
+		Instead of averaging near neighbors, make a prediction for each
+		neighbor.
+		"""
 
-		sc = np.empty((nn_range_len,num_preds))
+		#calculate distances first
+		self.dist_calc(Xtest)
 
-		for ii in range(nn_range_len):
+		ypred = []
 
-			self.y_pred = self.y_pred_range[:,:,ii]
+		for nn in nn_list:
 
-			sc[ii,:] = self.score(ytest,how=how)
+			neigh_ind = self.ind[:,nn]
 
-		return sc
+			ypred.append(self.ytrain[neigh_ind])
+
+		self.ypred = ypred
+
+		return ypred
 
 
 
@@ -193,7 +155,7 @@ class NonLinDiscrete:
 	Nonlinear forecasting
 	"""
 
-	def __init__(self,max_nn,weights='uniform'):
+	def __init__(self,weights='uniform'):
 		"""
 		Parameters
 		----------
@@ -204,12 +166,7 @@ class NonLinDiscrete:
 			-'distance' : weighted as 1/distance
 
 		"""
-		self.max_nn = max_nn
 		self.weights = weights
-
-		self.knn = neighbors.KNeighborsRegressor(int(max_nn),
-			weights=weights,metric='hamming')
-
 
 	def fit(self, Xtrain, ytrain):
 		"""
@@ -219,6 +176,7 @@ class NonLinDiscrete:
 		self.Xtrain = Xtrain
 		self.ytrain = ytrain
 
+		self.knn = neighbors.KNeighborsRegressor(weights=weights,metric='hamming')
 		self.knn.fit(Xtrain,ytrain)
 
 	def dist_calc(self,Xtest):
@@ -243,7 +201,7 @@ class NonLinDiscrete:
 		self.Xtest = Xtest
 		print("distance calculated")
 
-	def predict(self,nn):
+	def predict(self,nn_list,Xtest):
 		"""
 		Make a prediction for a certain value of near neighbors
 
@@ -253,66 +211,42 @@ class NonLinDiscrete:
 			How many near neighbors to use
 		"""
 
+		self.dist_calc(Xtest)
 		xsize = self.dist.shape[0]
 		ysize = self.ytrain.shape[1]
+		ypred = []
 
-		y_pred = np.empty((xsize,ysize))
+		for nn in nn_list:
 
-		if self.weights =='uniform':
+			yp = np.empty((xsize,ysize))
 
-			neigh_ind = self.ind[:,0:nn]
+			if self.weights =='uniform':
 
-			for j in range(self.ytrain.shape[1]):
-				#mode, _ = stats.mode(self.ytrain[neigh_ind,j], axis=1)
-				mode = mets.quick_mode_axis1(self.ytrain[neigh_ind,j].astype(int))
-				y_pred[:,j] = mode# .ravel()
+				neigh_ind = self.ind[:,0:nn]
+
+				for j in range(self.ytrain.shape[1]):
+
+					mode = mets.quick_mode_axis1(self.ytrain[neigh_ind,j].astype(int))
+					yp[:,j] = mode
 
 
-		elif self.weights=='distance':
-			dist = self.dist[:,0:nn]
-			neigh_ind = self.ind[:,0:nn]
-			W = 1./dist
+			elif self.weights=='distance':
+				dist = self.dist[:,0:nn]
+				neigh_ind = self.ind[:,0:nn]
+				W = 1./dist
 
-			for j in range(self.ytrain.shape[1]):
-				mode, _ = mets.weighted_mode(self.ytrain[neigh_ind,j], W, axis=1)
+				for j in range(self.ytrain.shape[1]):
+					mode, _ = mets.weighted_mode(self.ytrain[neigh_ind,j].astype(int), W, axis=1)
 
-				mode = np.asarray(mode.ravel(), dtype=np.intp)
+					mode = np.asarray(mode.ravel(), dtype=int)
 
-				y_pred[:, j] = mode
+					yp[:, j] = mode
+			ypred.append(yp)
 
-		self.y_pred = y_pred
+		self.ypred = y_pred
 
 		return y_pred
 
-
-
-	def predict_range(self,nn_range):
-		"""
-		predict over a range of near neighbors
-		Parameters
-		----------
-		nn_range : 1d array
-			The number of near neighbors to test
-
-		Example :
-		nn_range = np.arange(0,100,10) would calculate the
-		predictions at 0,10,20,...,90 near neighbors
-		"""
-
-		xsize = self.dist.shape[0]
-		ysize = self.ytrain.shape[1]
-		zsize = len(nn_range)
-		y_pred_range = np.empty((xsize,ysize,zsize))
-
-		for ii,nn in enumerate(nn_range):
-
-			y_p = self.predict(nn)
-
-			y_pred_range[:,:,ii] = y_p
-
-		self.y_pred_range = y_pred_range
-
-		return y_pred_range
 
 	def score_individual(self,ytest,how='tau'):
 		"""
@@ -349,7 +283,7 @@ class NonLinDiscrete:
 
 
 
-	def score(self, ytest, how='classCompare'):
+	def score(self, ytest, how='tau'):
 		"""
 		Evalulate the predictions
 		Parameters
@@ -366,52 +300,28 @@ class NonLinDiscrete:
 
 		sc = np.empty((1,num_preds))
 
-		for ii in range(num_preds):
+		scores = []
 
-			p = self.y_pred[:,ii]
+		for pred in self.ypred:
+			sc = np.empty(pred.shape[1])
 
-			if how == 'classCompare':
-				sc[0,ii] = mets.classCompare(p,ytest[:,ii])
+			for i in range(pred.shape[1]):
 
-			elif how == 'classError':
-				sc[0,ii] = mets.classificationError(p,ytest[:,ii])
+				p = pred[:,i]
 
-			elif how == 'tau':
-				sc[0,ii] = mets.kleckas_tau(p,ytest[:,ii])
+				if how == 'classCompare':
+					sc[i] = mets.classCompare(p,ytest[:,i])
 
+				elif how == 'classError':
+					sc[i] = mets.classificationError(p,ytest[:,i])
 
+				elif how == 'tau':
+					sc[i] = mets.kleckas_tau(p,ytest[:,i])
 
-		return sc
+			scores.append(sc)
 
-	def score_range(self,ytest,how='classError'):
-		"""
-		Evalulate the predictions that were made for numerous nn values
-		Parameters
-		----------
-		ytest : 2d array containing the targets
-		how : string
-			how to score the predictions
-			-'classCompare' : percent correctly predicted
-			-'classError' : Dont use this
-			'tau' : kleckas tau
-		"""
-
-
-		num_preds = self.y_pred_range.shape[1]
-		nn_range_len = self.y_pred_range.shape[2]
-
-		sc = np.empty((nn_range_len,num_preds))
-
-		for ii in range(nn_range_len):
-
-			self.y_pred = self.y_pred_range[:,:,ii]
-
-			sc[ii,:] = self.score(ytest,how=how)
-
-		return sc
-
-
-
+		scores = np.vstack(scores)
+		return scores
 
 class embed:
 
