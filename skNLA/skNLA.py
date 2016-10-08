@@ -10,9 +10,9 @@ from sklearn import neighbors
 import numpy as np
 from sklearn import metrics as skmetrics
 
-class NonLin:
+class Regression:
 	"""
-	Nonlinear forecasting
+	Nonlinear regression
 	"""
 
 	def __init__(self,weights):
@@ -138,9 +138,10 @@ class NonLin:
 
 		ypred = []
 
+
 		for nn in nn_list:
 
-			neigh_ind = self.ind[:,nn]
+			neigh_ind = self.ind[:,nn-1]# subtract 1 since it is zero based
 
 			ypred.append(self.ytrain[neigh_ind])
 
@@ -150,9 +151,9 @@ class NonLin:
 
 
 
-class NonLinDiscrete:
+class Classification:
 	"""
-	Nonlinear forecasting
+	Nonlinear classification
 	"""
 
 	def __init__(self,weights='uniform'):
@@ -175,8 +176,8 @@ class NonLinDiscrete:
 		"""
 		self.Xtrain = Xtrain
 		self.ytrain = ytrain
-
-		self.knn = neighbors.KNeighborsRegressor(weights=weights,metric='hamming')
+		max_nn = len(Xtrain)
+		self.knn = neighbors.KNeighborsRegressor(max_nn,weights=self.weights,metric='hamming')
 		self.knn.fit(Xtrain,ytrain)
 
 	def dist_calc(self,Xtest):
@@ -199,7 +200,6 @@ class NonLinDiscrete:
 		self.ind = i
 
 		self.Xtest = Xtest
-		print("distance calculated")
 
 	def predict(self,nn_list,Xtest):
 		"""
@@ -243,44 +243,31 @@ class NonLinDiscrete:
 					yp[:, j] = mode
 			ypred.append(yp)
 
-		self.ypred = y_pred
+		self.ypred = ypred
 
-		return y_pred
+		return ypred
 
-
-	def score_individual(self,ytest,how='tau'):
+	def predict_individual(self,nn_list,Xtest):
 		"""
-		Scores each individual near neighbor.
-
-		Returns
-		----------
-		dist : 1d array of the average distances for each near neighbor
-		score : 2d (num of NN, prediction distance) array of the score values
+		Instead of averaging near neighbors, make a prediction for each
+		neighbor.
 		"""
 
-		num_neighbors = self.dist.shape[1]
-		num_preds = self.ytrain.shape[1]
-		score = np.zeros((num_neighbors, num_preds))
+		#calculate distances first
+		self.dist_calc(Xtest)
 
-		for i in range(num_neighbors):
-
-			ypred = self.ytrain[self.ind[:,i]] # grab all the 1st NN, then 2nd, etc...
-
-			for j in range(num_preds):
+		ypred = []
 
 
-				if how == 'classCompare':
-					score[i,j] = mets.classCompare(ypred[:,j], ytest[:,j])
+		for nn in nn_list:
 
-				elif how == 'classError':
-					score[i,j] = mets.classificationError(ypred[:,j], ytest[:,j])
+			neigh_ind = self.ind[:,nn-1] #subtract 1 since it is zero based
 
-				elif how == 'tau':
-					score[i,j] = mets.kleckas_tau(ypred[:,j], ytest[:,j])
+			ypred.append(self.ytrain[neigh_ind])
 
-		avg_dist = np.mean(self.dist,axis=0)
-		return avg_dist, score
+		self.ypred = ypred
 
+		return ypred
 
 
 	def score(self, ytest, how='tau'):
@@ -323,7 +310,7 @@ class NonLinDiscrete:
 		scores = np.vstack(scores)
 		return scores
 
-class embed:
+class Embed:
 
 	def __init__(self,X):
 		"""
@@ -334,66 +321,29 @@ class embed:
 
 		self.X = X
 
+
 	def mutual_information(self,max_lag):
 		"""
-		Calculates the mutual information between the an unshifted time series
-		and a shifted time series. Utilizes scikit-learn's implementation of
-		the mutual information found in sklearn.metrics.
-
-		Parameters
-		----------
-
-		X : 1-D array
-			time series that is to be shifted over
-
-		max_lag : integer
-			maximum amount to shift the time series
-
-		Returns
-		-------
-		m_score : 1-D array
-			mutual information at between the unshifted time series and the
-			shifted time series
+		Uses numpy's mutual information
 		"""
 
-		#number of bins - say ~ 20 pts / bin for joint distribution
-		#and that at least 4 bins are required
-		N = max(self.X.shape)
-		num_bins = max(4.,np.floor(np.sqrt(N/20)))
-		num_bins = int(num_bins)
+		digi = mets.mi_digitize(self.X)
 
-		m_score = np.zeros((max_lag))
+		mi = np.empty(max_lag)
 
-		for jj in range(max_lag):
-			lag = jj+1
+		for i in range(max_lag):
 
-			ts = self.X[0:-lag]
-			ts_shift = self.X[lag:]
+			ind = i+1
+			unshift = digi[ind:]
+			shift = digi[0:-ind]
 
-			min_ts = np.min(self.X)
-			max_ts = np.max(self.X)+.0001 #needed to bin them up
+			mi[i] = skmetrics.mutual_info_score(unshift,shift)
 
-			bins = np.linspace(min_ts,max_ts,num_bins+1)
+		return mi
 
-			bin_tracker = np.zeros_like(ts)
-			bin_tracker_shift = np.zeros_like(ts_shift)
-
-			for ii in range(num_bins):
-
-				locs = np.logical_and( ts>=bins[ii], ts<bins[ii+1] )
-				bin_tracker[locs] = ii
-
-				locs_shift = np.logical_and( ts_shift>=bins[ii], ts_shift<bins[ii+1] )
-				bin_tracker_shift[locs_shift]=ii
-
-
-			m_score[jj] = skmetrics.mutual_info_score(bin_tracker,bin_tracker_shift)
-		return m_score
-
-
-	def mutual_information_spatial(self,max_lag,percent_calc=.5):
+	def mutual_information_spatial(self,max_lag,percent_calc=.5,digitize=True):
 		"""
-		Calculates the mutual information along the rows and columns at a
+		Calculates the mutual information along the rows and down columns at a
 		certain number of indices (percent_calc) and returns
 		the sum of the mutual informaiton along the columns and along the rows.
 
@@ -426,8 +376,11 @@ class embed:
 
 
 		"""
+		if digitize:
+			M = mets.mi_digitize(self.X)
+		else:
+			M = self.X
 
-		M = self.X.copy()
 		rs, cs = np.shape(M)
 
 		rs_iters = int(rs*percent_calc)
@@ -440,25 +393,28 @@ class embed:
 		# The r_picks are used to calculate the MI in the columns
 		# and the c_picks are used to calculate the MI in the rows
 
-		c_mi = np.zeros((max_lag,rs_iters))
-		r_mi = np.zeros((max_lag,cs_iters))
+		c_mi = np.zeros((rs_iters,max_lag))
+		r_mi = np.zeros((cs_iters,max_lag))
 
-		for ii in range(rs_iters):
+		for i in range(rs_iters):
+			for j in range(max_lag):
 
-			m_slice = M[r_picks[ii],:]
-			self.X = m_slice
-			c_mi[:,ii] = self.mutual_information(max_lag)
+				ind = j+1
+				unshift = M[r_picks[i],ind:]
+				shift = M[r_picks[i],:-ind]
+				c_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
 
-		for ii in range(cs_iters):
+		for i in range(cs_iters):
+			for j in range(max_lag):
 
-			m_slice = M[:,c_picks[ii]]
-			self.X = m_slice
-			r_mi[:,ii] = self.mutual_information(max_lag)
+				ind=j+1
+				unshift = M[ind:, c_picks[i]]
+				shift = M[:-ind, c_picks[i]]
+				r_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
 
-		r_mut = np.sum(r_mi,axis=1)
-		c_mut = np.sum(c_mi,axis=1)
+		r_mut = np.mean(r_mi,axis=0)
+		c_mut = np.mean(c_mi,axis=0)
 
-		self.X = M
 		return r_mut, c_mut, r_mi, c_mi
 
 

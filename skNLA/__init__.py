@@ -1,1 +1,1 @@
-from .skNLA import NonLin, NonLinDiscrete, embed
+from .skNLA import Regression, Classification, Embed

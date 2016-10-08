@@ -28,7 +28,21 @@ def weighted_mean(indices, distances, ytrain ):
 	return y_pred
 
 
+def mi_digitize(X):
+	"""
+	Digitize a time series for mutual information analysis
+	"""
 
+	minX = np.min(X) - 1e-5 #subtract for correct binning
+	maxX = np.max(X) + 1e-5 #add for correct binning
+
+	nbins = int(np.sqrt(len(X)/20))
+	nbins = max(4,nbins) #make sure there are atleast four bins
+	bins = np.linspace(minX, maxX, nbins+1) #add one for correct num bins
+
+	digi = np.digitize(X, bins)
+
+	return digi
 
 
 def corrCoef(preds,actual):
@@ -291,6 +305,9 @@ def score(preds,actual):
 	v = np.square(actual - actual.mean()).sum()
 	r2 = 1 - u/v
 
+	if v == 0.:
+		print('Targets are all the same. Returning 0.')
+		r2=0
 	return r2
 
 
