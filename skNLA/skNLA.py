@@ -154,8 +154,8 @@ class Regression:
 		"""
 		Returns the mean and std of the distances for the given nn_list
 		"""
-		nn_list = np.array(nn_list)
-		d = self.dists[:,nn_list-1]
+		nn_list = np.array(nn_list)-1
+		d = self.dist[:,nn_list]
 
 		mean = np.mean(d,axis=0)
 		std = np.std(d,axis=0)
@@ -327,7 +327,7 @@ class Classification:
 		"""
 
 		nn_list = np.array(nn_list)
-		d = self.dists[:,nn_list-1]
+		d = self.dist[:,nn_list-1]
 
 		mean = np.mean(d,axis=0)
 		std = np.std(d,axis=0)
