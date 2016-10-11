@@ -45,7 +45,7 @@ def mi_digitize(X):
 	return digi
 
 
-def corrCoef(preds,actual):
+def corrcoef(preds,actual):
 	"""
 	Correlation Coefficient of between predicted values and actual values
 
@@ -64,7 +64,7 @@ def corrCoef(preds,actual):
 		Returns the correlation coefficient
 	"""
 
-	cc = np.corrcoef(preds,actual)[0,1]
+	cc = np.corrcoef(preds,actual)[1,0]
 
 	return cc
 

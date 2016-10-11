@@ -15,7 +15,7 @@ class Regression:
 	Nonlinear regression
 	"""
 
-	def __init__(self,weights):
+	def __init__(self,weights='uniform'):
 		"""
 		Parameters
 		----------
@@ -60,7 +60,7 @@ class Regression:
 
 		self.Xtest = Xtest
 
-	def predict(self,nn_list,Xtest):
+	def predict(self,Xtest,nn_list):
 		"""
 		Make a prediction for a certain value of near neighbors
 
@@ -119,6 +119,7 @@ class Regression:
 					sc[i] = mets.score(p, ytest[:,i])
 
 				if how == 'corrcoef':
+
 					sc[i] = mets.corrcoef(p, ytest[:,i])
 
 			scores.append(sc)
@@ -127,7 +128,7 @@ class Regression:
 		return scores
 
 
-	def predict_individual(self,nn_list,Xtest):
+	def predict_individual(self,Xtest,nn_list):
 		"""
 		Instead of averaging near neighbors, make a prediction for each
 		neighbor.
@@ -149,7 +150,17 @@ class Regression:
 
 		return ypred
 
+	def dist_stats(self,nn_list):
+		"""
+		Returns the mean and std of the distances for the given nn_list
+		"""
+		nn_list = np.array(nn_list)
+		d = self.dists[:,nn_list-1]
 
+		mean = np.mean(d,axis=0)
+		std = np.std(d,axis=0)
+
+		return mean, std
 
 class Classification:
 	"""
@@ -201,7 +212,7 @@ class Classification:
 
 		self.Xtest = Xtest
 
-	def predict(self,nn_list,Xtest):
+	def predict(self,Xtest,nn_list):
 		"""
 		Make a prediction for a certain value of near neighbors
 
@@ -247,7 +258,7 @@ class Classification:
 
 		return ypred
 
-	def predict_individual(self,nn_list,Xtest):
+	def predict_individual(self,Xtest,nn_list):
 		"""
 		Instead of averaging near neighbors, make a prediction for each
 		neighbor.
@@ -309,6 +320,19 @@ class Classification:
 
 		scores = np.vstack(scores)
 		return scores
+
+	def dist_stats(self,nn_list):
+		"""
+		Returns the mean and std of the distances for the given nn_list
+		"""
+
+		nn_list = np.array(nn_list)
+		d = self.dists[:,nn_list-1]
+
+		mean = np.mean(d,axis=0)
+		std = np.std(d,axis=0)
+
+		return mean, std
 
 class Embed:
 
