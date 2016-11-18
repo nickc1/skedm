@@ -1,6 +1,6 @@
 """
 Metrics for scoring predictions and also some more specialized
-math needed for skNLF
+math needed for sknla
 """
 
 import numpy as np

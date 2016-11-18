@@ -1,1 +1,1 @@
-from .skNLA import Regression, Classification, Embed
+from .sknla import Regression, Classification, Embed
