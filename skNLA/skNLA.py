@@ -4,7 +4,7 @@ Scikit learn implementation of nonlinear forecasting.
 By Nick Cortale
 """
 
-import sknla.metrics as mets
+from . import utilities
 from scipy import stats as stats
 from sklearn import neighbors
 import numpy as np
@@ -85,7 +85,7 @@ class Regression:
 
 			elif self.weights =='distance':
 
-				p = mets.weighted_mean(neigh_ind, self.dist[:,0:nn], self.ytrain)
+				p = utilities.weighted_mean(neigh_ind, self.dist[:,0:nn], self.ytrain)
 				ypred.append( p )
 
 		self.ypred = ypred
@@ -116,11 +116,11 @@ class Regression:
 				p = pred[:,i]
 
 				if how == 'score':
-					sc[i] = mets.score(p, ytest[:,i])
+					sc[i] = utilities.score(p, ytest[:,i])
 
 				if how == 'corrcoef':
 
-					sc[i] = mets.corrcoef(p, ytest[:,i])
+					sc[i] = utilities.corrcoef(p, ytest[:,i])
 
 			scores.append(sc)
 
@@ -237,7 +237,7 @@ class Classification:
 
 				for j in range(self.ytrain.shape[1]):
 
-					mode = mets.quick_mode_axis1(self.ytrain[neigh_ind,j].astype(int))
+					mode = utilities.quick_mode_axis1(self.ytrain[neigh_ind,j].astype(int))
 					yp[:,j] = mode
 
 
@@ -247,7 +247,7 @@ class Classification:
 				W = 1./dist
 
 				for j in range(self.ytrain.shape[1]):
-					mode, _ = mets.weighted_mode(self.ytrain[neigh_ind,j].astype(int), W, axis=1)
+					mode, _ = utilities.weighted_mode(self.ytrain[neigh_ind,j].astype(int), W, axis=1)
 
 					mode = np.asarray(mode.ravel(), dtype=int)
 
@@ -308,13 +308,13 @@ class Classification:
 				p = pred[:,i]
 
 				if how == 'classCompare':
-					sc[i] = mets.classCompare(p,ytest[:,i])
+					sc[i] = utilities.classCompare(p,ytest[:,i])
 
 				elif how == 'classError':
-					sc[i] = mets.classificationError(p,ytest[:,i])
+					sc[i] = utilities.classificationError(p,ytest[:,i])
 
 				elif how == 'tau':
-					sc[i] = mets.kleckas_tau(p,ytest[:,i])
+					sc[i] = utilities.kleckas_tau(p,ytest[:,i])
 
 			scores.append(sc)
 
@@ -351,7 +351,7 @@ class Embed:
 		Uses numpy's mutual information
 		"""
 
-		digi = mets.mi_digitize(self.X)
+		digi = utilities.mi_digitize(self.X)
 
 		mi = np.empty(max_lag)
 
@@ -401,7 +401,7 @@ class Embed:
 
 		"""
 		if digitize:
-			M = mets.mi_digitize(self.X)
+			M = utilities.mi_digitize(self.X)
 		else:
 			M = self.X
 

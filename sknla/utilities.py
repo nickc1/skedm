@@ -7,9 +7,6 @@ import numpy as np
 from scipy import stats as stats
 from numba import jit
 
-
-
-
 def weighted_mean(indices, distances, ytrain ):
 	"""
 	Transforms a list of distances into weights. Currently it is just
@@ -389,43 +386,15 @@ def weighted_mode(a, w, axis=0):
 
 	return mostfrequent, oldcounts
 
-def deterministic_metric(CC,lag):
-	"""
-	Calculate the deterministic metric. Calculates the difference in forecast
-	skill between low numbers of near neighbors and high numbers of near neighbors
 
-	Parameters
-	----------
-
-	CC : 2-D array
-		array of forecast skill for a given system
-	lag : int
-		lag value for the system which is calculated as the first minimum of the
-		mutual information
-
-	Returns
-	-------
-	d_metric : float
-		evaluated deterministic metric
-
-	"""
-
-	nn_iters = CC.shape[0]
-	half = int(nn_iters/2.)
-	d_range = int(lag/2.)
-	d_metric=0
-	for ii in range(d_range):
-		left = CC[0:half,ii]
-		right = CC[half::,ii]
-
-		s_max = np.max(left)
-		s_min = np.min(right)
-		d_metric += (s_max-s_min)
-	return d_metric
 
 
 @jit
 def quick_mode_axis1(X):
+	"""
+	Takes the mode of an array across the columns. aka axis=1
+	X : np.array
+	"""
 	X = X.astype(int)
 	len_x = len(X)
 	mode = np.zeros(len_x)
@@ -433,31 +402,6 @@ def quick_mode_axis1(X):
 		mode[i] = np.bincount(X[i,:]).argmax()
 	return mode
 
-
-def auto_correlation(X,shift):
-	"""
-	Parameters
-	----------
-	X : 2d array to be shifted
-	frac_shift : what percent of length to shift the array
-	"""
-
-	r,c = X.shape
-	rshift,cshift = shift
-
-	rsum = np.zeros(rshift)
-	csum = np.zeros(cshift)
-	#shift horizontally
-	for i in range(rshift):
-
-		shifted = np.roll(X,i,axis=0)
-		rsum[i] = np.sum(shifted == X)
-
-	for i in range(cshift):
-		shifted = np.roll(X,i,axis=1)
-		csum[i] = np.sum(shifted == X)
-
-	return rsum,csum
 
 def keep_diversity(X,thresh=1.):
 	"""

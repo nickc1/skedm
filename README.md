@@ -14,7 +14,7 @@ sknla looks for past configurations of the system that are similar to the presen
 
 Functionality
 -------------
-skNLF can forecast both coninuous 1D time series, 2D spatio-temporal patterns, and 2D discrete spatial images. See the included notebooks for full examples.
+sknla can forecast both coninuous 1D time series, 2D spatio-temporal patterns, and 2D discrete spatial images. See the included notebooks for full examples.
 
 
 [sk-nla]: http://nickc1.github.io/sknla/
