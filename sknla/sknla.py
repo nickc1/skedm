@@ -441,6 +441,98 @@ class Embed:
 
 		return r_mut, c_mut, r_mi, c_mi
 
+	def mutual_information_3d(self,max_lag,percent_calc=.5,digitize=True):
+		"""
+		Calculates the mutual information along the rows and down columns at a
+		certain number of indices (percent_calc) and returns
+		the sum of the mutual informaiton along the columns and along the rows.
+
+		Parameters
+		----------
+
+		M : 2-D array
+			input two-dimensional image
+
+		max_lag : integer
+			maximum amount to shift the space
+
+		percent_calc : float
+			How many rows and columns to use to calculate the mutual information
+
+		Returns
+		-------
+
+		R_mut : 1-D array
+			the mutual inforation averaged down the rows (vertical)
+
+		C_mut : 1-D array
+			the mutual information averaged across the columns (horizontal)
+
+		r_mi : 2-D array
+			the mutual information down each row (vertical)
+
+		c_mi : 2-D array
+			the mutual information across the columns (horizontal)
+
+
+		"""
+		if digitize:
+			M = utilities.mi_digitize(self.X)
+		else:
+			M = self.X
+
+		rs, cs, zs = np.shape(M)
+
+		rs_iters = int(rs*percent_calc)
+		cs_iters = int(cs*percent_calc)
+
+		r_picks = np.random.choice(np.arange(rs),size=rs_iters,replace=False)
+		c_picks = np.random.choice(np.arange(cs),size=cs_iters,replace=False)
+
+
+		# The r_picks are used to calculate the MI in the columns
+		# and the c_picks are used to calculate the MI in the rows
+
+		c_mi = np.zeros((rs_iters,max_lag))
+		r_mi = np.zeros((cs_iters,max_lag))
+
+		for i in range(rs_iters):
+			for j in range(max_lag):
+
+				rand_z = np.random.randint(0,zs)
+				ind = j+1
+				unshift = M[r_picks[i],ind:,rand_z]
+				shift = M[r_picks[i],:-ind,rand_z]
+				c_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+
+		for i in range(cs_iters):
+			for j in range(max_lag):
+
+				rand_z = np.random.randint(0,zs)
+				ind=j+1
+				unshift = M[ind:, c_picks[i],rand_z]
+				shift = M[:-ind, c_picks[i],rand_z]
+				r_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+
+		#for the z dimension
+		rs,cs = np.where(np.random.rand(rs,cs)<percent_calc)
+		z_mi = np.zeros( (len(rs),max_lag) )
+
+		for i, (rs,cs) in enumerate(zip(r_picks,c_picks)):
+			for j in range(max_lag):
+
+				ind=j+1
+				
+				unshift = M[rs, cs, ind:]
+				shift = M[rs, cs, :-ind]
+				z_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+
+		r_mut = np.mean(r_mi,axis=0)
+		c_mut = np.mean(c_mi,axis=0)
+		z_mut = np.mean(z_mi,axis=0)
+
+		return r_mut, c_mut, z_mut
+
 
 	def embed_vectors_1d(self,lag,embed,predict):
 		"""
@@ -638,9 +730,9 @@ class Embed:
 
 		"""
 
-		rsize = X.shape[0]
-		csize = X.shape[1]
-		tsize = X.shape[2]
+		rsize = self.X.shape[0]
+		csize = self.X.shape[1]
+		tsize = self.X.shape[2]
 
 		r_lag,c_lag,t_lag = lag
 		rem,cem,tem = embed
@@ -681,15 +773,15 @@ class Embed:
 			c_end_val = cs + c_lag * (cem-1) + 1
 			t_end_val = ts + t_lag * (tem-1) + 1
 
-			part = X[rs : r_end_val, cs : c_end_val, ts : t_end_val ]
+			part = self.X[rs : r_end_val, cs : c_end_val, ts : t_end_val ]
 
 			features[ii,:] = part[::r_lag,::c_lag,::t_lag].ravel()
 
 
 			rs_target = rs + r_lag
 			cs_target = cs + c_lag
-			targets[ii,:] = X[rs + r_lag*(rem-1)/2,
-				cs+ c_lag*(cem-1)/2, t_end_val:t_end_val+predict].ravel()
+			targets[ii,:] = self.X[rs + int(r_lag*(rem-1)/2),
+				cs+ int(c_lag*(cem-1)/2), t_end_val:t_end_val+predict].ravel()
 
 
 		return features,targets

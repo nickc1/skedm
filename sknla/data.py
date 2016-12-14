@@ -285,9 +285,6 @@ def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=None):
 		left_X = np.roll(X,1)  # shift it around for diffusion
 		right_X = np.roll(X,-1)
 
-		left2_X = np.roll(X,2)
-		right2_X = np.roll(X,-2)
-
 		# logistic equation in space
 		reg = X[tt,:] * (1 - X[tt,:])
 		left = eps * left_X[tt,:] * ( 1 - left_X[tt,:])
@@ -488,7 +485,7 @@ def noise(sz=128,seed=36):
 
 
 
-def chaos3D(sz=128,A=3.99,eps=1.,steps=100):
+def chaos3D(sz=128,A=3.99,eps=1.,steps=100,tstart = 50):
 	"""
 	Logistic map diffused in space and then taken through time.
 	Chaos evolves in 3rd dimension.
@@ -510,6 +507,10 @@ def chaos3D(sz=128,A=3.99,eps=1.,steps=100):
 		sets the random seed for the logistic map. Allows results to be
 		easily reproduced.
 
+	tstart : int
+		When to start collecting the data. This allows the chaos to be
+		fully developed before collection
+
 	Returns
 	-------
 
@@ -519,24 +520,30 @@ def chaos3D(sz=128,A=3.99,eps=1.,steps=100):
 	"""
 
 	X = np.random.rand(sz,sz)
+	storeX = []
 
-
-	for tt in range(steps-1):
-		left_X = np.roll(X,1)  # shift it around for diffusion
-		right_X = np.roll(X,-1)
-
-		left2_X = np.roll(X,2)
-		right2_X = np.roll(X,-2)
+	for tt in range(tstart + steps + 1):
+		left_X = np.roll(X,1,axis=1)  # shift it around for diffusion
+		right_X = np.roll(X,-1,axis=1)
+		top_X = np.roll(X,1,axis=0)
+		bot_X = np.roll(X,1,axis=0)
 
 		# logistic equation in space
+		reg = X * (1 - X)
+		left = eps * left_X * (1 - left_X)
+		right = eps * right_X * (1 - right_X)
+		top = eps * top_X * (1 - top_X)
+		bot = eps * bot_X * (1 - bot_X)
 
-		X = (1/(1+4*eps))*(A*X*(1-X)
-		+ A*left_X*(1-left_X)
-		+ A*right_X*(1-right_X)
-		+ A*right2_X*(1-right2_X)
-		+ A*left2_X*(1-left2_X))
+		X = (A/(1+4*eps)) * (reg + left + right + top + bot)
 
-	return X
+		if tt > tstart:
+			storeX.append(X)
+
+
+
+
+	return np.dstack(storeX)
 
 
 def randomCircles(sz=256,rad=20.,sigma=1,num_circles = 1000):
