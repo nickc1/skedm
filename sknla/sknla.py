@@ -522,7 +522,7 @@ class Embed:
 			for j in range(max_lag):
 
 				ind=j+1
-				
+
 				unshift = M[rs, cs, ind:]
 				shift = M[rs, cs, :-ind]
 				z_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
