@@ -1,20 +1,20 @@
 
-sknla
+skedm
 ========
 
 [DOCUMENTATION][sk-nla]
 
-This package is an implementation of nonlinear analysis (nla) using scikit-learn's style. It reconstructs [phase spaces][phase-space] to analyze behavior and make forecasts. The technique is described in depth in [Nonlinear Time Series Analysis by Kantz and Schreiber][nlf-book].
+This package is an implementation of emperical dynamic modeling (edm) using scikit-learn's style. It reconstructs [phase spaces][phase-space] to analyze behavior and make forecasts. The technique is described in depth in [Nonlinear Time Series Analysis by Kantz and Schreiber][nlf-book].
 
 Quick Explanation
 -----------------
 
-sknla looks for past configurations of the system that are similar to the present configuration of the system. It then looks at how the system evolved when it was in those similar configurations and uses that knowledge to make forecasts about future evolution. The forecasts are then compared to the actual evolution of the system.
+skedm looks for past configurations of the system that are similar to the present configuration of the system. It then looks at how the system evolved when it was in those similar configurations and uses that knowledge to make forecasts about future evolution. The forecasts are then compared to the actual evolution of the system.
 
 
 Functionality
 -------------
-sknla can forecast both coninuous 1D time series, 2D spatio-temporal patterns, and 2D discrete spatial images. See the included notebooks for full examples.
+skedm can forecast both coninuous 1D time series, 2D spatio-temporal patterns, and 2D discrete spatial images. See the included notebooks for full examples.
 
 
 [sk-nla]: http://nickc1.github.io/sknla/
