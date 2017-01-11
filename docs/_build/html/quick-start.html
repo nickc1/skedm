@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quick Start &mdash; skedm 0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="skedm 0.1 documentation" href="index.html"/>
+        <link rel="next" title="Embedding" href="embedding.html"/>
+        <link rel="prev" title="Install" href="install.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> skedm
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="embedding.html">Embedding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="near-neighbors.html">Near Neighbors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">skedm</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Quick Start</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/quick-start.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+<p>In order to illustrate how this package works, we start with the example in the videos above. The <a class="reference external" href="https://www.wikiwand.com/en/Lorenz_system">lorenz system</a> takes the form of :</p>
+<div class="math">
+\[ \begin{align}\begin{aligned}\frac{dx}{dt} = \sigma (y - x)\\\frac{dy}{dt} = x(\rho - z) - y\\\frac{dz}{dt} = xy - \beta z\end{aligned}\end{align} \]</div>
+<p>Here, we are going to make forecasts of the <cite>x</cite> time series. Note that this series, while completely deterministic, is a classic <a class="reference external" href="https://www.wikiwand.com/en/Chaos_theory">chaotic system</a>. This means that making forecasts into the future is going to be difficult as small changes in the initial conditions can lead to drastically different trajectories of the system.</p>
+<p>There is a function in <code class="docutils literal"><span class="pre">skedm.data</span></code> to reproduce these time series. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skedm.data</span> <span class="k">as</span> <span class="nn">data</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lorenz</span><span class="p">()[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#only going to use the x values</span>
+</pre></div>
+</div>
+<img alt="_images/lorenz.png" class="align-center" src="_images/lorenz.png" />
+<p>The next step is to calculate the mutual information between the time series and the shifted time series. This determines the lag value for the embedding. The first minimum in the <a class="reference external" href="https://www.wikiwand.com/en/Mutual_information">mutual information</a> can be thought of as jumping far enough away that there is new information gained. A more useful thought construct might be to think of it as the first minimum in the autocorrelation. Mutual information, however, is better than autocorrelation for <a class="reference external" href="http://www.physics.emory.edu/faculty/weeks//research/tseries3.html">picking the lag value</a>. The mutual information calculation can be done using the <cite>embed</cite> class provided by skedm.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skedm</span> <span class="k">as</span> <span class="nn">edm</span>
+
+<span class="n">E</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Embed</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1">#initiate the class</span>
+
+<span class="n">max_lag</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">mi</span> <span class="o">=</span> <span class="n">E</span><span class="o">.</span><span class="n">mutual_information</span><span class="p">(</span><span class="n">max_lag</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/lorenz_mutual_info.png" class="align-center" src="_images/lorenz_mutual_info.png" />
+<p>The first minimum of the mutual information is at lag=18. This is the lag that will be used to rebuild a shadow manifold. This is done by the <code class="docutils literal"><span class="pre">embed_vectors_1d</span></code> method. A longer discussion about embedding dimension (how the value for <code class="docutils literal"><span class="pre">embed</span></code> is chosen) is found in the next section.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lag</span> <span class="o">=</span> <span class="mi">18</span>
+<span class="n">embed</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">predict</span> <span class="o">=</span> <span class="mi">36</span> <span class="c1">#predicting out to double to lag</span>
+<span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">E</span><span class="o">.</span><span class="n">embed_vectors_1d</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span><span class="n">embed</span><span class="p">,</span><span class="n">predict</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/embedded_lorenz.png" class="align-center" src="_images/embedded_lorenz.png" />
+<p>The plot above is showing only <code class="docutils literal"><span class="pre">X[:,0]</span></code> and <code class="docutils literal"><span class="pre">X[:,1]</span></code>. This embedding preserves the geometric features of the original attractor.</p>
+<p>Now that we embed the time series, all that is left to do is check the forecast skill as a function of near neighbors. First we split it into a training set and testing set. Additionally, we will initiate the class.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#split it into training and testing sets</span>
+<span class="n">train_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="o">.</span><span class="mi">75</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="n">Xtrain</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">]</span>
+<span class="n">ytrain</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">]</span>
+<span class="n">Xtest</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_len</span><span class="p">:]</span>
+<span class="n">ytest</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_len</span><span class="p">:]</span>
+
+<span class="n">weights</span> <span class="o">=</span> <span class="s1">&#39;distance&#39;</span> <span class="c1">#use a distance weighting for the near neighbors</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Regression</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="c1"># initiate the nonlinear forecasting class</span>
+</pre></div>
+</div>
+<p>Next, we need to fit the training data (rebuild the a shadow manifold) and make predictions for the test set. (22 seconds on a macbook air)</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">M</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">)</span> <span class="c1">#fit the data (rebuilding the attractor)</span>
+
+<span class="n">nn_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span> <span class="c1">#first 200 NN</span>
+<span class="n">ypred</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">nn_list</span><span class="p">)</span>
+
+<span class="n">score</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span> <span class="c1">#score</span>
+</pre></div>
+</div>
+<img alt="_images/lorenz_forecast_range.png" class="align-center" src="_images/lorenz_forecast_range.png" />
+<p>As can be seen from the image above, the highest forecast skill is located at low numbers of near neighbors and low forecast distances. In order to view the actual predictions for different numbers of near neighbors we can do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span><span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">35</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="mi">35</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">35</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">24</span><span class="p">][:,</span><span class="mi">35</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">24</span><span class="p">]))</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">35</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">49</span><span class="p">][:,</span><span class="mi">35</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">49</span><span class="p">]))</span>
+
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">35</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">99</span><span class="p">][:,</span><span class="mi">35</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">99</span><span class="p">]))</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/lorenz_weighted_predictions.png" class="align-center" src="_images/lorenz_weighted_predictions.png" />
+<p>As expected, the forecast accuracy decreases as more and more near neighbors are averaged together to make a prediction.</p>
+<p>Additionally, instead of averaging near neighbors, it is possible to look at the forecast skill of each near neighbor. This is visualized against the average distance to that point. This is computed as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">M</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">)</span> <span class="c1">#fit the data (rebuilding the attractor)</span>
+
+<span class="n">nn_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+<span class="n">ypred</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">predict_individual</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">nn_list</span><span class="p">)</span>
+
+<span class="n">score</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span> <span class="c1">#score</span>
+</pre></div>
+</div>
+<img alt="_images/lorenz_score_individual.png" class="align-center" src="_images/lorenz_score_individual.png" />
+<p>Likewise, we can look at the actual forecast made by the algorithm and compare it to the actual evolution of the time series.</p>
+<img alt="_images/lorenz_individual_predictions.png" class="align-center" src="_images/lorenz_individual_predictions.png" />
+<p>As we can see, by not averaging the near neighbors, the forecast skill decreases and the actual forecast made becomes quite noisy, This is because we are no grabbing points that are not nearby in the space to make predictions. This should intuitively do worse than picking nearby regions.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="embedding.html" class="btn btn-neutral float-right" title="Embedding" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral" title="Install" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Nick Cortale.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

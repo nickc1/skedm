@@ -11,777 +11,784 @@ import numpy as np
 from sklearn import metrics as skmetrics
 
 class Regression:
-	"""
-	Nonlinear regression
-	"""
+    """
+    Nonlinear regression
+    """
 
-	def __init__(self,weights='uniform'):
-		"""
-		Parameters
-		----------
-		weights : string
-			-'uniform' : uniform weighting
-			-'distance' : weighted as 1/distance
-		"""
+    def __init__(self,weights='uniform'):
+        """
+        Parameters
+        ----------
+        weights : string
+            -'uniform' : uniform weighting
+            -'distance' : weighted as 1/distance
+        """
 
-		self.weights = weights
+    	self.weights = weights
 
-	def fit(self, Xtrain, ytrain):
-		"""
-		Xtrain : features (nsamples,nfeatures)
-		ytrain : targets (nsamples,ntargets)
-		"""
-		self.Xtrain = Xtrain
-		self.ytrain = ytrain
+    def fit(self, Xtrain, ytrain):
+        """
+        Xtrain : features (nsamples,nfeatures)
+        ytrain : targets (nsamples,ntargets)
+        """
+        self.Xtrain = Xtrain
+        self.ytrain = ytrain
 
-		max_nn = len(Xtrain)
-		# initiate the class and fit the data
-		self.knn = neighbors.KNeighborsRegressor(max_nn, weights=self.weights)
-		self.knn.fit(Xtrain,ytrain)
+        max_nn = len(Xtrain)
+        # initiate the class and fit the data
+        self.knn = neighbors.KNeighborsRegressor(max_nn, weights=self.weights)
+        self.knn.fit(Xtrain,ytrain)
 
-	def dist_calc(self,Xtest):
-		"""
-		Calculates the distance from the testing set to the training
-		set.
+    def dist_calc(self,Xtest):
+        """
+        Calculates the distance from the testing set to the training
+        set.
 
-		Parameters
-		----------
-		Xtest : test features (nsamples, nfeatures)
+        Parameters
+        ----------
+        Xtest : test features (nsamples, nfeatures)
 
-		Returns
-		-------
-		self.dist : distance to each of the training samples
-		self.ind : indices of the sample that are closest
-		"""
-		d,i = self.knn.kneighbors(Xtest)
+        Returns
+        -------
+        self.dist : distance to each of the training samples
+        self.ind : indices of the sample that are closest
+        """
+        d,i = self.knn.kneighbors(Xtest)
 
-		self.dist = d
-		self.ind = i
+        self.dist = d
+        self.ind = i
 
-		self.Xtest = Xtest
+        self.Xtest = Xtest
 
 	def predict(self,Xtest,nn_list):
-		"""
-		Make a prediction for a certain value of near neighbors
+        """
+        Make a prediction for a certain value of near neighbors
 
-		Parameters
-		----------
-		nn_list : list
-			Values of NN to test
-		"""
+        Parameters
+        ----------
+        Xtest : 2d array
+            Testing samples of shape (nsamples,nfeatures)
+        nn_list : 1d array
+            Values of Near Neighbors to use to make predictions
 
-		#calculate distances first
-		self.dist_calc(Xtest)
+        Returns
+        -------
+        ypred : 2d array
+            predictions for ytest of shape(nsamples,num predictions)
+        """
 
-		ypred = []
+        #calculate distances first
+        self.dist_calc(Xtest)
 
-		for nn in nn_list:
+        ypred = []
 
-			neigh_ind = self.ind[:,0:nn]
+        for nn in nn_list:
 
-			if self.weights == 'uniform':
+            neigh_ind = self.ind[:,0:nn]
 
-				ypred.append( np.mean(self.ytrain[neigh_ind], axis=1) )
+        	if self.weights == 'uniform':
 
-			elif self.weights =='distance':
+                ypred.append( np.mean(self.ytrain[neigh_ind], axis=1) )
 
-				p = utilities.weighted_mean(neigh_ind, self.dist[:,0:nn], self.ytrain)
-				ypred.append( p )
+        	elif self.weights =='distance':
+                for i in range()
+                p = utilities.weighted_mean(neigh_ind, self.dist[:,0:nn], self.ytrain)
+                ypred.append( p )
 
-		self.ypred = ypred
-		self.nn_list = nn_list
-		return ypred
+        self.ypred = ypred
+        self.nn_list = nn_list
+        return ypred
 
 
 	def score(self,ytest,how='score'):
-		"""
-		scores the predictions if they were calculated for numerous
-		values of near neighbors.
+        """
+        scores the predictions if they were calculated for numerous
+        values of near neighbors.
 
-		Parameters
-		----------
-		ytest : 2d array containing the targets
-		how : string
-			how to score the predictions
-			-'score' : see scikit-learn's score function
-			-'corrcoef' : correlation coefficient
-		"""
-		scores = []
-		#iterate through each pred for each nn value
-		for pred in self.ypred:
-			sc = np.empty(pred.shape[1]) #need to store the scores
+        Parameters
+        ----------
+        ytest : 2d array containing the targets
+        how : string
+        	how to score the predictions
+        	-'score' : see scikit-learn's score function
+        	-'corrcoef' : correlation coefficient
+        """
+        scores = []
+        #iterate through each pred for each nn value
+        for pred in self.ypred:
+        	sc = np.empty(pred.shape[1]) #need to store the scores
 
-			for i in range(pred.shape[1]):
+            for i in range(pred.shape[1]):
 
-				p = pred[:,i]
+                p = pred[:,i]
 
-				if how == 'score':
-					sc[i] = utilities.score(p, ytest[:,i])
+                if how == 'score':
+                	sc[i] = utilities.score(p, ytest[:,i])
 
-				if how == 'corrcoef':
+                if how == 'corrcoef':
 
-					sc[i] = utilities.corrcoef(p, ytest[:,i])
+                	sc[i] = utilities.corrcoef(p, ytest[:,i])
 
-			scores.append(sc)
+            scores.append(sc)
 
-		scores = np.vstack(scores)
-		return scores
-
-
-	def predict_individual(self,Xtest,nn_list):
-		"""
-		Instead of averaging near neighbors, make a prediction for each
-		neighbor.
-		"""
-
-		#calculate distances first
-		self.dist_calc(Xtest)
-
-		ypred = []
+        scores = np.vstack(scores)
+        return scores
 
 
-		for nn in nn_list:
+    def predict_individual(self,Xtest,nn_list):
+    	"""
+    	Instead of averaging near neighbors, make a prediction for each
+    	neighbor.
+    	"""
 
-			neigh_ind = self.ind[:,nn-1]# subtract 1 since it is zero based
+        #calculate distances first
+        self.dist_calc(Xtest)
 
-			ypred.append(self.ytrain[neigh_ind])
+        ypred = []
 
-		self.ypred = ypred
 
-		return ypred
+        for nn in nn_list:
 
-	def dist_stats(self,nn_list):
-		"""
-		Returns the mean and std of the distances for the given nn_list
-		"""
-		nn_list = np.array(nn_list)-1
-		d = self.dist[:,nn_list]
+            neigh_ind = self.ind[:,nn-1]# subtract 1 since it is zero based
 
-		mean = np.mean(d,axis=0)
-		std = np.std(d,axis=0)
+            ypred.append(self.ytrain[neigh_ind])
 
-		return mean, std
+        self.ypred = ypred
+
+        return ypred
+
+    def dist_stats(self,nn_list):
+        """
+        Returns the mean and std of the distances for the given nn_list
+        """
+        nn_list = np.array(nn_list)-1
+        d = self.dist[:,nn_list]
+
+        mean = np.mean(d,axis=0)
+        std = np.std(d,axis=0)
+
+        return mean, std
 
 class Classification:
-	"""
-	Nonlinear classification
-	"""
+    """
+    Nonlinear classification
+    """
 
-	def __init__(self,weights='uniform'):
-		"""
-		Parameters
-		----------
-		max_nn : int
-			Maximum number of near neighbors to use
-		weights : string
-			-'uniform' : uniform weighting
-			-'distance' : weighted as 1/distance
+    def __init__(self,weights='uniform'):
+        """
+        Parameters
+        ----------
+        max_nn : int
+        	Maximum number of near neighbors to use
+        weights : string
+        	-'uniform' : uniform weighting
+        	-'distance' : weighted as 1/distance
 
-		"""
-		self.weights = weights
+        """
+        self.weights = weights
 
-	def fit(self, Xtrain, ytrain):
-		"""
-		Xtrain : features (nsamples,nfeatures)
-		ytrain : targets (nsamples,ntargets)
-		"""
-		self.Xtrain = Xtrain
-		self.ytrain = ytrain
-		max_nn = len(Xtrain)
-		self.knn = neighbors.KNeighborsRegressor(max_nn,weights=self.weights,metric='hamming')
-		self.knn.fit(Xtrain,ytrain)
+    def fit(self, Xtrain, ytrain):
+        """
+        Xtrain : features (nsamples,nfeatures)
+        ytrain : targets (nsamples,ntargets)
+        """
+        self.Xtrain = Xtrain
+        self.ytrain = ytrain
+        max_nn = len(Xtrain)
+        self.knn = neighbors.KNeighborsRegressor(max_nn,weights=self.weights,metric='hamming')
+        self.knn.fit(Xtrain,ytrain)
 
-	def dist_calc(self,Xtest):
-		"""
-		Calculates the distance from the testing set to the training
-		set.
+    def dist_calc(self,Xtest):
+        """
+        Calculates the distance from the testing set to the training
+        set.
 
-		Parameters
-		----------
-		Xtest : test features (nsamples,nfeatures)
+        Parameters
+        ----------
+        Xtest : test features (nsamples,nfeatures)
 
-		Returns
-		-------
-		self.dist : distance to each of the training samples
-		self.ind : indices of the sample that are closest
-		"""
-		d,i = self.knn.kneighbors(Xtest)
+        Returns
+        -------
+        self.dist : distance to each of the training samples
+        self.ind : indices of the sample that are closest
+        """
+        d,i = self.knn.kneighbors(Xtest)
 
-		self.dist = d
-		self.ind = i
+        self.dist = d
+        self.ind = i
 
-		self.Xtest = Xtest
+        self.Xtest = Xtest
 
-	def predict(self,Xtest,nn_list):
-		"""
-		Make a prediction for a certain value of near neighbors
+    def predict(self,Xtest,nn_list):
+        """
+        Make a prediction for a certain value of near neighbors
 
-		Parameters
-		----------
-		nn : int
-			How many near neighbors to use
-		"""
+        Parameters
+        ----------
+        nn : int
+        	How many near neighbors to use
+        """
 
-		self.dist_calc(Xtest)
-		xsize = self.dist.shape[0]
-		ysize = self.ytrain.shape[1]
-		ypred = []
+        self.dist_calc(Xtest)
+        xsize = self.dist.shape[0]
+        ysize = self.ytrain.shape[1]
+        ypred = []
 
-		for nn in nn_list:
+        for nn in nn_list:
 
-			yp = np.empty((xsize,ysize))
+            yp = np.empty((xsize,ysize))
 
-			if self.weights =='uniform':
+            if self.weights =='uniform':
 
-				neigh_ind = self.ind[:,0:nn]
+                neigh_ind = self.ind[:,0:nn]
 
-				for j in range(self.ytrain.shape[1]):
+                for j in range(self.ytrain.shape[1]):
 
-					mode = utilities.quick_mode_axis1(self.ytrain[neigh_ind,j].astype(int))
-					yp[:,j] = mode
-
-
-			elif self.weights=='distance':
-				dist = self.dist[:,0:nn]
-				neigh_ind = self.ind[:,0:nn]
-				W = 1./dist
-
-				for j in range(self.ytrain.shape[1]):
-					mode, _ = utilities.weighted_mode(self.ytrain[neigh_ind,j].astype(int), W, axis=1)
-
-					mode = np.asarray(mode.ravel(), dtype=int)
-
-					yp[:, j] = mode
-			ypred.append(yp)
-
-		self.ypred = ypred
-
-		return ypred
-
-	def predict_individual(self,Xtest,nn_list):
-		"""
-		Instead of averaging near neighbors, make a prediction for each
-		neighbor.
-		"""
-
-		#calculate distances first
-		self.dist_calc(Xtest)
-
-		ypred = []
+                    mode = utilities.quick_mode_axis1(self.ytrain[neigh_ind,j].astype(int))
+                    yp[:,j] = mode
 
 
-		for nn in nn_list:
+            elif self.weights=='distance':
+                dist = self.dist[:,0:nn]
+                neigh_ind = self.ind[:,0:nn]
+                W = 1./dist
 
-			neigh_ind = self.ind[:,nn-1] #subtract 1 since it is zero based
+                for j in range(self.ytrain.shape[1]):
+                    mode, _ = utilities.weighted_mode(self.ytrain[neigh_ind,j].astype(int), W, axis=1)
 
-			ypred.append(self.ytrain[neigh_ind])
+                    mode = np.asarray(mode.ravel(), dtype=int)
 
-		self.ypred = ypred
+                    yp[:, j] = mode
 
-		return ypred
+            ypred.append(yp)
+
+        self.ypred = ypred
+
+        return ypred
+
+    def predict_individual(self,Xtest,nn_list):
+        """
+        Instead of averaging near neighbors, make a prediction for each
+        neighbor.
+        """
+
+        #calculate distances first
+        self.dist_calc(Xtest)
+
+        ypred = []
 
 
-	def score(self, ytest, how='tau'):
-		"""
-		Evalulate the predictions
-		Parameters
-		----------
-		ytest : 2d array containing the targets
-		how : string
-			how to score the predictions
-			-'classCompare' : percent correctly predicted
-			-'classError' : Dont use this
-			-'tau' : kleckas tau
-		"""
+        for nn in nn_list:
 
-		num_preds = ytest.shape[1]
+            neigh_ind = self.ind[:,nn-1] #subtract 1 since it is zero based
 
-		sc = np.empty((1,num_preds))
+            ypred.append(self.ytrain[neigh_ind])
 
-		scores = []
+        self.ypred = ypred
 
-		for pred in self.ypred:
-			sc = np.empty(pred.shape[1])
+        return ypred
 
-			for i in range(pred.shape[1]):
 
-				p = pred[:,i]
+    def score(self, ytest, how='tau'):
+        """
+        Evalulate the predictions
+        Parameters
+        ----------
+        ytest : 2d array containing the targets
+        how : string
+            how to score the predictions
+            -'classCompare' : percent correctly predicted
+            -'classError' : Dont use this
+            -'tau' : kleckas tau
+        """
 
-				if how == 'classCompare':
-					sc[i] = utilities.classCompare(p,ytest[:,i])
+        num_preds = ytest.shape[1]
 
-				elif how == 'classError':
-					sc[i] = utilities.classificationError(p,ytest[:,i])
+        sc = np.empty((1,num_preds))
 
-				elif how == 'tau':
-					sc[i] = utilities.kleckas_tau(p,ytest[:,i])
+        scores = []
 
-			scores.append(sc)
+    	for pred in self.ypred:
+            sc = np.empty(pred.shape[1])
 
-		scores = np.vstack(scores)
-		return scores
+            for i in range(pred.shape[1]):
 
-	def dist_stats(self,nn_list):
-		"""
-		Returns the mean and std of the distances for the given nn_list
-		"""
+                p = pred[:,i]
 
-		nn_list = np.array(nn_list)
-		d = self.dist[:,nn_list-1]
+                if how == 'classCompare':
+                    sc[i] = utilities.classCompare(p,ytest[:,i])
 
-		mean = np.mean(d,axis=0)
-		std = np.std(d,axis=0)
+                elif how == 'classError':
+                    sc[i] = utilities.classificationError(p,ytest[:,i])
 
-		return mean, std
+                elif how == 'tau':
+                    sc[i] = utilities.kleckas_tau(p,ytest[:,i])
+
+            scores.append(sc)
+
+        scores = np.vstack(scores)
+        return scores
+
+    def dist_stats(self,nn_list):
+        """
+        Returns the mean and std of the distances for the given nn_list
+        """
+
+        nn_list = np.array(nn_list)
+        d = self.dist[:,nn_list-1]
+
+        mean = np.mean(d,axis=0)
+        std = np.std(d,axis=0)
+
+        return mean, std
 
 class Embed:
 
-	def __init__(self,X):
-		"""
-		Parameters
-		----------
-		X : series, 2d array, or 3d array to be embedded
-		"""
+    def __init__(self,X):
+        """
+        Parameters
+        ----------
+        X : series, 2d array, or 3d array to be embedded
+        """
 
-		self.X = X
+        self.X = X
 
 
-	def mutual_information(self,max_lag):
+    def mutual_information(self,max_lag):
 		"""
 		Uses numpy's mutual information
 		"""
 
-		digi = utilities.mi_digitize(self.X)
+        digi = utilities.mi_digitize(self.X)
 
-		mi = np.empty(max_lag)
+        mi = np.empty(max_lag)
 
-		for i in range(max_lag):
+        for i in range(max_lag):
 
-			ind = i+1
-			unshift = digi[ind:]
-			shift = digi[0:-ind]
+            ind = i+1
+            unshift = digi[ind:]
+            shift = digi[0:-ind]
 
-			mi[i] = skmetrics.mutual_info_score(unshift,shift)
+            mi[i] = skmetrics.mutual_info_score(unshift,shift)
 
-		return mi
+        return mi
 
 	def mutual_information_spatial(self,max_lag,percent_calc=.5,digitize=True):
-		"""
-		Calculates the mutual information along the rows and down columns at a
-		certain number of indices (percent_calc) and returns
-		the sum of the mutual informaiton along the columns and along the rows.
+        """
+        Calculates the mutual information along the rows and down columns at a
+        certain number of indices (percent_calc) and returns
+        the sum of the mutual informaiton along the columns and along the rows.
 
-		Parameters
-		----------
+        Parameters
+        ----------
 
-		M : 2-D array
-			input two-dimensional image
+        M : 2-D array
+            input two-dimensional image
 
-		max_lag : integer
-			maximum amount to shift the space
+        max_lag : integer
+            maximum amount to shift the space
 
-		percent_calc : float
-			How many rows and columns to use to calculate the mutual information
+        percent_calc : float
+            How many rows and columns to use to calculate the mutual information
 
-		Returns
-		-------
+        Returns
+        -------
 
-		R_mut : 1-D array
-			the mutual inforation averaged down the rows (vertical)
+        R_mut : 1-D array
+            the mutual inforation averaged down the rows (vertical)
 
-		C_mut : 1-D array
-			the mutual information averaged across the columns (horizontal)
+        C_mut : 1-D array
+            the mutual information averaged across the columns (horizontal)
 
-		r_mi : 2-D array
-			the mutual information down each row (vertical)
+        r_mi : 2-D array
+            the mutual information down each row (vertical)
 
-		c_mi : 2-D array
-			the mutual information across the columns (horizontal)
-
-
-		"""
-		if digitize:
-			M = utilities.mi_digitize(self.X)
-		else:
-			M = self.X
-
-		rs, cs = np.shape(M)
-
-		rs_iters = int(rs*percent_calc)
-		cs_iters = int(cs*percent_calc)
-
-		r_picks = np.random.choice(np.arange(rs),size=rs_iters,replace=False)
-		c_picks = np.random.choice(np.arange(cs),size=cs_iters,replace=False)
+        c_mi : 2-D array
+            the mutual information across the columns (horizontal)
 
 
-		# The r_picks are used to calculate the MI in the columns
-		# and the c_picks are used to calculate the MI in the rows
+        """
+        if digitize:
+            M = utilities.mi_digitize(self.X)
+        else:
+            M = self.X
 
-		c_mi = np.zeros((rs_iters,max_lag))
-		r_mi = np.zeros((cs_iters,max_lag))
+        rs, cs = np.shape(M)
 
-		for i in range(rs_iters):
-			for j in range(max_lag):
+        rs_iters = int(rs*percent_calc)
+        cs_iters = int(cs*percent_calc)
 
-				ind = j+1
-				unshift = M[r_picks[i],ind:]
-				shift = M[r_picks[i],:-ind]
-				c_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+        r_picks = np.random.choice(np.arange(rs),size=rs_iters,replace=False)
+        c_picks = np.random.choice(np.arange(cs),size=cs_iters,replace=False)
 
-		for i in range(cs_iters):
-			for j in range(max_lag):
 
-				ind=j+1
-				unshift = M[ind:, c_picks[i]]
-				shift = M[:-ind, c_picks[i]]
-				r_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+        # The r_picks are used to calculate the MI in the columns
+        # and the c_picks are used to calculate the MI in the rows
 
-		r_mut = np.mean(r_mi,axis=0)
-		c_mut = np.mean(c_mi,axis=0)
+        c_mi = np.zeros((rs_iters,max_lag))
+        r_mi = np.zeros((cs_iters,max_lag))
 
-		return r_mut, c_mut, r_mi, c_mi
+        for i in range(rs_iters):
+            for j in range(max_lag):
+
+                ind = j+1
+                unshift = M[r_picks[i],ind:]
+                shift = M[r_picks[i],:-ind]
+                c_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+
+        for i in range(cs_iters):
+            for j in range(max_lag):
+
+                ind=j+1
+                unshift = M[ind:, c_picks[i]]
+                shift = M[:-ind, c_picks[i]]
+                r_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+
+        r_mut = np.mean(r_mi,axis=0)
+        c_mut = np.mean(c_mi,axis=0)
+
+        return r_mut, c_mut, r_mi, c_mi
 
 	def mutual_information_3d(self,max_lag,percent_calc=.5,digitize=True):
-		"""
-		Calculates the mutual information along the rows and down columns at a
-		certain number of indices (percent_calc) and returns
-		the sum of the mutual informaiton along the columns and along the rows.
+        """
+        Calculates the mutual information along the rows and down columns at a
+        certain number of indices (percent_calc) and returns
+        the sum of the mutual informaiton along the columns and along the rows.
 
-		Parameters
-		----------
+        Parameters
+        ----------
 
-		M : 2-D array
-			input two-dimensional image
+        M : 2-D array
+            input two-dimensional image
 
-		max_lag : integer
-			maximum amount to shift the space
+        max_lag : integer
+            maximum amount to shift the space
 
-		percent_calc : float
-			How many rows and columns to use to calculate the mutual information
+        percent_calc : float
+            How many rows and columns to use to calculate the mutual information
 
-		Returns
-		-------
+        Returns
+        -------
 
-		R_mut : 1-D array
-			the mutual inforation averaged down the rows (vertical)
+        R_mut : 1-D array
+            the mutual inforation averaged down the rows (vertical)
 
-		C_mut : 1-D array
-			the mutual information averaged across the columns (horizontal)
+        C_mut : 1-D array
+            the mutual information averaged across the columns (horizontal)
 
-		r_mi : 2-D array
-			the mutual information down each row (vertical)
+        r_mi : 2-D array
+            the mutual information down each row (vertical)
 
-		c_mi : 2-D array
-			the mutual information across the columns (horizontal)
+        c_mi : 2-D array
+            the mutual information across the columns (horizontal)
+        """
+
+        if digitize:
+            M = utilities.mi_digitize(self.X)
+        else:
+            M = self.X
+
+        rs, cs, zs = np.shape(M)
+
+        rs_iters = int(rs*percent_calc)
+        cs_iters = int(cs*percent_calc)
+
+        r_picks = np.random.choice(np.arange(rs),size=rs_iters,replace=False)
+        c_picks = np.random.choice(np.arange(cs),size=cs_iters,replace=False)
 
 
-		"""
-		if digitize:
-			M = utilities.mi_digitize(self.X)
-		else:
-			M = self.X
+        # The r_picks are used to calculate the MI in the columns
+        # and the c_picks are used to calculate the MI in the rows
 
-		rs, cs, zs = np.shape(M)
+        c_mi = np.zeros((rs_iters,max_lag))
+        r_mi = np.zeros((cs_iters,max_lag))
 
-		rs_iters = int(rs*percent_calc)
-		cs_iters = int(cs*percent_calc)
+        for i in range(rs_iters):
+            for j in range(max_lag):
 
-		r_picks = np.random.choice(np.arange(rs),size=rs_iters,replace=False)
-		c_picks = np.random.choice(np.arange(cs),size=cs_iters,replace=False)
+                rand_z = np.random.randint(0,zs)
+                ind = j+1
+                unshift = M[r_picks[i],ind:,rand_z]
+                shift = M[r_picks[i],:-ind,rand_z]
+                c_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
 
+        for i in range(cs_iters):
+            for j in range(max_lag):
 
-		# The r_picks are used to calculate the MI in the columns
-		# and the c_picks are used to calculate the MI in the rows
+                rand_z = np.random.randint(0,zs)
+                ind=j+1
+                unshift = M[ind:, c_picks[i],rand_z]
+                shift = M[:-ind, c_picks[i],rand_z]
+                r_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
 
-		c_mi = np.zeros((rs_iters,max_lag))
-		r_mi = np.zeros((cs_iters,max_lag))
+        #for the z dimension
+        rs,cs = np.where(np.random.rand(rs,cs)<percent_calc)
+        z_mi = np.zeros( (len(rs),max_lag) )
 
-		for i in range(rs_iters):
-			for j in range(max_lag):
+        for i, (rs,cs) in enumerate(zip(r_picks,c_picks)):
+            for j in range(max_lag):
 
-				rand_z = np.random.randint(0,zs)
-				ind = j+1
-				unshift = M[r_picks[i],ind:,rand_z]
-				shift = M[r_picks[i],:-ind,rand_z]
-				c_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+                ind=j+1
 
-		for i in range(cs_iters):
-			for j in range(max_lag):
+                unshift = M[rs, cs, ind:]
+                shift = M[rs, cs, :-ind]
+                z_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
 
-				rand_z = np.random.randint(0,zs)
-				ind=j+1
-				unshift = M[ind:, c_picks[i],rand_z]
-				shift = M[:-ind, c_picks[i],rand_z]
-				r_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
+        r_mut = np.mean(r_mi,axis=0)
+        c_mut = np.mean(c_mi,axis=0)
+        z_mut = np.mean(z_mi,axis=0)
 
-		#for the z dimension
-		rs,cs = np.where(np.random.rand(rs,cs)<percent_calc)
-		z_mi = np.zeros( (len(rs),max_lag) )
-
-		for i, (rs,cs) in enumerate(zip(r_picks,c_picks)):
-			for j in range(max_lag):
-
-				ind=j+1
-
-				unshift = M[rs, cs, ind:]
-				shift = M[rs, cs, :-ind]
-				z_mi[i,j] = skmetrics.mutual_info_score(unshift,shift)
-
-		r_mut = np.mean(r_mi,axis=0)
-		c_mut = np.mean(c_mi,axis=0)
-		z_mut = np.mean(z_mi,axis=0)
-
-		return r_mut, c_mut, z_mut
+        return r_mut, c_mut, z_mut
 
 
 	def embed_vectors_1d(self,lag,embed,predict):
-		"""
-		Embeds vectors from a two dimensional image in m-dimensional space.
+        """
+        Embeds vectors from a two dimensional image in m-dimensional space.
 
-		Parameters
-		----------
-		X : array
-			A 1-D array representing the training or testing set.
+        Parameters
+        ----------
+        X : array
+            A 1-D array representing the training or testing set.
 
-		lag : int
-			lag values as calculated from the first minimum of the mutual info.
+        lag : int
+            lag values as calculated from the first minimum of the mutual info.
 
-		embed : int
-			embedding dimension, how many lag values to take
+        embed : int
+            embedding dimension, how many lag values to take
 
-		predict : int
-			distance to forecast (see example)
+        predict : int
+            distance to forecast (see example)
 
 
-		Returns
-		-------
-		features : array of shape [num_vectors,embed]
-			A 2-D array containing all of the embedded vectors
+        Returns
+        -------
+        features : array of shape [num_vectors,embed]
+            A 2-D array containing all of the embedded vectors
 
-		targets : array of shape [num_vectors,predict]
-			A 2-D array containing the evolution of the embedded vectors
+        targets : array of shape [num_vectors,predict]
+            A 2-D array containing the evolution of the embedded vectors
 
-		Example
-		-------
-		X = [0,1,2,3,4,5,6,7,8,9,10]
+        Example
+        -------
+        X = [0,1,2,3,4,5,6,7,8,9,10]
 
-		em = 3
-		lag = 2
-		predict=3
+        em = 3
+        lag = 2
+        predict=3
 
-		returns:
-		features = [[0,2,4], [1,3,5], [2,4,6], [3,5,7]]
-		targets = [[5,6,7], [6,7,8], [7,8,9], [8,9,10]]
-		"""
+        returns:
+        features = [[0,2,4], [1,3,5], [2,4,6], [3,5,7]]
+        targets = [[5,6,7], [6,7,8], [7,8,9], [8,9,10]]
+        """
 
-		tsize = self.X.shape[0]
-		t_iter = tsize-predict-(lag*(embed-1))
+        tsize = self.X.shape[0]
+        t_iter = tsize-predict-(lag*(embed-1))
 
-		features = np.zeros((t_iter,embed))
-		targets = np.zeros((t_iter,predict))
+        features = np.zeros((t_iter,embed))
+        targets = np.zeros((t_iter,predict))
 
-		for ii in range(t_iter):
+        for ii in range(t_iter):
 
-			end_val = ii+lag*(embed-1)+1
+            end_val = ii+lag*(embed-1)+1
 
-			part = self.X[ii : end_val]
+            part = self.X[ii : end_val]
 
-			features[ii,:] = part[::(lag)]
-			targets[ii,:] = self.X[end_val:end_val+predict]
-		return features, targets
+            features[ii,:] = part[::(lag)]
+            targets[ii,:] = self.X[end_val:end_val+predict]
+        return features, targets
 
 
 
 
 	def embed_vectors_2d(self,lag,embed,predict,percent=0.1):
-		"""
-		Embeds vectors from a two dimensional image in m-dimensional space.
+        """
+        Embeds vectors from a two dimensional image in m-dimensional space.
 
-		Parameters
-		----------
-		X : array
-			A 2-D array representing the training set or testing set.
+        Parameters
+        ----------
+        X : array
+            A 2-D array representing the training set or testing set.
 
-		lag : tuple of ints (r,c)
-			row and column lag values (r,c) can think of as (height,width).
+        lag : tuple of ints (r,c)
+            row and column lag values (r,c) can think of as (height,width).
 
-		embed : tuple of ints (r,c)
-			row and column embedding shape (r,c) can think of as (height,width).
-			c must be odd
+        embed : tuple of ints (r,c)
+            row and column embedding shape (r,c) can think of as (height,width).
+            c must be odd
 
-		predict : int
-			distance in the space to forecast (see example)
+        predict : int
+            distance in the space to forecast (see example)
 
-		percent : float (default = None)
-			percent of the space to embed. Used for computation efficiency
+        percent : float (default = None)
+            percent of the space to embed. Used for computation efficiency
 
-		Returns
-		-------
-		features : array of shape [num_vectors,r*c]
-			A 2-D array containing all of the embedded vectors
+        Returns
+        -------
+        features : array of shape [num_vectors,r*c]
+            A 2-D array containing all of the embedded vectors
 
-		targets : array of shape [num_vectors,predict]
-			A 2-D array containing the evolution of the embedded vectors
-
-
-		Example:
-		lag = (3,4)
-		embed = (2,5)
-		predict = 2
+        targets : array of shape [num_vectors,predict]
+            A 2-D array containing the evolution of the embedded vectors
 
 
-		[f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
-		 |         |         |         |         |
-		 |         |         |         |         |
-		[f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
-							[t]
-							[t]
-		"""
-
-		rsize = self.X.shape[0]
-		csize = self.X.shape[1]
-
-		r_lag,c_lag = lag
-		rem,cem = embed
+        Example:
+        lag = (3,4)
+        embed = (2,5)
+        predict = 2
 
 
-		# determine how many iterations we will have and
-		# the empty feature and target matrices
+        [f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
+         |         |         |         |         |
+         |         |         |         |         |
+        [f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
+                            [t]
+                            [t]
+        """
 
-		c_iter = csize - c_lag*(cem-1)
-		r_iter = rsize  - predict - r_lag*(rem-1)
+        rsize = self.X.shape[0]
+        csize = self.X.shape[1]
 
-		#randomly pick spots to be embedded
-		ix = np.random.rand(r_iter,c_iter)<=percent
-		r_inds,c_inds = np.where(ix)
-
-		targets = np.zeros((len(r_inds),predict))
-		features = np.zeros((len(r_inds),rem*cem))
-
-
-		print("targets before loop:", targets.shape)
-
-		for ii in range(features.shape[0]):
-
-			rs = r_inds[ii]
-			cs = c_inds[ii]
+        r_lag,c_lag = lag
+        rem,cem = embed
 
 
-			r_end_val = rs+r_lag*(rem-1)+1
-			c_end_val = cs+c_lag*(cem-1)+1
+        # determine how many iterations we will have and
+        # the empty feature and target matrices
 
-			part = self.X[rs : r_end_val, cs : c_end_val ]
+        c_iter = csize - c_lag*(cem-1)
+        r_iter = rsize  - predict - r_lag*(rem-1)
 
-			features[ii,:] = part[::r_lag,::c_lag].ravel()
-			targets[ii,:] = self.X[r_end_val:r_end_val+predict,cs + int(c_lag*(cem-1)/2)]
+        #randomly pick spots to be embedded
+        ix = np.random.rand(r_iter,c_iter)<=percent
+        r_inds,c_inds = np.where(ix)
+
+        targets = np.zeros((len(r_inds),predict))
+        features = np.zeros((len(r_inds),rem*cem))
 
 
-		return features,targets
+        print("targets before loop:", targets.shape)
+
+        for ii in range(features.shape[0]):
+
+            rs = r_inds[ii]
+            cs = c_inds[ii]
+
+
+            r_end_val = rs+r_lag*(rem-1)+1
+            c_end_val = cs+c_lag*(cem-1)+1
+
+            part = self.X[rs : r_end_val, cs : c_end_val ]
+
+            features[ii,:] = part[::r_lag,::c_lag].ravel()
+            targets[ii,:] = self.X[r_end_val:r_end_val+predict,cs + int(c_lag*(cem-1)/2)]
+
+
+        return features,targets
 
 
 
 	def embed_vectors_3d(self,lag,embed,predict,percent=0.1):
-		"""
-		Embeds vectors from a three-dimensional matrix in m-dimensional space.
-		The third dimension is assumed to be time.
+        """
+        Embeds vectors from a three-dimensional matrix in m-dimensional space.
+        The third dimension is assumed to be time.
 
-		Parameters
-		----------
-		X : array
-			A 3-D array representing the training set or testing set.
+        Parameters
+        ----------
+        X : array
+            A 3-D array representing the training set or testing set.
 
-		lag : tuple of ints (r,c)
-			row and column lag values (r,c) can think of as (height,width).
+        lag : tuple of ints (r,c)
+            row and column lag values (r,c) can think of as (height,width).
 
-		embed : tuple of ints (r,c,t)
-			row and column, and time embedding shape (r,c,t) can think of as
-			(height,width,time). c must be odd
+        embed : tuple of ints (r,c,t)
+            row and column, and time embedding shape (r,c,t) can think of as
+            (height,width,time). c must be odd
 
-		predict : int
-			distance in the space to forecast (see example)
+        predict : int
+            distance in the space to forecast (see example)
 
-		percent : float (default = None)
-			percent of the space to embed. Used for computation efficiency
+        percent : float (default = None)
+            percent of the space to embed. Used for computation efficiency
 
-		Returns
-		-------
-		features : array of shape [num_vectors,r*c]
-			A 2-D array containing all of the embedded vectors
+        Returns
+        -------
+        features : array of shape [num_vectors,r*c]
+            A 2-D array containing all of the embedded vectors
 
-		targets : array of shape [num_vectors,predict]
-			A 2-D array containing the evolution of the embedded vectors
-
-
-		Example:
-		lag = (3,4,2) #height,width,time
-		embed = (3,3)
-		predict = 2
+        targets : array of shape [num_vectors,predict]
+            A 2-D array containing the evolution of the embedded vectors
 
 
-		[f] _ _ _ [f] _ _ _ [f]
-		 |         |         |
-		 |         |         |
-		[f] _ _ _ [f] _ _ _ [f]
-		 |         |         |
-		 |         |         |
-		[f] _ _ _ [f] _ _ _ [f]
-
-		The targets would be directly below the center [f]
-
-		"""
-
-		rsize = self.X.shape[0]
-		csize = self.X.shape[1]
-		tsize = self.X.shape[2]
-
-		r_lag,c_lag,t_lag = lag
-		rem,cem,tem = embed
+        Example:
+        lag = (3,4,2) #height,width,time
+        embed = (3,3)
+        predict = 2
 
 
-		# determine how many iterations we will have and
-		# the empty feature and target matrices
+        [f] _ _ _ [f] _ _ _ [f]
+         |         |         |
+         |         |         |
+        [f] _ _ _ [f] _ _ _ [f]
+         |         |         |
+         |         |         |
+        [f] _ _ _ [f] _ _ _ [f]
 
-		c_iter = csize - c_lag*(cem-1)
-		r_iter = rsize  - r_lag*(rem-1)
-		t_iter = tsize - t_lag*(tem-1) - predict
+        The targets would be directly below the center [f]
 
-		#create tuples of all the possible x,y,t values for the image
-		# creates a bunch of tuples
-		ix = np.random.rand(r_iter,c_iter,t_iter)<=percent
+        """
 
-		r_inds,c_inds,t_inds = np.where(ix)
+        rsize = self.X.shape[0]
+        csize = self.X.shape[1]
+        tsize = self.X.shape[2]
 
-		#choose only a percent of them if percent is defined
-
-		percent_tot = len(r_inds)
-
-		targets = np.zeros((percent_tot,predict))
-		features = np.zeros((percent_tot,rem*cem*tem))
-
+        r_lag,c_lag,t_lag = lag
+        rem,cem,tem = embed
 
 
-		print('targets before loop:', targets.shape)
+        # determine how many iterations we will have and
+        # the empty feature and target matrices
 
-		for ii in range(features.shape[0]):
+        c_iter = csize - c_lag*(cem-1)
+        r_iter = rsize  - r_lag*(rem-1)
+        t_iter = tsize - t_lag*(tem-1) - predict
 
-			rs = r_inds[ii]
-			cs = c_inds[ii]
-			ts = t_inds[ii]
+        #create tuples of all the possible x,y,t values for the image
+        # creates a bunch of tuples
+        ix = np.random.rand(r_iter,c_iter,t_iter)<=percent
 
+        r_inds,c_inds,t_inds = np.where(ix)
 
-			r_end_val = rs + r_lag * (rem-1) + 1
-			c_end_val = cs + c_lag * (cem-1) + 1
-			t_end_val = ts + t_lag * (tem-1) + 1
+        #choose only a percent of them if percent is defined
 
-			part = self.X[rs : r_end_val, cs : c_end_val, ts : t_end_val ]
+        percent_tot = len(r_inds)
 
-			features[ii,:] = part[::r_lag,::c_lag,::t_lag].ravel()
-
-
-			rs_target = rs + r_lag
-			cs_target = cs + c_lag
-			targets[ii,:] = self.X[rs + int(r_lag*(rem-1)/2),
-				cs+ int(c_lag*(cem-1)/2), t_end_val:t_end_val+predict].ravel()
+        targets = np.zeros((percent_tot,predict))
+        features = np.zeros((percent_tot,rem*cem*tem))
 
 
-		return features,targets
+
+        print('targets before loop:', targets.shape)
+
+        for ii in range(features.shape[0]):
+
+            rs = r_inds[ii]
+            cs = c_inds[ii]
+            ts = t_inds[ii]
+
+
+            r_end_val = rs + r_lag * (rem-1) + 1
+            c_end_val = cs + c_lag * (cem-1) + 1
+            t_end_val = ts + t_lag * (tem-1) + 1
+
+            part = self.X[rs : r_end_val, cs : c_end_val, ts : t_end_val ]
+
+            features[ii,:] = part[::r_lag,::c_lag,::t_lag].ravel()
+
+
+            rs_target = rs + r_lag
+            cs_target = cs + c_lag
+            targets[ii,:] = self.X[rs + int(r_lag*(rem-1)/2),
+                cs+ int(c_lag*(cem-1)/2), t_end_val:t_end_val+predict].ravel()
+
+
+        return features,targets

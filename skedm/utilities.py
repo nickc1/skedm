@@ -7,22 +7,47 @@ import numpy as np
 from scipy import stats as stats
 from numba import jit
 
+def weight_calc():
+    """
+    Calculate the weights given a set a distances.
+    """
+
 def weighted_mean(indices, distances, ytrain ):
-	"""
-	Transforms a list of distances into weights. Currently it is just
-	1/distance
-	"""
+    """
+    Transforms a list of distances and indices into weights. Only 1/distance is
+    implemented.
 
-	W = 1./distances
+    Parameters
+    ----------
 
-	y_pred = np.empty((distances.shape[0], ytrain.shape[1]), dtype=np.float)
-	denom = np.sum(W, axis=1)
+    indices : 2d array
+        Indices of the near neighbors. shape(nsamples,number near neighbors)
 
-	for i in range(ytrain.shape[1]):
-		num = np.sum(ytrain[indices, i] * W, axis=1)
-		y_pred[:, i] = num / denom
+    distances : 2d array
+        Sorted distances to the near neighbors for the indices.
+        shape(nsamples,number near neighbors)
 
-	return y_pred
+    ytrain : 2d array
+        Training values. shape(nsamples,prediction_distance)
+
+    Returns
+    -------
+
+    y_pred : 2d array
+        Weighted predictions
+    """
+    distances = distances+0.00001 #ensures no zeros when dividing
+
+    W = 1./distances
+
+    y_pred = np.empty((distances.shape[0], ytrain.shape[1]), dtype=np.float)
+    denom = np.sum(W, axis=1)
+
+    for i in range(ytrain.shape[1]):
+        num = np.sum(ytrain[indices, i] * W, axis=1)
+        y_pred[:, i] = num / denom
+
+    return y_pred
 
 
 def mi_digitize(X):
