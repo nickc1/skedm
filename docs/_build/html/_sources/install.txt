@@ -36,7 +36,7 @@ Contribute, Report Issues, Support
 
 To contribute, we suggest making a pull request.
 
-To report issues, we suggest making
+To report issues, we suggest making opening an issue
 
 
 

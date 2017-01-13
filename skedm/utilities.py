@@ -7,64 +7,56 @@ import numpy as np
 from scipy import stats as stats
 from numba import jit
 
-def weight_calc():
-    """
-    Calculate the weights given a set a distances.
-    """
 
-def weighted_mean(indices, distances, ytrain ):
+
+def weighted_mean(X, distances ):
     """
-    Transforms a list of distances and indices into weights. Only 1/distance is
-    implemented.
+    Calculates the weighted mean given a set of values and their corresponding
+    weights. Only 1/distance is implemented. This essentially is just a
+    weighted mean down axis=1.
 
     Parameters
     ----------
 
-    indices : 2d array
-        Indices of the near neighbors. shape(nsamples,number near neighbors)
+    X : 2d array
+        Training values. shape(nsamples,number near neighbors)
 
     distances : 2d array
         Sorted distances to the near neighbors for the indices.
         shape(nsamples,number near neighbors)
 
-    ytrain : 2d array
-        Training values. shape(nsamples,prediction_distance)
-
     Returns
     -------
 
-    y_pred : 2d array
+    w_mean : 2d array
         Weighted predictions
     """
     distances = distances+0.00001 #ensures no zeros when dividing
 
     W = 1./distances
+    denom = np.sum(W, axis=1,keepdims=True)
+    W/=denom
 
-    y_pred = np.empty((distances.shape[0], ytrain.shape[1]), dtype=np.float)
-    denom = np.sum(W, axis=1)
+    w_mean = np.sum(X * W, axis=1)
 
-    for i in range(ytrain.shape[1]):
-        num = np.sum(ytrain[indices, i] * W, axis=1)
-        y_pred[:, i] = num / denom
-
-    return y_pred
+    return w_mean
 
 
 def mi_digitize(X):
-	"""
-	Digitize a time series for mutual information analysis
-	"""
+    """
+    Digitize a time series for mutual information analysis
+    """
 
-	minX = np.min(X) - 1e-5 #subtract for correct binning
-	maxX = np.max(X) + 1e-5 #add for correct binning
+    minX = np.min(X) - 1e-5 #subtract for correct binning
+    maxX = np.max(X) + 1e-5 #add for correct binning
 
-	nbins = int(np.sqrt(len(X)/20))
-	nbins = max(4,nbins) #make sure there are atleast four bins
-	bins = np.linspace(minX, maxX, nbins+1) #add one for correct num bins
+    nbins = int(np.sqrt(len(X)/20))
+    nbins = max(4,nbins) #make sure there are atleast four bins
+    bins = np.linspace(minX, maxX, nbins+1) #add one for correct num bins
 
-	digi = np.digitize(X, bins)
+    digi = np.digitize(X, bins)
 
-	return digi
+    return digi
 
 
 def corrcoef(preds,actual):

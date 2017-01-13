@@ -88,11 +88,16 @@ class Regression:
 
             if self.weights == 'uniform':
 
-                ypred.append( np.mean(self.ytrain[neigh_ind], axis=1) )
+                p = np.mean(self.ytrain[neigh_ind], axis=1)
 
             elif self.weights =='distance':
-                p = utilities.weighted_mean(neigh_ind, self.dist[:,0:nn], self.ytrain)
-                ypred.append( p )
+
+                p = np.empty((distances.shape[0], ytrain.shape[1]), dtype=np.float)
+
+                for i in range(self.ytrain.shape[1]):
+                    p[:,i] = utilities.weighted_mean(self.ytrain[neigh_ind], self.dist[:,0:nn])
+
+            ypred.append(p)
 
         self.ypred = ypred
         self.nn_list = nn_list
