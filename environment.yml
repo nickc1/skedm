@@ -5,5 +5,3 @@ dependencies:
   - numba
   - scikit-learn
   - pytest
-  - jupyter
-  - seaborn
