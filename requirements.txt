@@ -1,6 +1,0 @@
-numpy
-numba
-scikit-learn
-pytest
-
-
