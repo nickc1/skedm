@@ -10,7 +10,7 @@ pip
 
 
 Requirements
-^^^^^^^^^^^
+^^^^^^^^^^^^
 
 To simply create the approriate environment, you can use a conda environment.yml file. The file takes the form of:
 
@@ -32,7 +32,7 @@ Then you can simply create the environment with:
   conda env create -f environment.yml
 
 Contribute, Report Issues, Support
-^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To contribute, we suggest making a pull request.
 

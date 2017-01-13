@@ -6,3 +6,4 @@ dependencies:
   - scikit-learn
   - pytest
   - jupyter
+  - seaborn

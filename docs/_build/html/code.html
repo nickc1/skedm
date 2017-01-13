@@ -266,7 +266,17 @@ ytrain : targets (nsamples,ntargets)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nn_list</strong> (<em>list</em>) &#8211; Values of NN to test</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Xtest</strong> (<em>2d array</em>) &#8211; Testing samples of shape (nsamples,nfeatures)</li>
+<li><strong>nn_list</strong> (<em>1d array</em>) &#8211; Values of Near Neighbors to use to make predictions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ypred</strong> &#8211; predictions for ytest of shape(nsamples,num predictions)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2d array</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -543,10 +553,36 @@ to the most common prediction of the space</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="skedm.utilities.weight_calc">
+<code class="descclassname">skedm.utilities.</code><code class="descname">weight_calc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.weight_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the weights given a set a distances.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="skedm.utilities.weighted_mean">
 <code class="descclassname">skedm.utilities.</code><code class="descname">weighted_mean</code><span class="sig-paren">(</span><em>indices</em>, <em>distances</em>, <em>ytrain</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.weighted_mean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transforms a list of distances into weights. Currently it is just
-1/distance</p>
+<dd><p>Transforms a list of distances and indices into weights. Only 1/distance is
+implemented.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indices</strong> (<em>2d array</em>) &#8211; Indices of the near neighbors. shape(nsamples,number near neighbors)</li>
+<li><strong>distances</strong> (<em>2d array</em>) &#8211; Sorted distances to the near neighbors for the indices.
+shape(nsamples,number near neighbors)</li>
+<li><strong>ytrain</strong> (<em>2d array</em>) &#8211; Training values. shape(nsamples,prediction_distance)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>y_pred</strong> &#8211; Weighted predictions</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2d array</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">

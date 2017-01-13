@@ -24,7 +24,7 @@ class Regression:
             -'distance' : weighted as 1/distance
         """
 
-    	self.weights = weights
+        self.weights = weights
 
     def fit(self, Xtrain, ytrain):
         """
@@ -60,7 +60,7 @@ class Regression:
 
         self.Xtest = Xtest
 
-	def predict(self,Xtest,nn_list):
+    def predict(self,Xtest,nn_list):
         """
         Make a prediction for a certain value of near neighbors
 
@@ -86,12 +86,11 @@ class Regression:
 
             neigh_ind = self.ind[:,0:nn]
 
-        	if self.weights == 'uniform':
+            if self.weights == 'uniform':
 
                 ypred.append( np.mean(self.ytrain[neigh_ind], axis=1) )
 
-        	elif self.weights =='distance':
-                for i in range()
+            elif self.weights =='distance':
                 p = utilities.weighted_mean(neigh_ind, self.dist[:,0:nn], self.ytrain)
                 ypred.append( p )
 
@@ -100,7 +99,7 @@ class Regression:
         return ypred
 
 
-	def score(self,ytest,how='score'):
+    def score(self,ytest,how='score'):
         """
         scores the predictions if they were calculated for numerous
         values of near neighbors.
@@ -109,25 +108,25 @@ class Regression:
         ----------
         ytest : 2d array containing the targets
         how : string
-        	how to score the predictions
-        	-'score' : see scikit-learn's score function
-        	-'corrcoef' : correlation coefficient
+            how to score the predictions
+            -'score' : see scikit-learn's score function
+            -'corrcoef' : correlation coefficient
         """
         scores = []
         #iterate through each pred for each nn value
         for pred in self.ypred:
-        	sc = np.empty(pred.shape[1]) #need to store the scores
+            sc = np.empty(pred.shape[1]) #need to store the scores
 
             for i in range(pred.shape[1]):
 
                 p = pred[:,i]
 
                 if how == 'score':
-                	sc[i] = utilities.score(p, ytest[:,i])
+                    sc[i] = utilities.score(p, ytest[:,i])
 
                 if how == 'corrcoef':
 
-                	sc[i] = utilities.corrcoef(p, ytest[:,i])
+                    sc[i] = utilities.corrcoef(p, ytest[:,i])
 
             scores.append(sc)
 
@@ -136,10 +135,10 @@ class Regression:
 
 
     def predict_individual(self,Xtest,nn_list):
-    	"""
-    	Instead of averaging near neighbors, make a prediction for each
-    	neighbor.
-    	"""
+        """
+        Instead of averaging near neighbors, make a prediction for each
+        neighbor.
+        """
 
         #calculate distances first
         self.dist_calc(Xtest)
@@ -179,10 +178,10 @@ class Classification:
         Parameters
         ----------
         max_nn : int
-        	Maximum number of near neighbors to use
+            Maximum number of near neighbors to use
         weights : string
-        	-'uniform' : uniform weighting
-        	-'distance' : weighted as 1/distance
+            -'uniform' : uniform weighting
+            -'distance' : weighted as 1/distance
 
         """
         self.weights = weights
@@ -226,7 +225,7 @@ class Classification:
         Parameters
         ----------
         nn : int
-        	How many near neighbors to use
+            How many near neighbors to use
         """
 
         self.dist_calc(Xtest)
@@ -308,7 +307,7 @@ class Classification:
 
         scores = []
 
-    	for pred in self.ypred:
+        for pred in self.ypred:
             sc = np.empty(pred.shape[1])
 
             for i in range(pred.shape[1]):
@@ -355,9 +354,9 @@ class Embed:
 
 
     def mutual_information(self,max_lag):
-		"""
-		Uses numpy's mutual information
-		"""
+        """
+        Uses numpy's mutual information
+        """
 
         digi = utilities.mi_digitize(self.X)
 
@@ -373,7 +372,7 @@ class Embed:
 
         return mi
 
-	def mutual_information_spatial(self,max_lag,percent_calc=.5,digitize=True):
+    def mutual_information_spatial(self,max_lag,percent_calc=.5,digitize=True):
         """
         Calculates the mutual information along the rows and down columns at a
         certain number of indices (percent_calc) and returns
@@ -449,7 +448,7 @@ class Embed:
 
         return r_mut, c_mut, r_mi, c_mi
 
-	def mutual_information_3d(self,max_lag,percent_calc=.5,digitize=True):
+    def mutual_information_3d(self,max_lag,percent_calc=.5,digitize=True):
         """
         Calculates the mutual information along the rows and down columns at a
         certain number of indices (percent_calc) and returns
@@ -541,7 +540,7 @@ class Embed:
         return r_mut, c_mut, z_mut
 
 
-	def embed_vectors_1d(self,lag,embed,predict):
+    def embed_vectors_1d(self,lag,embed,predict):
         """
         Embeds vectors from a two dimensional image in m-dimensional space.
 
@@ -600,7 +599,7 @@ class Embed:
 
 
 
-	def embed_vectors_2d(self,lag,embed,predict,percent=0.1):
+    def embed_vectors_2d(self,lag,embed,predict,percent=0.1):
         """
         Embeds vectors from a two dimensional image in m-dimensional space.
 
@@ -687,7 +686,7 @@ class Embed:
 
 
 
-	def embed_vectors_3d(self,lag,embed,predict,percent=0.1):
+    def embed_vectors_3d(self,lag,embed,predict,percent=0.1):
         """
         Embeds vectors from a three-dimensional matrix in m-dimensional space.
         The third dimension is assumed to be time.
