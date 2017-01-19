@@ -12,7 +12,7 @@ from numba import jit
 def weighted_mean(X, distances ):
     """
     Calculates the weighted mean given a set of values and their corresponding
-    weights. Only 1/distance is implemented. This essentially is just a
+    distances. Only 1/distance is implemented. This essentially is just a
     weighted mean down axis=1.
 
     Parameters
@@ -39,12 +39,21 @@ def weighted_mean(X, distances ):
 
     w_mean = np.sum(X * W, axis=1)
 
-    return w_mean
+    return w_mean.ravel()
 
 
 def mi_digitize(X):
     """
     Digitize a time series for mutual information analysis
+
+    Parameters
+    ----------
+    X : 1D array
+        array to be digitized of length m
+    Returns
+    -------
+    Y : 1D array
+        digitized array of length m
     """
 
     minX = np.min(X) - 1e-5 #subtract for correct binning
@@ -54,9 +63,9 @@ def mi_digitize(X):
     nbins = max(4,nbins) #make sure there are atleast four bins
     bins = np.linspace(minX, maxX, nbins+1) #add one for correct num bins
 
-    digi = np.digitize(X, bins)
+    Y = np.digitize(X, bins)
 
-    return digi
+    return Y
 
 
 def corrcoef(preds,actual):
@@ -418,6 +427,25 @@ def quick_mode_axis1(X):
 	for i in range(len_x):
 		mode[i] = np.bincount(X[i,:]).argmax()
 	return mode
+
+@jit
+def quick_mode_axis1_keep_nearest_neigh(X):
+    """
+    The current implementation of the mode takes the lowest value instead of
+    the closest value. For example if the neighbors have values:
+    [7,7,2,3,4,1,1] the current implementation will keep 1 as the value. For
+    our purposes, the ordering is important, so we want to keep the first value.
+    """
+
+    X = X.astype(int)
+    len_x = len(X)
+    mode = np.zeros(len_x)
+    for i in range(len_x):
+        loc = np.bincount(X[i,:])[X[i,:]].argmax() #reorder before argmax
+        mode[i] = X[i,:][loc]
+    return mode
+
+
 
 
 def keep_diversity(X,thresh=1.):

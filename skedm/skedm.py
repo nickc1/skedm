@@ -92,10 +92,10 @@ class Regression:
 
             elif self.weights =='distance':
 
-                p = np.empty((distances.shape[0], ytrain.shape[1]), dtype=np.float)
+                p = np.empty((self.dist.shape[0], self.ytrain.shape[1]), dtype=np.float)
 
                 for i in range(self.ytrain.shape[1]):
-                    p[:,i] = utilities.weighted_mean(self.ytrain[neigh_ind], self.dist[:,0:nn])
+                    p[:,i] = utilities.weighted_mean(self.ytrain[neigh_ind,i], self.dist[:,0:nn])
 
             ypred.append(p)
 
@@ -248,14 +248,15 @@ class Classification:
 
                 for j in range(self.ytrain.shape[1]):
 
-                    mode = utilities.quick_mode_axis1(self.ytrain[neigh_ind,j].astype(int))
+                    mode = utilities.quick_mode_axis1_keep_nearest_neigh(
+                                        self.ytrain[neigh_ind,j].astype(int))
                     yp[:,j] = mode
 
 
             elif self.weights=='distance':
                 dist = self.dist[:,0:nn]
                 neigh_ind = self.ind[:,0:nn]
-                W = 1./dist
+                W = 1./(dist+.000001) #to make sure we dont divide by zero
 
                 for j in range(self.ytrain.shape[1]):
                     mode, _ = utilities.weighted_mode(self.ytrain[neigh_ind,j].astype(int), W, axis=1)
