@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Near Neighbors &mdash; skedm 0.1 documentation</title>
+  <title>Score &mdash; skedm 0.1 documentation</title>
   
 
   
@@ -31,8 +31,8 @@
 
   
     <link rel="top" title="skedm 0.1 documentation" href="index.html"/>
-        <link rel="next" title="Evaluation" href="evaluation.html"/>
-        <link rel="prev" title="Embedding" href="embedding.html"/> 
+        <link rel="next" title="Module Reference" href="module-reference.html"/>
+        <link rel="prev" title="Predict" href="predict.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,11 +84,13 @@
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="embedding.html">Embedding</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Near Neighbors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Module Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-example.html">Quick Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generate-data.html">Generate Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="embed.html">Embed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module-reference.html">Module Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 </ul>
 
             
@@ -119,11 +121,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Near Neighbors</li>
+    <li>Score</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/near-neighbors.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/score.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,17 +135,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="near-neighbors">
-<h1>Near Neighbors<a class="headerlink" href="#near-neighbors" title="Permalink to this headline">¶</a></h1>
-<p>At the heart of emperical dynamic modeling is the <a href="#id1"><span class="problematic" id="id2">`k-nearest neighbors algorithm`_</span></a>. In fact, the package uses scikit-learn&#8217;s <a href="#id3"><span class="problematic" id="id4">`nearest neighbor implementation`_</span></a> for efficient calculation of distances and to retrieve the indices of the nearest neighbors. It is a good idea to understand the k-nearest neighbor algorithm before interpreting what this package implements.</p>
-<p>For the regression case, we will look at a zoomed in version of the lorenz system that was discussed above. The red dots are the actual points that make up the blue line and the green box is the point that we want to forecast. The trajectory is clockwise.</p>
-<img alt="_images/zoom_embedded_lorenz.png" class="align-center" src="_images/zoom_embedded_lorenz.png" />
-<p>In this section of the Lorenz attractor, we can see that the red points closest to the green box all follow the same trajectory. If we wanted to forecast this green box, we could grab the closest red point and see where that ends up. We would then say that this is where the green box will end up.</p>
-<p>Grabbing more points, however, might prove to be useful since our box lies between a couple of the points. It might be better to average the trajectories of, for example, the three nearest points to make a forecast than just taking the closest one.</p>
-<p>It is also possible to imagine that at some point grabbing more and more near neighbors will be detrimental to the forecast as the points that we will be grabbing will have wildly different trajectories. For example, grabbing all the points in this subsection of space will show a trajectory to the right which would be a terrible forecast for the green box.</p>
-<p>Additionally, we could also think about adding noise to this system as shown in the plot below.</p>
-<img alt="_images/zoom_embedded_lorenz_noise.png" class="align-center" src="_images/zoom_embedded_lorenz_noise.png" />
-<p>Now it might be useful to grab more points as the trajectories are no longer smooth. Additionally the trajectories are no longer perfectly deterministic. There is an added level of stochasticity which will lower the forecast skill.</p>
+  <div class="section" id="score">
+<h1>Score<a class="headerlink" href="#score" title="Permalink to this headline">¶</a></h1>
+<p>The next step is to examine the forecast skill. This is done by comparing the actual trajectories to the forecasted trajectories. We will see different patterns in the forecast skill depending if the system is deterministic or noisy. Consider the three systems below.</p>
+<img alt="_images/chaos_rand_noise.png" class="align-center" src="_images/chaos_rand_noise.png" />
+<p>The top is the [logistic map][logistic-map-wiki]. It is a classic chaotic system. The second is a sine wave with a little bit of noise added. The bottom is white noise. After calculating near neighbors, calculating the forecast and forecast skill, the following plot is produced.</p>
+<img alt="_images/forecast_skill_chaos_periodic_noise.png" class="align-center" src="_images/forecast_skill_chaos_periodic_noise.png" />
+<p>Both the logistic map and periodic map <span class="math">\(R^2\)</span> values fall off as the distance away in the phase space is increased. The sine wave, however, has almost a perfect forecast skill. The plot above is a little different from what was shown in the quick example above. Here we are looking at the forecast skill (y-axis) plotted against the average distance to a particular near neighbor (x-axis). To clarify, the first point on the plots above is the average distance to the first near neighbor for all the points in the testing set. For example, if there were 3 samples in our testing set and the first near neighbor to those points had distances [1.3, 4.5, 2.7] respectively. We would say that the average distance for the first near neighbor is:</p>
+<div class="math">
+\[\frac{.18 + .45 + .27}{3} = .30\]</div>
+<p>This would be plotted against the <span class="math">\(R^2\)</span> calculated for those three points.</p>
+<p>For these three different series, three different trends are apparent. The first is the initial value of the forecast skill. The logistic map and sine wave both have high forecast skills at low distances in the phase space. The white noise, however, has a forecast skill of zero for the first near neighbor. This is to be expected as forecasting a truly noisy system is impossible.</p>
+<p>The difference between the sine wave and the Logistic map is that the forecast skill does not dramatically fall off as a function of distance, nor as a function of prediction distance. The <span class="math">\(R^2\)</span> value stays high out to a distance of 0.2.</p>
 </div>
 
 
@@ -153,10 +156,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="evaluation.html" class="btn btn-neutral float-right" title="Evaluation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="module-reference.html" class="btn btn-neutral float-right" title="Module Reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="embedding.html" class="btn btn-neutral" title="Embedding" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="predict.html" class="btn btn-neutral" title="Predict" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

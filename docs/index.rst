@@ -7,15 +7,19 @@ skedm
 =================================
 
 
-|License Type|
+|License Type| |Travis CI|
 
 **Scikit Emperical Dynamic Modeling**
 
-Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time series, spatio-temporal 2D arrays, and even discrete spatial arrangements. More importantly, skedm can provide insight into the underlying dynamics of a system. For a more complete background, I suggest checking out `Nonlinear Analysis by Kantz`_ as well as `Practical implementation of nonlinear time series methods: The TISEAN package`_. This package reproduces some of the tisean package in pure python. For a brief overview, the wikipedia article on `nonlinear analysis`_ is a good start. Additionally, `Dr. Sugihara's lab`_ has produced some good summary videos of the topic:
+Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time series, spatio-temporal 2D arrays, and even discrete spatial arrangements. More importantly, skedm can provide insight into the underlying dynamics of a system.
+
+For a quick explanation of this package, I suggest checking out the :ref:`example` section as well as the wikipedia article on `nonlinear analysis`_ . Additionally, `Dr. Sugihara's lab`_ has produced some good summary videos of the topic:
 
 1. `Time Series and Dynamic Manifolds`_
 2. `Reconstructed Shadow Manifold`_
 
+
+For a more complete background, I suggest checking out `Nonlinear Analysis by Kantz`_ as well as `Practical implementation of nonlinear time series methods: The TISEAN package`_.
 
 
 
@@ -25,11 +29,13 @@ Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time 
    :caption: Contents:
 
    install
-   quick-start
-   embedding
-   near-neighbors
-   evaluation
-   code
+   quick-example
+   generate-data
+   embed
+   predict
+   score
+   module-reference
+   acknowledgements
 
 
 .. _Scikit Emperical Dynamic Modeling: https://github.com/NickC1/skedm
@@ -37,6 +43,7 @@ Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time 
 
 .. _Practical implementation of nonlinear time series methods\: The TISEAN package : http://scitation.aip.org/content/aip/journal/chaos/9/2/10.1063/1.166424
 
+.. _example: http://skedm.readthedocs.io/en/latest/example.html
 .. _nonlinear analysis: https://www.wikiwand.com/en/Nonlinear_functional_analysis
 
 .. _dr. sugihara's lab: http://deepeco.ucsd.edu/
@@ -49,3 +56,5 @@ Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time 
 
 .. |License Type| image:: https://img.shields.io/github/license/mashape/apistatus.svg
     :target: https://github.com/NickC1/skedm/blob/master/LICENSE
+.. |Travis CI| image:: https://travis-ci.org/NickC1/skedm.svg?branch=master
+    :target: https://travis-ci.org/NickC1/skedm

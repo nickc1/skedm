@@ -1,31 +1,31 @@
-"""
-Generates data for skedm (SciKit Emperical Dynamic Modeling)
-
-Available data:
-
-  1D
-------
-logistic_map : logistic equation
-noisyPeriodic : sine and cosine wave added with noise
-noisyPeriodic_complicated : more complicated sine and cosine wave
-noise : randomly generated numbers
-lorenz : lorenz equations
-
-  2D
-------
-chaos2D : 2D logistic map diffused in space
-periodic : sine and cosine addition
-periodicBrown : sine and cosine with brown noise added
-brownNoise : brown noise generator
-noise : randomly generated numbers
-chaos3D : logistic map diffused in the third dimension
-randomCircles : randomly placed circles
-circleInCircle : circles sorrouned by larger circle
-circlesWithStuff : larger circles with smaller circles around
-randomSizedCircles : randomly sized circles spread around
-voronoiMatrix : voronoi polygons
-
-"""
+#
+# Generates data for skedm (SciKit Emperical Dynamic Modeling)
+#
+# Available data:
+#
+#   1D
+# ------
+# logistic_map : logistic equation
+# noisyPeriodic : sine and cosine wave added with noise
+# noisyPeriodic_complicated : more complicated sine and cosine wave
+# noise : randomly generated numbers
+# lorenz : lorenz equations
+#
+#   2D
+# ------
+# chaos2D : 2D logistic map diffused in space
+# periodic : sine and cosine addition
+# periodicBrown : sine and cosine with brown noise added
+# brownNoise : brown noise generator
+# noise : randomly generated numbers
+# chaos3D : logistic map diffused in the third dimension
+# randomCircles : randomly placed circles
+# circleInCircle : circles sorrouned by larger circle
+# circlesWithStuff : larger circles with smaller circles around
+# randomSizedCircles : randomly sized circles spread around
+# voronoiMatrix : voronoi polygons
+#
+#
 
 
 
@@ -37,7 +37,7 @@ from sklearn import neighbors
 
 def logistic_map(sz=256,A=3.99,seed=36, noise=0):
 	"""
-	Logistic map.
+	1D Logistic map.
 
 	X(t+1) = rX(t)(1 - X(t)) + random
 

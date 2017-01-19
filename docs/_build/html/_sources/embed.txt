@@ -1,4 +1,6 @@
-Embedding
+..  _embed:
+
+Embed
 ==========
 
 Embedding the time series, spatio-temporal series, or a spatial pattern is required before attempting to forecast or understand the dynamics of the system. I would suggest reading `this post by a professor at emory`_ to understand which lag and embedding dimension is appropriate.

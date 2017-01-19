@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Embedding &mdash; skedm 0.1 documentation</title>
+  <title>Embed &mdash; skedm 0.1 documentation</title>
   
 
   
@@ -31,8 +31,8 @@
 
   
     <link rel="top" title="skedm 0.1 documentation" href="index.html"/>
-        <link rel="next" title="Near Neighbors" href="near-neighbors.html"/>
-        <link rel="prev" title="Quick Start" href="quick-start.html"/> 
+        <link rel="next" title="Predict" href="predict.html"/>
+        <link rel="prev" title="Generate Data" href="generate-data.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,15 +84,17 @@
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Embedding</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="quick-example.html">Quick Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generate-data.html">Generate Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Embed</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#d-embedding">1D Embedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">2D Embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">2D Embedding</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="near-neighbors.html">Near Neighbors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Module Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="score.html">Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module-reference.html">Module Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 </ul>
 
             
@@ -123,11 +125,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Embedding</li>
+    <li>Embed</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/embedding.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/embed.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -137,8 +139,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="embedding">
-<h1>Embedding<a class="headerlink" href="#embedding" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="embed">
+<span id="id1"></span><h1>Embed<a class="headerlink" href="#embed" title="Permalink to this headline">¶</a></h1>
 <p>Embedding the time series, spatio-temporal series, or a spatial pattern is required before attempting to forecast or understand the dynamics of the system. I would suggest reading <a class="reference external" href="http://www.physics.emory.edu/faculty/weeks//research/tseries3.html">this post by a professor at emory</a> to understand which lag and embedding dimension is appropriate.</p>
 <p>As a quick recap, the lag is picked as the first minimum in the mutual information and the embedding dimension is picked using a false near neighbors test. In practice, however, it is acceptable to use the embedding that gives the highest forecast skill. Through experimentation, an embedding dimension of 3 is a good value to begin with and an embedding dimension of (2,3) for 2d systems.</p>
 <div class="section" id="d-embedding">
@@ -158,8 +160,8 @@
 <p>More examples of 1d embeddings are shown below. E is the embedding dimension, L is the lag, and F is the prediction distance.</p>
 <img alt="_images/1d_embedding_examples.png" class="align-center" src="_images/1d_embedding_examples.png" />
 </div>
-<div class="section" id="id1">
-<h2>2D Embedding<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>2D Embedding<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>An example of a 2D embedding is shown in the gif below. It shows a lag of 2 in both the rows and columns, an embedding dimension of two down the rows, and an embedding dimension of three across the columns.</p>
 <img alt="_images/2d_embedding.gif" class="align-center" src="_images/2d_embedding.gif" />
 <p>This would be implemented in code as:</p>
@@ -183,10 +185,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="near-neighbors.html" class="btn btn-neutral float-right" title="Near Neighbors" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="predict.html" class="btn btn-neutral float-right" title="Predict" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="quick-start.html" class="btn btn-neutral" title="Quick Start" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="generate-data.html" class="btn btn-neutral" title="Generate Data" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

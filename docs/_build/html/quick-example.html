@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quick Start &mdash; skedm 0.1 documentation</title>
+  <title>Quick Example &mdash; skedm 0.1 documentation</title>
   
 
   
@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="skedm 0.1 documentation" href="index.html"/>
-        <link rel="next" title="Embedding" href="embedding.html"/>
+        <link rel="next" title="Generate Data" href="generate-data.html"/>
         <link rel="prev" title="Install" href="install.html"/> 
 
   
@@ -84,11 +84,13 @@
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="embedding.html">Embedding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="near-neighbors.html">Near Neighbors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Module Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generate-data.html">Generate Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="embed.html">Embed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="score.html">Score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module-reference.html">Module Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 </ul>
 
             
@@ -119,11 +121,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Quick Start</li>
+    <li>Quick Example</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/quick-start.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/quick-example.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,20 +135,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="quick-start">
-<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
-<p>In order to illustrate how this package works, we start with the example in the videos above. The <a class="reference external" href="https://www.wikiwand.com/en/Lorenz_system">lorenz system</a> takes the form of :</p>
+  <div class="section" id="quick-example">
+<span id="example"></span><h1>Quick Example<a class="headerlink" href="#quick-example" title="Permalink to this headline">¶</a></h1>
+<p>Here we will illustrate how this package works. Each subsection here has its own section which goes into much more detail.
+We will illustrate how this package works with the <a class="reference external" href="https://www.wikiwand.com/en/Lorenz_system">lorenz system</a>. The Lorenz system takes the form of :</p>
 <div class="math">
 \[ \begin{align}\begin{aligned}\frac{dx}{dt} = \sigma (y - x)\\\frac{dy}{dt} = x(\rho - z) - y\\\frac{dz}{dt} = xy - \beta z\end{aligned}\end{align} \]</div>
-<p>Here, we are going to make forecasts of the <cite>x</cite> time series. Note that this series, while completely deterministic, is a classic <a class="reference external" href="https://www.wikiwand.com/en/Chaos_theory">chaotic system</a>. This means that making forecasts into the future is going to be difficult as small changes in the initial conditions can lead to drastically different trajectories of the system.</p>
-<p>There is a function in <code class="docutils literal"><span class="pre">skedm.data</span></code> to reproduce these time series. For example:</p>
+<p>After solving this system of equations, we are going to make forecasts of the <cite>x</cite> time series. Note that this series, while completely deterministic (there is no randomness associated with any of the above equations), is a classic <a class="reference external" href="https://www.wikiwand.com/en/Chaos_theory">chaotic system</a>. Chaotic systems are notoriously difficult to forecast (e.g. weather). Small changes in the initial conditions can lead to drastically different trajectories of the system.</p>
+<p>There is a function in <code class="docutils literal"><span class="pre">skedm.data</span></code> that calculates solutions for the lorenz system. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skedm.data</span> <span class="k">as</span> <span class="nn">data</span>
 
 <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lorenz</span><span class="p">()[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#only going to use the x values</span>
 </pre></div>
 </div>
 <img alt="_images/lorenz.png" class="align-center" src="_images/lorenz.png" />
-<p>The next step is to calculate the mutual information between the time series and the shifted time series. This determines the lag value for the embedding. The first minimum in the <a class="reference external" href="https://www.wikiwand.com/en/Mutual_information">mutual information</a> can be thought of as jumping far enough away that there is new information gained. A more useful thought construct might be to think of it as the first minimum in the autocorrelation. Mutual information, however, is better than autocorrelation for <a class="reference external" href="http://www.physics.emory.edu/faculty/weeks//research/tseries3.html">picking the lag value</a>. The mutual information calculation can be done using the <cite>embed</cite> class provided by skedm.</p>
+<p>The next step is to calculate the mutual information between the time series and a shifted version of itself. More mathematically, the mutual information between <cite>X(t) and X(t+n)</cite> where <cite>n</cite> is an integer number of timesteps. This determines the lag value for the embedding. The first minimum in the <a class="reference external" href="https://www.wikiwand.com/en/Mutual_information">mutual information</a> can be thought of as jumping far enough away that there is new information gained. A more useful thought construct might be to think of it as the first minimum in the autocorrelation. Mutual information, however, is better than autocorrelation for <a class="reference external" href="http://www.physics.emory.edu/faculty/weeks//research/tseries3.html">picking the lag value</a>. The mutual information calculation can be done using the <cite>embed</cite> class provided by skedm.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skedm</span> <span class="k">as</span> <span class="nn">edm</span>
 
 <span class="n">E</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Embed</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1">#initiate the class</span>
@@ -156,7 +159,7 @@
 </pre></div>
 </div>
 <img alt="_images/lorenz_mutual_info.png" class="align-center" src="_images/lorenz_mutual_info.png" />
-<p>The first minimum of the mutual information is at lag=18. This is the lag that will be used to rebuild a shadow manifold. This is done by the <code class="docutils literal"><span class="pre">embed_vectors_1d</span></code> method. A longer discussion about embedding dimension (how the value for <code class="docutils literal"><span class="pre">embed</span></code> is chosen) is found in the next section.</p>
+<p>The first minimum of the mutual information is at <cite>n=18</cite>. This is the lag that will be used to rebuild a shadow manifold. This is done by the <code class="docutils literal"><span class="pre">embed_vectors_1d</span></code> method. A longer discussion about embedding dimension (how the value for <code class="docutils literal"><span class="pre">embed</span></code> is chosen) is found in the <span class="xref std std-ref">embedding</span> section.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lag</span> <span class="o">=</span> <span class="mi">18</span>
 <span class="n">embed</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">predict</span> <span class="o">=</span> <span class="mi">36</span> <span class="c1">#predicting out to double to lag</span>
@@ -225,7 +228,7 @@
 <img alt="_images/lorenz_score_individual.png" class="align-center" src="_images/lorenz_score_individual.png" />
 <p>Likewise, we can look at the actual forecast made by the algorithm and compare it to the actual evolution of the time series.</p>
 <img alt="_images/lorenz_individual_predictions.png" class="align-center" src="_images/lorenz_individual_predictions.png" />
-<p>As we can see, by not averaging the near neighbors, the forecast skill decreases and the actual forecast made becomes quite noisy, This is because we are no grabbing points that are not nearby in the space to make predictions. This should intuitively do worse than picking nearby regions.</p>
+<p>As we can see, by not averaging the near neighbors, the forecast skill decreases and the actual forecast made becomes quite noisy, This is because we are now grabbing points that are not nearby in the space to make predictions. This should intuitively do worse than picking nearby regions.</p>
 </div>
 
 
@@ -235,7 +238,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="embedding.html" class="btn btn-neutral float-right" title="Embedding" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="generate-data.html" class="btn btn-neutral float-right" title="Generate Data" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="install.html" class="btn btn-neutral" title="Install" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

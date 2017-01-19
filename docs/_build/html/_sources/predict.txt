@@ -1,5 +1,5 @@
-Near Neighbors
-==============
+Predict
+=======
 
 At the heart of emperical dynamic modeling is the `k-nearest neighbors algorithm`_. In fact, the package uses scikit-learn's `nearest neighbor implementation`_ for efficient calculation of distances and to retrieve the indices of the nearest neighbors. It is a good idea to understand the k-nearest neighbor algorithm before interpreting what this package implements.
 

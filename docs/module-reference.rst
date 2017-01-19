@@ -1,6 +1,6 @@
 
 Module Reference
-=================================
+================
 
 
 .. automodule:: skedm.skedm
@@ -11,10 +11,4 @@ utilities
 ---------
 
 .. automodule:: skedm.utilities
-   :members:
-
-data
-----
-
-.. automodule:: skedm.data
    :members:

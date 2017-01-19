@@ -1,5 +1,5 @@
-Evaluation
-==========
+Score
+=====
 
 The next step is to examine the forecast skill. This is done by comparing the actual trajectories to the forecasted trajectories. We will see different patterns in the forecast skill depending if the system is deterministic or noisy. Consider the three systems below.
 

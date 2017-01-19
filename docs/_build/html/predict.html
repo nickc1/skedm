@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Module Index &mdash; skedm 0.1 documentation</title>
+  <title>Predict &mdash; skedm 0.1 documentation</title>
   
 
   
@@ -31,9 +31,8 @@
 
   
     <link rel="top" title="skedm 0.1 documentation" href="index.html"/>
- 
-
-
+        <link rel="next" title="Score" href="score.html"/>
+        <link rel="prev" title="Embed" href="embed.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -83,12 +82,12 @@
             
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick-example.html">Quick Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generate-data.html">Generate Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="embed.html">Embed</a></li>
-<li class="toctree-l1"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Predict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="score.html">Score</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module-reference.html">Module Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
@@ -114,7 +113,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -122,9 +121,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li></li>
+    <li>Predict</li>
       <li class="wy-breadcrumbs-aside">
         
+          
+            <a href="_sources/predict.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -134,44 +135,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-   <h1>Python Module Index</h1>
-
-   <div class="modindex-jumpbox">
-   <a href="#cap-s"><strong>s</strong></a>
-   </div>
-
-   <table class="indextable modindextable" cellspacing="0" cellpadding="2">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-s"><td></td><td>
-       <strong>s</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <code class="xref">skedm</code></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="generate-data.html#module-skedm.data"><code class="xref">skedm.data</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="module-reference.html#module-skedm.skedm"><code class="xref">skedm.skedm</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="module-reference.html#module-skedm.utilities"><code class="xref">skedm.utilities</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+  <div class="section" id="predict">
+<h1>Predict<a class="headerlink" href="#predict" title="Permalink to this headline">¶</a></h1>
+<p>At the heart of emperical dynamic modeling is the <a href="#id1"><span class="problematic" id="id2">`k-nearest neighbors algorithm`_</span></a>. In fact, the package uses scikit-learn&#8217;s <a href="#id3"><span class="problematic" id="id4">`nearest neighbor implementation`_</span></a> for efficient calculation of distances and to retrieve the indices of the nearest neighbors. It is a good idea to understand the k-nearest neighbor algorithm before interpreting what this package implements.</p>
+<p>For the regression case, we will look at a zoomed in version of the lorenz system that was discussed above. The red dots are the actual points that make up the blue line and the green box is the point that we want to forecast. The trajectory is clockwise.</p>
+<img alt="_images/zoom_embedded_lorenz.png" class="align-center" src="_images/zoom_embedded_lorenz.png" />
+<p>In this section of the Lorenz attractor, we can see that the red points closest to the green box all follow the same trajectory. If we wanted to forecast this green box, we could grab the closest red point and see where that ends up. We would then say that this is where the green box will end up.</p>
+<p>Grabbing more points, however, might prove to be useful since our box lies between a couple of the points. It might be better to average the trajectories of, for example, the three nearest points to make a forecast than just taking the closest one.</p>
+<p>It is also possible to imagine that at some point grabbing more and more near neighbors will be detrimental to the forecast as the points that we will be grabbing will have wildly different trajectories. For example, grabbing all the points in this subsection of space will show a trajectory to the right which would be a terrible forecast for the green box.</p>
+<p>Additionally, we could also think about adding noise to this system as shown in the plot below.</p>
+<img alt="_images/zoom_embedded_lorenz_noise.png" class="align-center" src="_images/zoom_embedded_lorenz_noise.png" />
+<p>Now it might be useful to grab more points as the trajectories are no longer smooth. Additionally the trajectories are no longer perfectly deterministic. There is an added level of stochasticity which will lower the forecast skill.</p>
+</div>
 
 
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="score.html" class="btn btn-neutral float-right" title="Score" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="embed.html" class="btn btn-neutral" title="Embed" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

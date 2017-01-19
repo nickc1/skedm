@@ -1,5 +1,5 @@
 Install
-=================================
+=======
 
 
 pip
@@ -9,12 +9,10 @@ pip
   pip install skedm
 
 
-Requirements
-^^^^^^^^^^^^
+Conda (Recommended)
+^^^^^^^^^^^^^^^^^^^
 
-To simply create the approriate environment, you can use a conda environment.yml file. The file takes the form of:
-
-::
+To create a conda environment, you can use the following conda environment.yml file::
 
   name: skedm_env
   dependencies:
@@ -22,22 +20,23 @@ To simply create the approriate environment, you can use a conda environment.yml
     - numpy
     - numba
     - scikit-learn
+    - scipy
     - pip:
       - skedm
 
-Then you can simply create the environment with:
-
-::
+Then you can simply create the environment with::
 
   conda env create -f environment.yml
 
 Contribute, Report Issues, Support
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To contribute, we suggest making a pull request.
+To contribute, we suggest making a `pull request`_.
 
-To report issues, we suggest making opening an issue
+To report issues, we suggest `opening an issue`_.
 
 
 
 .. _github: https://github.com/NickC1/skedm
+.. _pull request: https://github.com/NickC1/skedm/pulls
+.. _opening an issue: https://github.com/NickC1/skedm/issues
