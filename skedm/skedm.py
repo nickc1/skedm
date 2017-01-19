@@ -28,8 +28,12 @@ class Regression:
 
     def fit(self, Xtrain, ytrain):
         """
-        Xtrain : features (nsamples,nfeatures)
-        ytrain : targets (nsamples,ntargets)
+        Fit the training data. Can also be thought of as populating the phase
+        space.
+        Xtrain : 2D array
+            features (nsamples,nfeatures)
+        ytrain : 2D array
+            targets (nsamples,ntargets)
         """
         self.Xtrain = Xtrain
         self.ytrain = ytrain
