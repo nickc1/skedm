@@ -7,7 +7,7 @@ The next step is to examine the forecast skill. This is done by comparing the ac
    :align: center
 
 
-The top is the [logistic map][logistic-map-wiki]. It is a classic chaotic system. The second is a sine wave with a little bit of noise added. The bottom is white noise. After calculating near neighbors, calculating the forecast and forecast skill, the following plot is produced.
+The top is the `logistic map`_. It is a classic chaotic system. The second is a sine wave with a little bit of noise added. The bottom is white noise. After calculating near neighbors, calculating the forecast and forecast skill, the following plot is produced.
 
 
 .. image:: /_static/edm/forecast_skill_chaos_periodic_noise.png
@@ -26,3 +26,5 @@ This would be plotted against the :math:`R^2` calculated for those three points.
 For these three different series, three different trends are apparent. The first is the initial value of the forecast skill. The logistic map and sine wave both have high forecast skills at low distances in the phase space. The white noise, however, has a forecast skill of zero for the first near neighbor. This is to be expected as forecasting a truly noisy system is impossible.
 
 The difference between the sine wave and the Logistic map is that the forecast skill does not dramatically fall off as a function of distance, nor as a function of prediction distance. The :math:`R^2` value stays high out to a distance of 0.2.
+
+.. _logistic map: https://www.wikiwand.com/en/Logistic_map

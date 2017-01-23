@@ -142,7 +142,7 @@
   <div class="section" id="embed">
 <span id="id1"></span><h1>Embed<a class="headerlink" href="#embed" title="Permalink to this headline">¶</a></h1>
 <p>Embedding the time series, spatio-temporal series, or a spatial pattern is required before attempting to forecast or understand the dynamics of the system. I would suggest reading <a class="reference external" href="http://www.physics.emory.edu/faculty/weeks//research/tseries3.html">this post by a professor at emory</a> to understand which lag and embedding dimension is appropriate.</p>
-<p>As a quick recap, the lag is picked as the first minimum in the mutual information and the embedding dimension is picked using a false near neighbors test. In practice, however, it is acceptable to use the embedding that gives the highest forecast skill. Through experimentation, an embedding dimension of 3 is a good value to begin with and an embedding dimension of (2,3) for 2d systems.</p>
+<p>As a quick recap, the lag is picked as the first minimum in the mutual information and the embedding dimension is picked using a false near neighbors test. In practice, however, it is acceptable to use the embedding that gives the highest forecast skill. As a starting point, an embedding dimension of 3 is a good value for 1D systems and an embedding dimension of (2,3) works well for 2d systems.</p>
 <div class="section" id="d-embedding">
 <h2>1D Embedding<a class="headerlink" href="#d-embedding" title="Permalink to this headline">¶</a></h2>
 <p>An example of a 1D embedding is shown in the gif below. It shows a lag of 2, an embedding dimension of 3 and a forecast distance of 2. Setting the problem up this way allows us to use powerful near neighbor libraries such as the one implemented in scikit-learn.</p>

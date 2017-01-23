@@ -3,8 +3,7 @@
 Quick Example
 =============
 
-Here we will illustrate how this package works. Each subsection here has its own section which goes into much more detail. 
-We will illustrate how this package works with the `lorenz system`_. The Lorenz system takes the form of :
+To illustrate the utility of this package we will work with the `lorenz system`_. The Lorenz system takes the form of :
 
 .. math::
 
@@ -57,7 +56,7 @@ The first minimum of the mutual information is at `n=18`. This is the lag that w
 
 The plot above is showing only ``X[:,0]`` and ``X[:,1]``. This embedding preserves the geometric features of the original attractor.
 
-Now that we embed the time series, all that is left to do is check the forecast skill as a function of near neighbors. First we split it into a training set and testing set. Additionally, we will initiate the class.
+Now that we embed the time series, all that is left to do is check the forecast skill as a function of near neighbors. First we split it into a training set and testing set. Additionally, we will initiate the Regression class.
 
 ::
 

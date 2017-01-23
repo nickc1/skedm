@@ -137,8 +137,7 @@
             
   <div class="section" id="quick-example">
 <span id="example"></span><h1>Quick Example<a class="headerlink" href="#quick-example" title="Permalink to this headline">¶</a></h1>
-<p>Here we will illustrate how this package works. Each subsection here has its own section which goes into much more detail.
-We will illustrate how this package works with the <a class="reference external" href="https://www.wikiwand.com/en/Lorenz_system">lorenz system</a>. The Lorenz system takes the form of :</p>
+<p>To illustrate the utility of this package we will work with the <a class="reference external" href="https://www.wikiwand.com/en/Lorenz_system">lorenz system</a>. The Lorenz system takes the form of :</p>
 <div class="math">
 \[ \begin{align}\begin{aligned}\frac{dx}{dt} = \sigma (y - x)\\\frac{dy}{dt} = x(\rho - z) - y\\\frac{dz}{dt} = xy - \beta z\end{aligned}\end{align} \]</div>
 <p>After solving this system of equations, we are going to make forecasts of the <cite>x</cite> time series. Note that this series, while completely deterministic (there is no randomness associated with any of the above equations), is a classic <a class="reference external" href="https://www.wikiwand.com/en/Chaos_theory">chaotic system</a>. Chaotic systems are notoriously difficult to forecast (e.g. weather). Small changes in the initial conditions can lead to drastically different trajectories of the system.</p>
@@ -168,7 +167,7 @@ We will illustrate how this package works with the <a class="reference external"
 </div>
 <img alt="_images/embedded_lorenz.png" class="align-center" src="_images/embedded_lorenz.png" />
 <p>The plot above is showing only <code class="docutils literal"><span class="pre">X[:,0]</span></code> and <code class="docutils literal"><span class="pre">X[:,1]</span></code>. This embedding preserves the geometric features of the original attractor.</p>
-<p>Now that we embed the time series, all that is left to do is check the forecast skill as a function of near neighbors. First we split it into a training set and testing set. Additionally, we will initiate the class.</p>
+<p>Now that we embed the time series, all that is left to do is check the forecast skill as a function of near neighbors. First we split it into a training set and testing set. Additionally, we will initiate the Regression class.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#split it into training and testing sets</span>
 <span class="n">train_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="o">.</span><span class="mi">75</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
 <span class="n">Xtrain</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">]</span>

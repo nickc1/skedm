@@ -5,7 +5,7 @@ Embed
 
 Embedding the time series, spatio-temporal series, or a spatial pattern is required before attempting to forecast or understand the dynamics of the system. I would suggest reading `this post by a professor at emory`_ to understand which lag and embedding dimension is appropriate.
 
-As a quick recap, the lag is picked as the first minimum in the mutual information and the embedding dimension is picked using a false near neighbors test. In practice, however, it is acceptable to use the embedding that gives the highest forecast skill. Through experimentation, an embedding dimension of 3 is a good value to begin with and an embedding dimension of (2,3) for 2d systems.
+As a quick recap, the lag is picked as the first minimum in the mutual information and the embedding dimension is picked using a false near neighbors test. In practice, however, it is acceptable to use the embedding that gives the highest forecast skill. As a starting point, an embedding dimension of 3 is a good value for 1D systems and an embedding dimension of (2,3) works well for 2d systems.
 
 1D Embedding
 ^^^^^^^^^^^^

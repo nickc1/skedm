@@ -21,3 +21,7 @@ Additionally, we could also think about adding noise to this system as shown in 
    :align: center
 
 Now it might be useful to grab more points as the trajectories are no longer smooth. Additionally the trajectories are no longer perfectly deterministic. There is an added level of stochasticity which will lower the forecast skill.
+
+
+.. _k-nearest neighbors algorithm: https://www.wikiwand.com/en/K-nearest_neighbors_algorithm
+.. _nearest neighbor implementation: http://scikit-learn.org/stable/modules/neighbors.html

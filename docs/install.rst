@@ -35,6 +35,8 @@ To contribute, we suggest making a `pull request`_.
 
 To report issues, we suggest `opening an issue`_.
 
+For support, email cortalen@uncw.edu.
+
 
 
 .. _github: https://github.com/NickC1/skedm
