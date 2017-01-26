@@ -54,4 +54,4 @@ MICRO = _version_micro
 VERSION = __version__
 PACKAGES = ['skedm']
 PACKAGE_DATA = ""
-REQUIRES = ["numpy","numba", "scikitlearn","scipy","pytest"]
+REQUIRES = ["numpy","numba","scipy"]
