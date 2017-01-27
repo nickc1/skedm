@@ -9,10 +9,10 @@ authors:
    orcid: 0000-0000-0000-0000
    affiliation: 1
  - name: Dylan McNamara
-   orcid: 0000-0000-0000-0000
-   affiliation: 2
+   orcid: 0000-0001-8752-1586
+   affiliation: 1
 affiliations:
- - name: University of North Carolina Wilmington
+ - name: Department of Physics and Physical Oceanography/Center for Marine Science, University of North Carolina Wilmington
    index: 1
 date: 24 January 2017
 bibliography: paper.bib
