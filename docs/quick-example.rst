@@ -20,7 +20,7 @@ There is a function in ``skedm.data`` that numerically solves the lorenz system 
 
   import skedm.data as data
 
-  X = data.lorenz()[:,0] #only going to use the x values
+  X = data.lorenz()[::2,0] #only going to use every other x value
 
 .. image:: /_static/edm/lorenz.png
    :align: center
