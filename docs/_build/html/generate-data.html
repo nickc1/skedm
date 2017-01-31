@@ -87,7 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="quick-example.html">Quick Example</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Generate Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-skedm.data">1 Dimensional</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">2 Dimensional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-skedm.data">2 Dimensional</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="embed.html">Embed</a></li>
@@ -173,8 +173,8 @@ chaotic behaviour.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.noisyPeriodic">
-<code class="descclassname">skedm.data.</code><code class="descname">noisyPeriodic</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisyPeriodic" title="Permalink to this definition">¶</a></dt>
+<dt id="skedm.data.noisy_periodic">
+<code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple periodic equation with a a specified amplitude of noise.</p>
 <p>X = sin(x) + .5cos(x) + random</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -189,7 +189,7 @@ chaotic behaviour.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Returns a 1D periodic equaiton of size (sz) with values between 0 and 1</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Periodic array of size (sz) with values between 0 and 1.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1D array</p>
@@ -200,8 +200,8 @@ chaotic behaviour.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.noisyPeriodic_complicated">
-<code class="descclassname">skedm.data.</code><code class="descname">noisyPeriodic_complicated</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisyPeriodic_complicated" title="Permalink to this definition">¶</a></dt>
+<dt id="skedm.data.noisy_periodic_complicated">
+<code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic_complicated</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic_complicated" title="Permalink to this definition">¶</a></dt>
 <dd><p>A complicated periodic equation with a a specified amplitude of noise.</p>
 <p>X = sin(x) + .5cos(.5x) + .25sin(.25x) + random</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -216,7 +216,7 @@ chaotic behaviour.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Returns a 1D periodic equaiton of size (sz) with values between 0 and 1.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Periodic array of size (sz) with values between 0 and 2.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1D array</p>
@@ -227,9 +227,9 @@ chaotic behaviour.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.noise">
-<code class="descclassname">skedm.data.</code><code class="descname">noise</code><span class="sig-paren">(</span><em>sz=256</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noise" title="Permalink to this definition">¶</a></dt>
-<dd><p>A random distribution of numbers.</p>
+<dt id="skedm.data.noise_1D">
+<code class="descclassname">skedm.data.</code><code class="descname">noise_1D</code><span class="sig-paren">(</span><em>sz=256</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noise_1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>A random distribution of numbers. White Noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -240,7 +240,7 @@ chaotic behaviour.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Returns a 1D periodic equaiton of size (sz) with values between 0 and 1.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Random array of size (sz) with values between 0 and 1.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1D array</p>
@@ -280,11 +280,11 @@ dz/dt = xy - Bz</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id1">
-<h2>2 Dimensional<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-skedm.data"></span><dl class="function">
-<dt id="skedm.data.chaos2D">
-<code class="descclassname">skedm.data.</code><code class="descname">chaos2D</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>seed=36</em>, <em>noise=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos2D" title="Permalink to this definition">¶</a></dt>
+<div class="section" id="module-skedm.data">
+<span id="id1"></span><h2>2 Dimensional<a class="headerlink" href="#module-skedm.data" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="skedm.data.chaos_2d">
+<code class="descclassname">skedm.data.</code><code class="descname">chaos_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>seed=36</em>, <em>noise=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Logistic map diffused in space.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -311,8 +311,8 @@ easily reproduced.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.periodic">
-<code class="descclassname">skedm.data.</code><code class="descname">periodic</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic" title="Permalink to this definition">¶</a></dt>
+<dt id="skedm.data.periodic_2d">
+<code class="descclassname">skedm.data.</code><code class="descname">periodic_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple 2D periodic equation with a specified amplitude of noise.</p>
 <p>X = sin(y) + .5cos(x) + random</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -327,7 +327,7 @@ easily reproduced.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Returns a 2D periodic equaiton of size (sz,sz). Values between 0 and 1.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; 2D periodic equaiton of size (sz,sz). Values between 0 and 1.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
@@ -338,23 +338,27 @@ easily reproduced.</li>
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="descclassname">skedm.data.</code><code class="descname">noise</code><span class="sig-paren">(</span><em>sz=256</em>, <em>seed=36</em><span class="sig-paren">)</span></dt>
-<dd><p>A random distribution of numbers.</p>
+<dt id="skedm.data.periodic_brown">
+<code class="descclassname">skedm.data.</code><code class="descname">periodic_brown</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=15</em>, <em>noise=1.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_brown" title="Permalink to this definition">¶</a></dt>
+<dd><p>A periodic equation with a specified amplitude of brown noise.
+Calls the function brownNoise.</p>
+<p>X = sin(y + noise*2pi)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series.</li>
+<li><strong>sz</strong> (<em>int</em>) &#8211; Length of the spatiotemporal series.</li>
+<li><strong>freq</strong> (<em>int</em>) &#8211; Frequency of the periodic equation.</li>
+<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 <li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Returns a 1D periodic equaiton of size (sz) with values between 0 and 1.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Array containing the periodic equation with brown noise added.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1D array</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
 </td>
 </tr>
 </tbody>
@@ -362,8 +366,91 @@ easily reproduced.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.randomCircles">
-<code class="descclassname">skedm.data.</code><code class="descname">randomCircles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad=20.0</em>, <em>sigma=1</em>, <em>num_circles=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.randomCircles" title="Permalink to this definition">¶</a></dt>
+<dt id="skedm.data.brown_noise">
+<code class="descclassname">skedm.data.</code><code class="descname">brown_noise</code><span class="sig-paren">(</span><em>sz=128</em>, <em>num_walks=500</em>, <em>walk_sz=100000</em>, <em>spread=1000</em>, <em>seed=3</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.brown_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates brown noise with a bunch of random walks.</p>
+<p>Subsamples to generate sizes: 128, 256, or 512. 512 is the full size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the array to be returned.</li>
+<li><strong>num_walks</strong> (<em>int</em>) &#8211; Number of random walks.</li>
+<li><strong>walk_sz</strong> (<em>int</em>) &#8211; Length of the random walk to take.</li>
+<li><strong>spread</strong> (<em>int</em>) &#8211; Normal distribution of walks. Sizes randn*spread.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; 2D brown noise array size (sz,sz).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.data.noise_2d">
+<code class="descclassname">skedm.data.</code><code class="descname">noise_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noise_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 2D random distribution of numbers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sz</strong> (<em>int</em>) &#8211; row and column size of array.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Array of size (sz,sz) with values between 0 and 1.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.data.chaos_3d">
+<code class="descclassname">skedm.data.</code><code class="descname">chaos_3d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>steps=100</em>, <em>tstart=50</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logistic map diffused in space and then taken through time.</p>
+<p>Chaos evolves in 3rd dimension.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the spatio-temporal series to be generated.</li>
+<li><strong>A</strong> (<em>float</em>) &#8211; Parameter for the logistic map. Values beyond 3.56995 exhibit chaotic
+behaviour.</li>
+<li><strong>eps</strong> (<em>float</em>) &#8211; Amount of coupling/diffusion between adjecent cells.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; sets the random seed for the logistic map. Allows results to be
+easily reproduced.</li>
+<li><strong>tstart</strong> (<em>int</em>) &#8211; When to start collecting the data. This allows the chaos to be
+fully developed before collection.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Spatiotemporal logistic map of size (sz,sz,steps).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.data.random_circles">
+<code class="descclassname">skedm.data.</code><code class="descname">random_circles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad=20.0</em>, <em>sigma=1</em>, <em>num_circles=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.random_circles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomly places down gaussian circles and the sum is taken.</p>
 <p>Calls circleCreate to make the circles</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -378,7 +465,7 @@ easily reproduced.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Returns the summed gaussian circles. Size (sz,sz).</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Summed gaussian circles. Size (sz,sz).</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
@@ -389,8 +476,34 @@ easily reproduced.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.circlesWithStuff">
-<code class="descclassname">skedm.data.</code><code class="descname">circlesWithStuff</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad1=5</em>, <em>rad2=8</em>, <em>num_blobs=100</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.circlesWithStuff" title="Permalink to this definition">¶</a></dt>
+<dt id="skedm.data.circle_in_circle">
+<code class="descclassname">skedm.data.</code><code class="descname">circle_in_circle</code><span class="sig-paren">(</span><em>rad_list</em>, <em>sz=256</em>, <em>num_blobs=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.circle_in_circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create circles inside larger circles. These circles cannot overlap.
+Calls the function blobber.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rad_list</strong> (<em>list of ints</em>) &#8211; Radii of the circles.</li>
+<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the returned space.</li>
+<li><strong>num_blobs</strong> (<em>int</em>) &#8211; Number of circles to create.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>blobs</strong> &#8211; Array of the circles within circles of shape (sz,sz).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.data.circles_with_stuff">
+<code class="descclassname">skedm.data.</code><code class="descname">circles_with_stuff</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad1=5</em>, <em>rad2=8</em>, <em>num_blobs=100</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.circles_with_stuff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create circles with random smaller circles spread around randomly.</p>
 <p>Same number of large circles and smaller circles. Calls blobber2.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -416,8 +529,8 @@ easily reproduced.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.randomSizedCircles">
-<code class="descclassname">skedm.data.</code><code class="descname">randomSizedCircles</code><span class="sig-paren">(</span><em>rad_list</em>, <em>val_list</em>, <em>sz=512</em>, <em>num_blobs=3000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.randomSizedCircles" title="Permalink to this definition">¶</a></dt>
+<dt id="skedm.data.random_sized_circles">
+<code class="descclassname">skedm.data.</code><code class="descname">random_sized_circles</code><span class="sig-paren">(</span><em>rad_list</em>, <em>val_list</em>, <em>sz=512</em>, <em>num_blobs=3000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.random_sized_circles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create random sized circles spread around randomly and assign them
 to classes: 1:27</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -432,7 +545,7 @@ to classes: 1:27</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>blobs</strong> &#8211; Array containing a all circles.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>blobs</strong> &#8211; Array containing all circles.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
@@ -443,8 +556,8 @@ to classes: 1:27</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.voronoiMatrix">
-<code class="descclassname">skedm.data.</code><code class="descname">voronoiMatrix</code><span class="sig-paren">(</span><em>sz=512</em>, <em>percent=0.1</em>, <em>num_classes=27</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.voronoiMatrix" title="Permalink to this definition">¶</a></dt>
+<dt id="skedm.data.voronoi_matrix">
+<code class="descclassname">skedm.data.</code><code class="descname">voronoi_matrix</code><span class="sig-paren">(</span><em>sz=512</em>, <em>percent=0.1</em>, <em>num_classes=27</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.voronoi_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create voronoi polygons.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

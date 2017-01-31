@@ -137,10 +137,10 @@
             
   <div class="section" id="quick-example">
 <span id="example"></span><h1>Quick Example<a class="headerlink" href="#quick-example" title="Permalink to this headline">¶</a></h1>
-<p>To illustrate the utility of this package we will work with the <a class="reference external" href="https://www.wikiwand.com/en/Lorenz_system">lorenz system</a>. The Lorenz system takes the form of :</p>
+<p>To illustrate the utility of this package we will work with the <a class="reference external" href="https://www.wikiwand.com/en/Lorenz_system">Lorenz system</a>. The Lorenz system takes the form of :</p>
 <div class="math">
 \[ \begin{align}\begin{aligned}\frac{dx}{dt} = \sigma (y - x)\\\frac{dy}{dt} = x(\rho - z) - y\\\frac{dz}{dt} = xy - \beta z\end{aligned}\end{align} \]</div>
-<p>After numerically solving this system of equations, we are going to make forecasts of the <cite>x</cite> time series. Note that this series, while completely deterministic (there is no randomness associated with any of the above equations), is a classic <a class="reference external" href="https://www.wikiwand.com/en/Chaos_theory">chaotic system</a>. Chaotic systems are notoriously difficult to forecast (e.g. weather) due to their sensitive dependance on initial conditions and corresponding positive Lyapunov exponents.</p>
+<p>After numerically solving this system of equations, we are going to make forecasts of the <span class="math">\(x\)</span> time series. Note that this series, while completely deterministic (there is no randomness associated with any of the above equations), is a classic <a class="reference external" href="https://www.wikiwand.com/en/Chaos_theory">chaotic system</a>. Chaotic systems are notoriously difficult to forecast (e.g. weather) due to their sensitive dependance on initial conditions and corresponding positive Lyapunov exponents.</p>
 <p>There is a function in <code class="docutils literal"><span class="pre">skedm.data</span></code> that numerically solves the lorenz system using scipy&#8217;s built in integrator with a step size of 0.1 seconds. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skedm.data</span> <span class="k">as</span> <span class="nn">data</span>
 
@@ -148,7 +148,7 @@
 </pre></div>
 </div>
 <img alt="_images/lorenz.png" class="align-center" src="_images/lorenz.png" />
-<p>In attempting to use the &#8216;x&#8217; time series to reconstruct the state space behavior of the complete lorenz system, a lag is needed to form the embedding vector.  This lag is most commonly found from the first minimum in the mutual information between the time series and a shifted version of itself. The first minimum in the <a class="reference external" href="https://www.wikiwand.com/en/Mutual_information">mutual information</a> can be thought of as jumping far enough away in the time series that new information is gained. A more inituitive but less commonly used procedure to finding the lag is using the first minimum in the autocorrelation. The mutual information calculation can be done using the <cite>embed</cite> class provided by skedm.</p>
+<p>In attempting to use the <span class="math">\(x\)</span> time series to reconstruct the state space behavior of the complete lorenz system, a lag is needed to form the embedding vector.  This lag is most commonly found from the first minimum in the mutual information between the time series and a shifted version of itself. The first minimum in the <a class="reference external" href="https://www.wikiwand.com/en/Mutual_information">mutual information</a> can be thought of as jumping far enough away in the time series that new information is gained. A more inituitive but less commonly used procedure to finding the lag is using the first minimum in the autocorrelation. The mutual information calculation can be done using the <code class="docutils literal"><span class="pre">embed</span></code> class provided by skedm.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skedm</span> <span class="k">as</span> <span class="nn">edm</span>
 
 <span class="n">E</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Embed</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1">#initiate the class</span>
@@ -158,7 +158,7 @@
 </pre></div>
 </div>
 <img alt="_images/lorenz_mutual_info.png" class="align-center" src="_images/lorenz_mutual_info.png" />
-<p>The first minimum of the mutual information is at <cite>n=18</cite>. This is the lag that will be used to rebuild a shadow manifold. This is done by the <code class="docutils literal"><span class="pre">embed_vectors_1d</span></code> method. A longer discussion about embedding dimension (how the value for <code class="docutils literal"><span class="pre">embed</span></code> is chosen) is found in the <span class="xref std std-ref">embedding</span> section.</p>
+<p>The first minimum of the mutual information is at <span class="math">\(n=18\)</span>. This is the lag that will be used to rebuild a shadow manifold. This is done by the <code class="docutils literal"><span class="pre">embed_vectors_1d</span></code> method. A longer discussion about embedding dimension (how the value for <code class="docutils literal"><span class="pre">embed</span></code> is chosen) is found in the <a class="reference internal" href="embed.html#embed"><span class="std std-ref">Embed</span></a> section.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lag</span> <span class="o">=</span> <span class="mi">18</span>
 <span class="n">embed</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">predict</span> <span class="o">=</span> <span class="mi">36</span> <span class="c1">#predicting out to double to lag</span>
@@ -215,7 +215,7 @@
 </div>
 <img alt="_images/lorenz_weighted_predictions.png" class="align-center" src="_images/lorenz_weighted_predictions.png" />
 <p>As expected, the forecast accuracy decreases as more and more near neighbor trajectories are averaged together to make a prediction.</p>
-<p>Additionally, instead of averaging near neighbors, it is possible to look at the forecast skill of each near neighbor. This is visualized against the average distance to that point. This is computed as:</p>
+<p>Additionally, instead of averaging near neighbors, it is possible to look at the forecast skill of each near neighbor. This is computed as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">M</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">)</span> <span class="c1">#fit the data (rebuilding the attractor)</span>
 
 <span class="n">nn_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
@@ -227,7 +227,7 @@
 <img alt="_images/lorenz_score_individual.png" class="align-center" src="_images/lorenz_score_individual.png" />
 <p>Likewise, we can look at the actual forecast made by the algorithm and compare it to the actual evolution of the time series.</p>
 <img alt="_images/lorenz_individual_predictions.png" class="align-center" src="_images/lorenz_individual_predictions.png" />
-<p>As we can see, by not averaging the near neighbors, the forecast skill decreases and the actual forecast made becomes quite noisy, This is because we are now using single trajectories that are not nearby in the reconstructed space to make predictions. This should intuitively do worse than picking nearby regions.</p>
+<p>As we can see, by not averaging the near neighbors, the forecast skill decreases and the actual forecast made becomes quite noisy. This is because we are now using single trajectories that are not nearby in the reconstructed space to make predictions. This should intuitively do worse than picking nearby regions.</p>
 </div>
 
 

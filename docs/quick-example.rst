@@ -3,7 +3,7 @@
 Quick Example
 =============
 
-To illustrate the utility of this package we will work with the `lorenz system`_. The Lorenz system takes the form of :
+To illustrate the utility of this package we will work with the `Lorenz system`_. The Lorenz system takes the form of :
 
 .. math::
 
@@ -13,7 +13,7 @@ To illustrate the utility of this package we will work with the `lorenz system`_
 
   \frac{dz}{dt} = xy - \beta z
 
-After numerically solving this system of equations, we are going to make forecasts of the `x` time series. Note that this series, while completely deterministic (there is no randomness associated with any of the above equations), is a classic `chaotic system`_. Chaotic systems are notoriously difficult to forecast (e.g. weather) due to their sensitive dependance on initial conditions and corresponding positive Lyapunov exponents.
+After numerically solving this system of equations, we are going to make forecasts of the :math:`x` time series. Note that this series, while completely deterministic (there is no randomness associated with any of the above equations), is a classic `chaotic system`_. Chaotic systems are notoriously difficult to forecast (e.g. weather) due to their sensitive dependance on initial conditions and corresponding positive Lyapunov exponents.
 
 There is a function in ``skedm.data`` that numerically solves the lorenz system using scipy's built in integrator with a step size of 0.1 seconds. For example::
 
@@ -25,7 +25,7 @@ There is a function in ``skedm.data`` that numerically solves the lorenz system 
 .. image:: /_static/edm/lorenz.png
    :align: center
 
-In attempting to use the 'x' time series to reconstruct the state space behavior of the complete lorenz system, a lag is needed to form the embedding vector.  This lag is most commonly found from the first minimum in the mutual information between the time series and a shifted version of itself. The first minimum in the `mutual information`_ can be thought of as jumping far enough away in the time series that new information is gained. A more inituitive but less commonly used procedure to finding the lag is using the first minimum in the autocorrelation. The mutual information calculation can be done using the `embed` class provided by skedm.
+In attempting to use the :math:`x` time series to reconstruct the state space behavior of the complete lorenz system, a lag is needed to form the embedding vector.  This lag is most commonly found from the first minimum in the mutual information between the time series and a shifted version of itself. The first minimum in the `mutual information`_ can be thought of as jumping far enough away in the time series that new information is gained. A more inituitive but less commonly used procedure to finding the lag is using the first minimum in the autocorrelation. The mutual information calculation can be done using the ``embed`` class provided by skedm.
 
 
 ::
@@ -41,7 +41,7 @@ In attempting to use the 'x' time series to reconstruct the state space behavior
 .. image:: /_static/edm/lorenz_mutual_info.png
    :align: center
 
-The first minimum of the mutual information is at `n=18`. This is the lag that will be used to rebuild a shadow manifold. This is done by the ``embed_vectors_1d`` method. A longer discussion about embedding dimension (how the value for ``embed`` is chosen) is found in the :ref:`embedding` section.
+The first minimum of the mutual information is at :math:`n=18`. This is the lag that will be used to rebuild a shadow manifold. This is done by the ``embed_vectors_1d`` method. A longer discussion about embedding dimension (how the value for ``embed`` is chosen) is found in the :ref:`embed` section.
 
 ::
 
@@ -118,7 +118,7 @@ As can be seen from the image above, the highest forecast skill is found at a sm
 
 As expected, the forecast accuracy decreases as more and more near neighbor trajectories are averaged together to make a prediction.
 
-Additionally, instead of averaging near neighbors, it is possible to look at the forecast skill of each near neighbor. This is visualized against the average distance to that point. This is computed as:
+Additionally, instead of averaging near neighbors, it is possible to look at the forecast skill of each near neighbor. This is computed as:
 
 ::
 
@@ -139,9 +139,9 @@ Likewise, we can look at the actual forecast made by the algorithm and compare i
    :align: center
 
 
-As we can see, by not averaging the near neighbors, the forecast skill decreases and the actual forecast made becomes quite noisy, This is because we are now using single trajectories that are not nearby in the reconstructed space to make predictions. This should intuitively do worse than picking nearby regions.
+As we can see, by not averaging the near neighbors, the forecast skill decreases and the actual forecast made becomes quite noisy. This is because we are now using single trajectories that are not nearby in the reconstructed space to make predictions. This should intuitively do worse than picking nearby regions.
 
-.. _lorenz system: https://www.wikiwand.com/en/Lorenz_system
+.. _Lorenz system: https://www.wikiwand.com/en/Lorenz_system
 .. _phase spaces: https://github.com/ericholscher/reStructuredText-Philosophy
 .. _chaotic system: https://www.wikiwand.com/en/Chaos_theory
 .. _mutual information: https://www.wikiwand.com/en/Mutual_information

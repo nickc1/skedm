@@ -145,7 +145,20 @@
 <dl class="class">
 <dt id="skedm.skedm.Classification">
 <em class="property">class </em><code class="descclassname">skedm.skedm.</code><code class="descname">Classification</code><span class="sig-paren">(</span><em>weights='uniform'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nonlinear classification</p>
+<dd><p>Nonlinear classification.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>weights</strong> (<em>str</em>) &#8211; <p>Procedure to weight the near neighbors. Options:</p>
+<ul class="simple">
+<li>&#8216;uniform&#8217; : uniform weighting</li>
+<li>&#8216;distance&#8217; : weighted as 1/distance</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="skedm.skedm.Classification.dist_calc">
 <code class="descname">dist_calc</code><span class="sig-paren">(</span><em>Xtest</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.dist_calc" title="Permalink to this definition">¶</a></dt>
@@ -155,13 +168,7 @@ set.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Xtest</strong> (<em>test features (nsamples,nfeatures)</em>) &#8211; </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>self.dist</strong> (<em>distance to each of the training samples</em>)</li>
-<li><strong>self.ind</strong> (<em>indices of the sample that are closest</em>)</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Xtest</strong> (<em>2d array</em>) &#8211; Test features (nsamples, nfeatures).</td>
 </tr>
 </tbody>
 </table>
@@ -176,8 +183,20 @@ set.</p>
 <dl class="method">
 <dt id="skedm.skedm.Classification.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>Xtrain</em>, <em>ytrain</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Xtrain : features (nsamples,nfeatures)
-ytrain : targets (nsamples,ntargets)</p>
+<dd><p>Fit the training data. Can also be thought of as reconstructing
+the attractor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Xtrain</strong> (<em>2D array</em>) &#8211; Features of shape (nsamples,nfeatures).</li>
+<li><strong>ytrain</strong> (<em>2D array</em>) &#8211; Targets of shape (nsamples,ntargets).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -188,7 +207,11 @@ ytrain : targets (nsamples,ntargets)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nn</strong> (<em>int</em>) &#8211; How many near neighbors to use</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Xtest</strong> (<em>2d array</em>) &#8211; Contains the test features.</li>
+<li><strong>nn_list</strong> (<em>1d array of ints</em>) &#8211; Neighbors to be tested.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -197,25 +220,43 @@ ytrain : targets (nsamples,ntargets)</p>
 <dl class="method">
 <dt id="skedm.skedm.Classification.predict_individual">
 <code class="descname">predict_individual</code><span class="sig-paren">(</span><em>Xtest</em>, <em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.predict_individual" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instead of averaging near neighbors, make a prediction for each
-neighbor.</p>
+<dd><p>Make a prediction for each neighbor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Xtest</strong> (<em>2d array</em>) &#8211; Contains the test features.</li>
+<li><strong>nn_list</strong> (<em>1d array of ints</em>) &#8211; Neighbors to be tested.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="skedm.skedm.Classification.score">
 <code class="descname">score</code><span class="sig-paren">(</span><em>ytest</em>, <em>how='tau'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evalulate the predictions
-:param ytest:
-:type ytest: 2d array containing the targets
-:param how: how to score the predictions</p>
-<blockquote>
-<div>-&#8216;classCompare&#8217; : percent correctly predicted
--&#8216;classError&#8217; : Dont use this
--&#8216;tau&#8217; : kleckas tau</div></blockquote>
+<dd><p>Evalulate the predictions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ytest</strong> (<em>2d array</em>) &#8211; Contains the target values.</li>
+<li><strong>how</strong> (<em>str</em>) &#8211; <p>How to score the predictions. Possible values:</p>
+<blockquote>
+<div><ul>
+<li>&#8216;classCompare&#8217; : percent correctly predicted</li>
+<li>&#8216;classError&#8217; : Dont use this</li>
+<li>&#8216;tau&#8217; : kleckas tau</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -225,23 +266,31 @@ neighbor.</p>
 <dl class="class">
 <dt id="skedm.skedm.Regression">
 <em class="property">class </em><code class="descclassname">skedm.skedm.</code><code class="descname">Regression</code><span class="sig-paren">(</span><em>weights='uniform'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nonlinear regression</p>
-<dl class="method">
-<dt id="skedm.skedm.Regression.dist_calc">
-<code class="descname">dist_calc</code><span class="sig-paren">(</span><em>Xtest</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.dist_calc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the distance from the testing set to the training
-set.</p>
+<dd><p>Nonlinear Regression</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Xtest</strong> (<em>test features (nsamples, nfeatures)</em>) &#8211; </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>self.dist</strong> (<em>distance to each of the training samples</em>)</li>
-<li><strong>self.ind</strong> (<em>indices of the sample that are closest</em>)</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>weights</strong> (<em>str</em>) &#8211; <p>How to weight the near neighbors. Options are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>&#8216;uniform&#8217; : uniform weighting</li>
+<li>&#8216;distance&#8217; : weighted as 1/distance</li>
 </ul>
+</div></blockquote>
 </td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="skedm.skedm.Regression.dist_calc">
+<code class="descname">dist_calc</code><span class="sig-paren">(</span><em>Xtest</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.dist_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the distance from the testing set to the training set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Xtest</strong> (<em>2D array</em>) &#8211; Test features (nsamples, nfeatures).</td>
 </tr>
 </tbody>
 </table>
@@ -250,21 +299,40 @@ set.</p>
 <dl class="method">
 <dt id="skedm.skedm.Regression.dist_stats">
 <code class="descname">dist_stats</code><span class="sig-paren">(</span><em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.dist_stats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the mean and std of the distances for the given nn_list</p>
+<dd><p>Calculates the mean and std of the distances for the given nn_list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nn_list</strong> (<em>1d array of ints</em>) &#8211; Neighbors to have their mean distance and std returned.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>mean</strong> (<em>1d array</em>) &#8211; Mean of the all the test distances corresponding to the nn_list.</li>
+<li><strong>std</strong> (<em>1d array</em>) &#8211; Std of all the test distances corresponding to the nn_list.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="skedm.skedm.Regression.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>Xtrain</em>, <em>ytrain</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the training data. Can also be thought of as populating the phase
-space.
-Xtrain : 2D array</p>
-<blockquote>
-<div>features (nsamples,nfeatures)</div></blockquote>
-<dl class="docutils">
-<dt>ytrain</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">2D array</span><dd>targets (nsamples,ntargets)</dd>
-</dl>
+space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Xtrain</strong> (<em>2D array</em>) &#8211; Features (nsamples,nfeatures).</li>
+<li><strong>ytrain</strong> (<em>2D array</em>) &#8211; Targets (nsamples,ntargets).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -281,7 +349,7 @@ Xtrain : 2D array</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ypred</strong> &#8211; predictions for ytest of shape(nsamples,num predictions)</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ypred</strong> &#8211; Predictions for ytest of shape(nsamples,num predictions).</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2d array</p>
@@ -294,25 +362,43 @@ Xtrain : 2D array</p>
 <dl class="method">
 <dt id="skedm.skedm.Regression.predict_individual">
 <code class="descname">predict_individual</code><span class="sig-paren">(</span><em>Xtest</em>, <em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.predict_individual" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instead of averaging near neighbors, make a prediction for each
-neighbor.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="skedm.skedm.Regression.score">
-<code class="descname">score</code><span class="sig-paren">(</span><em>ytest</em>, <em>how='score'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.score" title="Permalink to this definition">¶</a></dt>
-<dd><p>scores the predictions if they were calculated for numerous
-values of near neighbors.</p>
+<dd><p>Make a prediction for each neighbor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ytest</strong> (<em>2d array containing the targets</em>) &#8211; </li>
-<li><strong>how</strong> (<em>string</em>) &#8211; how to score the predictions
--&#8216;score&#8217; : see scikit-learn&#8217;s score function
--&#8216;corrcoef&#8217; : correlation coefficient</li>
+<li><strong>Xtest</strong> (<em>2d array</em>) &#8211; Contains the test features.</li>
+<li><strong>nn_list</strong> (<em>1d array of ints</em>) &#8211; Neighbors to be tested.</li>
 </ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Regression.score">
+<code class="descname">score</code><span class="sig-paren">(</span><em>ytest</em>, <em>how='score'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the predictions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ytest</strong> (<em>2d array</em>) &#8211; Target values.</li>
+<li><strong>how</strong> (<em>str</em>) &#8211; <p>How to score the predictions. Options include:</p>
+<blockquote>
+<div>-&#8216;score&#8217; : see scikit-learn&#8217;s score function
+-&#8216;corrcoef&#8217; : correlation coefficient</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>score</strong> &#8211; Scores for the corresponding near neighbors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2d array</p>
 </td>
 </tr>
 </tbody>
@@ -428,25 +514,29 @@ to the most common prediction of the space.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>2d array of ints</em>) &#8211; Array to evaluate for diversity</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>keep</strong> (<em>1d boolean array</em>) &#8211; Array where true means there is more than one class in that row.</li>
-<li><em>Example</em></li>
-<li><em>[1 1 1 1]</em></li>
-<li><em>[2 1 2 3]</em></li>
-<li><em>[2 2 2 2]</em></li>
-<li><em>[3 2 1 4]</em></li>
-<li><em>returns</em></li>
-<li><em>[F]</em></li>
-<li><em>[T]</em></li>
-<li><em>[F]</em></li>
-<li><em>[T]</em></li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>2d array of ints</em>) &#8211; Array to evaluate for diversity</li>
+<li><strong>thresh</strong> (<em>float</em>) &#8211; Percent of species that need to be unique.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>keep</strong> &#8211; Array where true means there is more than one class in that row.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1d boolean array</p>
 </td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">]</span>
+<span class="go">[2 1 2 3]</span>
+<span class="go">[2 2 2 2]</span>
+<span class="go">[3 2 1 4]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep_diversity</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">array([F,T,F,T])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
