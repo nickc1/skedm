@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Module Reference &mdash; skedm 0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="skedm 0.1 documentation" href="index.html"/>
+        <link rel="next" title="Acknowledgements" href="acknowledgements.html"/>
+        <link rel="prev" title="Score" href="score.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> skedm
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-example.html">Quick Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generate-data.html">Generate Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="embed.html">Embed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="score.html">Score</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Module Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-skedm.utilities">utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">skedm</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Module Reference</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/module-reference.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-skedm.skedm">
+<span id="module-reference"></span><h1>Module Reference<a class="headerlink" href="#module-skedm.skedm" title="Permalink to this headline">¶</a></h1>
+<p>Scikit learn implementation of nonlinear forecasting.</p>
+<p>By Nick Cortale</p>
+<dl class="class">
+<dt id="skedm.skedm.Classification">
+<em class="property">class </em><code class="descclassname">skedm.skedm.</code><code class="descname">Classification</code><span class="sig-paren">(</span><em>weights='uniform'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nonlinear classification</p>
+<dl class="method">
+<dt id="skedm.skedm.Classification.dist_calc">
+<code class="descname">dist_calc</code><span class="sig-paren">(</span><em>Xtest</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.dist_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the distance from the testing set to the training
+set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Xtest</strong> (<em>test features (nsamples,nfeatures)</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>self.dist</strong> (<em>distance to each of the training samples</em>)</li>
+<li><strong>self.ind</strong> (<em>indices of the sample that are closest</em>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Classification.dist_stats">
+<code class="descname">dist_stats</code><span class="sig-paren">(</span><em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.dist_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mean and std of the distances for the given nn_list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Classification.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>Xtrain</em>, <em>ytrain</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Xtrain : features (nsamples,nfeatures)
+ytrain : targets (nsamples,ntargets)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Classification.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>Xtest</em>, <em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a prediction for a certain value of near neighbors</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nn</strong> (<em>int</em>) &#8211; How many near neighbors to use</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Classification.predict_individual">
+<code class="descname">predict_individual</code><span class="sig-paren">(</span><em>Xtest</em>, <em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.predict_individual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instead of averaging near neighbors, make a prediction for each
+neighbor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Classification.score">
+<code class="descname">score</code><span class="sig-paren">(</span><em>ytest</em>, <em>how='tau'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evalulate the predictions
+:param ytest:
+:type ytest: 2d array containing the targets
+:param how: how to score the predictions</p>
+<blockquote>
+<div>-&#8216;classCompare&#8217; : percent correctly predicted
+-&#8216;classError&#8217; : Dont use this
+-&#8216;tau&#8217; : kleckas tau</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="skedm.skedm.Regression">
+<em class="property">class </em><code class="descclassname">skedm.skedm.</code><code class="descname">Regression</code><span class="sig-paren">(</span><em>weights='uniform'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nonlinear regression</p>
+<dl class="method">
+<dt id="skedm.skedm.Regression.dist_calc">
+<code class="descname">dist_calc</code><span class="sig-paren">(</span><em>Xtest</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.dist_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the distance from the testing set to the training
+set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Xtest</strong> (<em>test features (nsamples, nfeatures)</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>self.dist</strong> (<em>distance to each of the training samples</em>)</li>
+<li><strong>self.ind</strong> (<em>indices of the sample that are closest</em>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Regression.dist_stats">
+<code class="descname">dist_stats</code><span class="sig-paren">(</span><em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.dist_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mean and std of the distances for the given nn_list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Regression.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>Xtrain</em>, <em>ytrain</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the training data. Can also be thought of as populating the phase
+space.
+Xtrain : 2D array</p>
+<blockquote>
+<div>features (nsamples,nfeatures)</div></blockquote>
+<dl class="docutils">
+<dt>ytrain</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">2D array</span><dd>targets (nsamples,ntargets)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Regression.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>Xtest</em>, <em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a prediction for a certain value of near neighbors</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Xtest</strong> (<em>2d array</em>) &#8211; Testing samples of shape (nsamples,nfeatures)</li>
+<li><strong>nn_list</strong> (<em>1d array</em>) &#8211; Values of Near Neighbors to use to make predictions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ypred</strong> &#8211; predictions for ytest of shape(nsamples,num predictions)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2d array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Regression.predict_individual">
+<code class="descname">predict_individual</code><span class="sig-paren">(</span><em>Xtest</em>, <em>nn_list</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.predict_individual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instead of averaging near neighbors, make a prediction for each
+neighbor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Regression.score">
+<code class="descname">score</code><span class="sig-paren">(</span><em>ytest</em>, <em>how='score'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>scores the predictions if they were calculated for numerous
+values of near neighbors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ytest</strong> (<em>2d array containing the targets</em>) &#8211; </li>
+<li><strong>how</strong> (<em>string</em>) &#8211; how to score the predictions
+-&#8216;score&#8217; : see scikit-learn&#8217;s score function
+-&#8216;corrcoef&#8217; : correlation coefficient</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-skedm.utilities">
+<span id="utilities"></span><h2>utilities<a class="headerlink" href="#module-skedm.utilities" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="skedm.utilities.class_compare">
+<code class="descclassname">skedm.utilities.</code><code class="descname">class_compare</code><span class="sig-paren">(</span><em>preds</em>, <em>actual</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.class_compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percent correct between predicted values and actual values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>preds</strong> (<em>1D array</em>) &#8211; Predicted values of shape (num samples,).</li>
+<li><strong>actual</strong> (<em>1D array</em>) &#8211; Actual values from the testing set. Shape (num samples,).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cc</strong> &#8211; Returns the correlation coefficient.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.classification_error">
+<code class="descclassname">skedm.utilities.</code><code class="descname">classification_error</code><span class="sig-paren">(</span><em>preds</em>, <em>actual</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.classification_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percent correct between predicted values and actual values scaled
+to the most common prediction of the space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>preds</strong> (<em>1D array</em>) &#8211; Predicted values of shape (num samples,).</li>
+<li><strong>actual</strong> (<em>1D array</em>) &#8211; Actual values of shape (num samples,).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cc</strong> &#8211; Returns the correlation coefficient</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.cohens_kappa">
+<code class="descclassname">skedm.utilities.</code><code class="descname">cohens_kappa</code><span class="sig-paren">(</span><em>preds</em>, <em>actual</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.cohens_kappa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates cohens kappa.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>preds</strong> (<em>1D array</em>) &#8211; Predicted values of shape (num samples,).</li>
+<li><strong>test</strong> (<em>array of shape (num samples,)</em>) &#8211; Actual values from the testing set.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>c</strong> &#8211; Returns the cohens_kappa.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.corrcoef">
+<code class="descclassname">skedm.utilities.</code><code class="descname">corrcoef</code><span class="sig-paren">(</span><em>preds</em>, <em>actual</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.corrcoef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Correlation Coefficient of between predicted values and actual values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>preds</strong> (<em>1D array</em>) &#8211; Predicted values of shape (num samples,).</li>
+<li><strong>test</strong> (<em>1D array</em>) &#8211; Actual values from the testing set of shape (num samples,).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cc</strong> &#8211; Returns the correlation coefficient.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.keep_diversity">
+<code class="descclassname">skedm.utilities.</code><code class="descname">keep_diversity</code><span class="sig-paren">(</span><em>X</em>, <em>thresh=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.keep_diversity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns indices where the columns are not a single class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>2d array of ints</em>) &#8211; Array to evaluate for diversity</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>keep</strong> (<em>1d boolean array</em>) &#8211; Array where true means there is more than one class in that row.</li>
+<li><em>Example</em></li>
+<li><em>[1 1 1 1]</em></li>
+<li><em>[2 1 2 3]</em></li>
+<li><em>[2 2 2 2]</em></li>
+<li><em>[3 2 1 4]</em></li>
+<li><em>returns</em></li>
+<li><em>[F]</em></li>
+<li><em>[T]</em></li>
+<li><em>[F]</em></li>
+<li><em>[T]</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.kleckas_tau">
+<code class="descclassname">skedm.utilities.</code><code class="descname">kleckas_tau</code><span class="sig-paren">(</span><em>preds</em>, <em>actual</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.kleckas_tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates kleckas tau</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>preds</strong> (<em>1D array</em>) &#8211; Predicted values of shape (num samples,).</li>
+<li><strong>actual</strong> (<em>1D array</em>) &#8211; Actual values of shape (num samples,).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>tau</strong> &#8211; Returns kleckas tau</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.klekas_tau_spatial">
+<code class="descclassname">skedm.utilities.</code><code class="descname">klekas_tau_spatial</code><span class="sig-paren">(</span><em>X</em>, <em>max_lag</em>, <em>percent_calc=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.klekas_tau_spatial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the kleckas tau value between a shifted and unshifted slice
+of the space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>2D array</em>) &#8211; Spatail image.</li>
+<li><strong>max_lag</strong> (<em>integer</em>) &#8211; Maximum amount to shift the space.</li>
+<li><strong>percent_calc</strong> (<em>float</em>) &#8211; How many rows and columns to use average over. Using the whole space
+is overkill.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>R_mut</strong> (<em>1D array</em>) &#8211; Klekas tau averaged down the rows (vertical).</li>
+<li><strong>C_mut</strong> (<em>1-D array</em>) &#8211; Klekas tau averaged across the columns (horizontal).</li>
+<li><strong>r_mi</strong> (<em>2-D array</em>) &#8211; Klekas tau down each row (vertical).</li>
+<li><strong>c_mi</strong> (<em>2-D array</em>) &#8211; Klekas tau across each columns (horizontal).</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.mi_digitize">
+<code class="descclassname">skedm.utilities.</code><code class="descname">mi_digitize</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.mi_digitize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Digitize a time series for mutual information analysis</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>1D array</em>) &#8211; Array to be digitized of length m.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>Y</strong> &#8211; Digitized array of length m.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">1D array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.score">
+<code class="descclassname">skedm.utilities.</code><code class="descname">score</code><span class="sig-paren">(</span><em>preds</em>, <em>actual</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the coefficient of determination.</p>
+<p>The coefficient R^2 is defined as (1 - u/v), where u is the regression
+sum of squares ((y_true - y_pred) ** 2).sum() and v is the residual
+sum of squares ((y_true - y_true.mean()) ** 2).sum(). Best possible
+score is 1.0, lower values are worse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>preds</strong> (<em>1D array</em>) &#8211; Predicted values of shape (num samples,)</li>
+<li><strong>test</strong> (<em>1D array</em>) &#8211; Actual values of shape (num samples,)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cc</strong> &#8211; Returns the coefficient of determination.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.variance_explained">
+<code class="descclassname">skedm.utilities.</code><code class="descname">variance_explained</code><span class="sig-paren">(</span><em>preds</em>, <em>actual</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.variance_explained" title="Permalink to this definition">¶</a></dt>
+<dd><p>Explained variance between predicted values and actual values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>preds</strong> (<em>1D array</em>) &#8211; Predict values of shape (num samples,).</li>
+<li><strong>actual</strong> (<em>1D array</em>) &#8211; Actual values of shape (num samples,).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cc</strong> &#8211; Returns the correlation coefficient</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.weighted_mean">
+<code class="descclassname">skedm.utilities.</code><code class="descname">weighted_mean</code><span class="sig-paren">(</span><em>X</em>, <em>distances</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.weighted_mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the weighted mean given a set of values and their corresponding
+distances.</p>
+<p>Only 1/distance is implemented. This essentially is just a weighted mean
+down axis=1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>2d array</em>) &#8211; Training values of shape(nsamples,number near neighbors).</li>
+<li><strong>distances</strong> (<em>2d array</em>) &#8211; Sorted distances to the near neighbors for the indices.
+Shape(nsamples,number near neighbors).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>w_mean</strong> &#8211; Weighted predictions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2d array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.utilities.weighted_mode">
+<code class="descclassname">skedm.utilities.</code><code class="descname">weighted_mode</code><span class="sig-paren">(</span><em>a</em>, <em>w</em>, <em>axis=0</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.utilities.weighted_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is borrowed from sci-kit learn&#8217;s extmath.py</p>
+<p>Returns an array of the weighted modal (most common) value in a</p>
+<p>If there is more than one such value, only the first is returned.
+The bin-count for the modal bins is also returned.</p>
+<p>This is an extension of the algorithm in scipy.stats.mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> (<em>array_like</em>) &#8211; n-dimensional array of which to find mode(s).</li>
+<li><strong>w</strong> (<em>array_like</em>) &#8211; n-dimensional array of weights for each value.</li>
+<li><strong>axis</strong> (<em>int, optional</em>) &#8211; Axis along which to operate. Default is 0, i.e. the first axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>vals</strong> (<em>ndarray</em>) &#8211; Array of modal values.</li>
+<li><strong>score</strong> (<em>ndarray</em>) &#8211; Array of weighted counts for each mode.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="k">import</span> <span class="n">weighted_mode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">weighted_mode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+<span class="go">(array([ 4.]), array([ 3.]))</span>
+</pre></div>
+</div>
+<p>The value 4 appears three times: with uniform weights, the result is
+simply the mode of the distribution.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># deweight the 4&#39;s</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">weighted_mode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+<span class="go">(array([ 2.]), array([ 3.5]))</span>
+</pre></div>
+</div>
+<p>The value 2 has the highest score: it appears twice with weights of
+1.5 and 2: the sum of these is 3.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">scipy.stats.mode()</span></code></p>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="acknowledgements.html" class="btn btn-neutral float-right" title="Acknowledgements" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="score.html" class="btn btn-neutral" title="Score" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Nick Cortale.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
