@@ -1,26 +1,43 @@
 
 skedm
-========
+=================================
 
-[DOCUMENTATION][sk-nla]
-
-This package is an implementation of emperical dynamic modeling (edm) using scikit-learn's style. It reconstructs [phase spaces][phase-space] to analyze behavior and make forecasts. The technique is described in depth in [Nonlinear Time Series Analysis by Kantz and Schreiber][nlf-book].
-
-Quick Explanation
------------------
-
-skedm looks for past configurations of the system that are similar to the present configuration of the system. It then looks at how the system evolved when it was in those similar configurations and uses that knowledge to make forecasts about future evolution. The forecasts are then compared to the actual evolution of the system.
+[![build status](https://travis-ci.org/NickC1/skedm.svg?branch=master)](https://travis-ci.org/jakevdp/https://travis-ci.org/NickC1/skedm)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/NickC1/skedm/blob/master/LICENSE)
 
 
-Functionality
--------------
-skedm can forecast both coninuous 1D time series, 2D spatio-temporal patterns, and 2D discrete spatial images. See the included notebooks for full examples.
+
+[DOCUMENTATION][read-the-docs]
+
+|License Type| |Travis CI|
+
+**Scikit Emperical Dynamic Modeling**
+
+Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time series, spatio-temporal 2D or 3D arrays, and even discrete spatial arrangements. More importantly, skedm can provide insight into the underlying dynamics of a system, specifically whether a system is nonlinear and deterministic or whether it is dominated by noise.
+
+For a quick explanation of this package, I suggest checking the wikipedia article on [nonlinear analysis][nonlinear-wiki] . Additionally, [Dr. Sugihara's lab][sugihara-lab] has produced some good summary videos of the topic:
+
+1. [Time Series and Dynamic Manifolds][vid-1]
+2. [Reconstructed Shadow Manifold][vid-2]
 
 
-[sk-nla]: http://nickc1.github.io/sknla/
-[phase-space]: https://en.wikipedia.org/wiki/Phase_space)
-[nlf-book]: http://www.amazon.com/Nonlinear-Time-Analysis-Holger-Kantz/dp/0521529026/ref=sr_1_8?ie=UTF8&qid=1452278686&sr=8-8&keywords=nonlinear+analysis
-[nn-algo]: https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm
-[sknn-algo]: http://scikit-learn.org/stable/modules/neighbors.html
-[scikit]: http://scikit-learn.org/stable/
-[false-nn]: http://www.mpipks-dresden.mpg.de/~tisean/TISEAN_2.1/docs/chaospaper/node9.html
+For a more complete background, I suggest checking out [Nonlinear Analysis by Kantz][kantz] as well as [Practical implementation of nonlinear time series methods: The TISEAN package][tisean]
+
+
+[read-the-docs]: http://skedm.readthedocs.io/en/latest/
+[kantz]: https://www.amazon.com/Nonlinear-Time-Analysis-Holger-Kantz/dp/0521529026/ref=sr_1_1?s=books&ie=UTF8&qid=1475599671&sr=1-1&keywords=nonlinear+time+series+analysis
+
+[tisean]: http://scitation.aip.org/content/aip/journal/chaos/9/2/10.1063/1.166424
+
+[nonlinear-wiki]: https://www.wikiwand.com/en/Nonlinear_functional_analysis
+
+[sugihara-lab]: http://deepeco.ucsd.edu/
+
+[vid-1]: https://www.youtube.com/watch?v=fevurdpiRYg
+
+[vid-2]: https://www.youtube.com/watch?v=rs3gYeZeJcw
+
+.. |License Type| image:: https://img.shields.io/github/license/mashape/apistatus.svg
+    :target: https://github.com/NickC1/skedm/blob/master/LICENSE
+.. |Travis CI| image:: https://travis-ci.org/NickC1/skedm.svg?branch=master
+    :target: https://travis-ci.org/NickC1/skedm

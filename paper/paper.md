@@ -6,7 +6,7 @@ tags:
   - Dynamic Systems
 authors:
  - name: Nick Cortale
-   orcid: 0000-0000-0000-0000
+   orcid: 0000-0003-2262-663X
    affiliation: 1
  - name: Dylan McNamara
    orcid: 0000-0001-8752-1586
