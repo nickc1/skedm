@@ -12,29 +12,34 @@ from sklearn import metrics as skmetrics
 
 class Regression:
     """
-    Nonlinear regression
+    Nonlinear Regression
+
+    Parameters
+    ----------
+    weights : str
+        How to weight the near neighbors. Options are:
+
+            - 'uniform' : uniform weighting
+            - 'distance' : weighted as 1/distance
     """
 
     def __init__(self,weights='uniform'):
-        """
-        Parameters
-        ----------
-        weights : string
-            -'uniform' : uniform weighting
-            -'distance' : weighted as 1/distance
-        """
 
         self.weights = weights
 
     def fit(self, Xtrain, ytrain):
-        """
-        Fit the training data. Can also be thought of as populating the phase
+        """Fit the training data. Can also be thought of as populating the phase
         space.
+
+        Parameters
+        ----------
         Xtrain : 2D array
-            features (nsamples,nfeatures)
+            Features (nsamples,nfeatures).
         ytrain : 2D array
-            targets (nsamples,ntargets)
+            Targets (nsamples,ntargets).
+
         """
+
         self.Xtrain = Xtrain
         self.ytrain = ytrain
 
@@ -44,18 +49,13 @@ class Regression:
         self.knn.fit(Xtrain,ytrain)
 
     def dist_calc(self,Xtest):
-        """
-        Calculates the distance from the testing set to the training
-        set.
+        """Calculates the distance from the testing set to the training set.
 
         Parameters
         ----------
-        Xtest : test features (nsamples, nfeatures)
+        Xtest : 2D array
+            Test features (nsamples, nfeatures).
 
-        Returns
-        -------
-        self.dist : distance to each of the training samples
-        self.ind : indices of the sample that are closest
         """
         d,i = self.knn.kneighbors(Xtest)
 
@@ -65,8 +65,7 @@ class Regression:
         self.Xtest = Xtest
 
     def predict(self,Xtest,nn_list):
-        """
-        Make a prediction for a certain value of near neighbors
+        """Make a prediction for a certain value of near neighbors
 
         Parameters
         ----------
@@ -78,7 +77,8 @@ class Regression:
         Returns
         -------
         ypred : 2d array
-            predictions for ytest of shape(nsamples,num predictions)
+            Predictions for ytest of shape(nsamples,num predictions).
+
         """
 
         #calculate distances first
@@ -109,17 +109,22 @@ class Regression:
 
 
     def score(self,ytest,how='score'):
-        """
-        scores the predictions if they were calculated for numerous
-        values of near neighbors.
+        """Score the predictions.
 
         Parameters
         ----------
-        ytest : 2d array containing the targets
-        how : string
-            how to score the predictions
-            -'score' : see scikit-learn's score function
-            -'corrcoef' : correlation coefficient
+        ytest : 2d array
+            Target values.
+        how : str
+            How to score the predictions. Options include:
+
+                -'score' : see scikit-learn's score function
+                -'corrcoef' : correlation coefficient
+        Returns
+        -------
+        score : 2d array
+            Scores for the corresponding near neighbors.
+
         """
         scores = []
         #iterate through each pred for each nn value
@@ -144,9 +149,15 @@ class Regression:
 
 
     def predict_individual(self,Xtest,nn_list):
-        """
-        Instead of averaging near neighbors, make a prediction for each
-        neighbor.
+        """Make a prediction for each neighbor.
+
+        Parameters
+        ----------
+        Xtest : 2d array
+            Contains the test features.
+        nn_list : 1d array of ints
+            Neighbors to be tested.
+
         """
 
         #calculate distances first
@@ -166,8 +177,20 @@ class Regression:
         return ypred
 
     def dist_stats(self,nn_list):
-        """
-        Returns the mean and std of the distances for the given nn_list
+        """Calculates the mean and std of the distances for the given nn_list.
+
+        Parameters
+        ----------
+        nn_list : 1d array of ints
+            Neighbors to have their mean distance and std returned.
+
+        Returns
+        -------
+        mean : 1d array
+            Mean of the all the test distances corresponding to the nn_list.
+        std : 1d array
+            Std of all the test distances corresponding to the nn_list.
+
         """
         nn_list = np.array(nn_list)-1
         d = self.dist[:,nn_list]
@@ -179,26 +202,31 @@ class Regression:
 
 class Classification:
     """
-    Nonlinear classification
+    Nonlinear classification.
+
+    Parameters
+    ----------
+    weights : str
+        Procedure to weight the near neighbors. Options:
+
+        - 'uniform' : uniform weighting
+        - 'distance' : weighted as 1/distance
     """
 
     def __init__(self,weights='uniform'):
-        """
-        Parameters
-        ----------
-        max_nn : int
-            Maximum number of near neighbors to use
-        weights : string
-            -'uniform' : uniform weighting
-            -'distance' : weighted as 1/distance
 
-        """
         self.weights = weights
 
     def fit(self, Xtrain, ytrain):
-        """
-        Xtrain : features (nsamples,nfeatures)
-        ytrain : targets (nsamples,ntargets)
+        """Fit the training data. Can also be thought of as reconstructing
+        the attractor.
+
+        Parameters
+        ----------
+        Xtrain : 2D array
+            Features of shape (nsamples,nfeatures).
+        ytrain : 2D array
+            Targets of shape (nsamples,ntargets).
         """
         self.Xtrain = Xtrain
         self.ytrain = ytrain
@@ -206,19 +234,15 @@ class Classification:
         self.knn = neighbors.KNeighborsRegressor(max_nn,weights=self.weights,metric='hamming')
         self.knn.fit(Xtrain,ytrain)
 
-    def dist_calc(self,Xtest):
-        """
-        Calculates the distance from the testing set to the training
+    def dist_calc(self, Xtest):
+        """Calculates the distance from the testing set to the training
         set.
 
         Parameters
         ----------
-        Xtest : test features (nsamples,nfeatures)
+        Xtest : 2d array
+            Test features (nsamples, nfeatures).
 
-        Returns
-        -------
-        self.dist : distance to each of the training samples
-        self.ind : indices of the sample that are closest
         """
         d,i = self.knn.kneighbors(Xtest)
 
@@ -227,14 +251,16 @@ class Classification:
 
         self.Xtest = Xtest
 
-    def predict(self,Xtest,nn_list):
-        """
-        Make a prediction for a certain value of near neighbors
+    def predict(self, Xtest, nn_list):
+        """Make a prediction for a certain value of near neighbors
 
         Parameters
         ----------
-        nn : int
-            How many near neighbors to use
+        Xtest : 2d array
+            Contains the test features.
+        nn_list : 1d array of ints
+            Neighbors to be tested.
+
         """
 
         self.dist_calc(Xtest)
@@ -275,10 +301,16 @@ class Classification:
 
         return ypred
 
-    def predict_individual(self,Xtest,nn_list):
-        """
-        Instead of averaging near neighbors, make a prediction for each
-        neighbor.
+    def predict_individual(self, Xtest, nn_list):
+        """Make a prediction for each neighbor.
+
+        Parameters
+        ----------
+        Xtest : 2d array
+            Contains the test features.
+        nn_list : 1d array of ints
+            Neighbors to be tested.
+
         """
 
         #calculate distances first
@@ -299,16 +331,19 @@ class Classification:
 
 
     def score(self, ytest, how='tau'):
-        """
-        Evalulate the predictions
+        """Evalulate the predictions.
+
         Parameters
         ----------
-        ytest : 2d array containing the targets
-        how : string
-            how to score the predictions
-            -'classCompare' : percent correctly predicted
-            -'classError' : Dont use this
-            -'tau' : kleckas tau
+        ytest : 2d array
+            Contains the target values.
+        how : str
+            How to score the predictions. Possible values:
+
+                - 'classCompare' : percent correctly predicted
+                - 'classError' : Dont use this
+                - 'tau' : kleckas tau
+
         """
 
         num_preds = ytest.shape[1]

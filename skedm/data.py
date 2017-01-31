@@ -2,30 +2,7 @@
 # Generates data for skedm (SciKit Emperical Dynamic Modeling)
 #
 # Available data:
-#
-#   1D
-# ------
-# logistic_map : logistic equation
-# noisyPeriodic : sine and cosine wave added with noise
-# noisyPeriodic_complicated : more complicated sine and cosine wave
-# noise : randomly generated numbers
-# lorenz : lorenz equations
-#
-#   2D
-# ------
-# chaos2D : 2D logistic map diffused in space
-# periodic : sine and cosine addition
-# periodicBrown : sine and cosine with brown noise added
-# brownNoise : brown noise generator
-# noise : randomly generated numbers
-# chaos3D : logistic map diffused in the third dimension
-# randomCircles : randomly placed circles
-# circleInCircle : circles sorrouned by larger circle
-# circlesWithStuff : larger circles with smaller circles around
-# randomSizedCircles : randomly sized circles spread around
-# voronoiMatrix : voronoi polygons
-#
-#
+# By Nick Cortale
 
 
 
@@ -75,7 +52,7 @@ def logistic_map(sz=256, A=3.99, seed=36, noise=0):
 
     return X
 
-def noisyPeriodic(sz=256,freq=52,seed=36,noise=.5):
+def noisy_periodic(sz=256,freq=52,seed=36,noise=.5):
     """ A simple periodic equation with a a specified amplitude of noise.
 
     X = sin(x) + .5cos(x) + random
@@ -94,7 +71,7 @@ def noisyPeriodic(sz=256,freq=52,seed=36,noise=.5):
     Returns
     -------
     X : 1D array
-        Returns a 1D periodic equaiton of size (sz) with values between 0 and 1
+        Periodic array of size (sz) with values between 0 and 1.
 
     """
 
@@ -109,7 +86,7 @@ def noisyPeriodic(sz=256,freq=52,seed=36,noise=.5):
     X = X/np.max(X)
     return X
 
-def noisyPeriodic_complicated(sz=256, freq=52, seed=36, noise=.5):
+def noisy_periodic_complicated(sz=256, freq=52, seed=36, noise=.5):
     """A complicated periodic equation with a a specified amplitude of noise.
 
     X = sin(x) + .5cos(.5x) + .25sin(.25x) + random
@@ -128,7 +105,7 @@ def noisyPeriodic_complicated(sz=256, freq=52, seed=36, noise=.5):
     Returns
     -------
     X : 1D array
-        Returns a 1D periodic equaiton of size (sz) with values between 0 and 1.
+        Periodic array of size (sz) with values between 0 and 2.
 
     """
 
@@ -144,8 +121,8 @@ def noisyPeriodic_complicated(sz=256, freq=52, seed=36, noise=.5):
 
     return X
 
-def noise(sz=256, seed=36):
-    """ A random distribution of numbers.
+def noise_1D(sz=256, seed=36):
+    """ A random distribution of numbers. White Noise.
 
     Parameters
     ----------
@@ -157,7 +134,7 @@ def noise(sz=256, seed=36):
     Returns
     -------
     X : 1D array
-        Returns a 1D periodic equaiton of size (sz) with values between 0 and 1.
+        Random array of size (sz) with values between 0 and 1.
     """
 
     np.random.seed(seed=seed)
@@ -209,7 +186,7 @@ TWO DIMENSIONAL
 """
 
 
-def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=None):
+def chaos_2d(sz=128, A=3.99, eps=1., seed=36, noise=None):
     """Logistic map diffused in space.
 
     Parameters
@@ -255,7 +232,7 @@ def chaos2D(sz=128, A=3.99, eps=1., seed=36, noise=None):
 
     return X
 
-def periodic(sz=128, freq=36, seed=36, noise=0.5):
+def periodic_2d(sz=128, freq=36, seed=36, noise=0.5):
     """A simple 2D periodic equation with a specified amplitude of noise.
 
     X = sin(y) + .5cos(x) + random
@@ -274,7 +251,7 @@ def periodic(sz=128, freq=36, seed=36, noise=0.5):
     Returns
     -------
     X : 2D array
-        Returns a 2D periodic equaiton of size (sz,sz). Values between 0 and 1.
+        2D periodic equaiton of size (sz,sz). Values between 0 and 1.
     """
 
     # set random seed
@@ -316,7 +293,7 @@ def periodic_brown(sz=128, freq=36, seed=15, noise=1.5):
     Returns
     -------
     X : 2D array
-    	Returns a 2D periodic equaiton of size (sz,sz).
+    	Array containing the periodic equation with brown noise added.
     """
 
     # set random seed
@@ -357,7 +334,7 @@ def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
     Returns
     -------
     X : 2D array
-    	Returns a 2D brown noise array size (sz,sz).
+        2D brown noise array size (sz,sz).
 
     """
 
@@ -412,7 +389,7 @@ def noise_2d(sz=128,seed=36):
     Returns
     -------
     X : 2D array
-        Returns a 2D array of size (sz,sz) with values between 0 and 1.
+        Array of size (sz,sz) with values between 0 and 1.
 
     """
 
@@ -449,7 +426,7 @@ def chaos_3d(sz=128,A=3.99,eps=1.,steps=100,tstart = 50):
     Returns
     -------
     X : 2D array
-        Spatiotemporal logistic map of size (sz,sz,steps)
+        Spatiotemporal logistic map of size (sz,sz,steps).
 
     """
 
@@ -477,7 +454,7 @@ def chaos_3d(sz=128,A=3.99,eps=1.,steps=100,tstart = 50):
     return np.dstack(storeX)
 
 
-def randomCircles(sz=256, rad=20., sigma=1, num_circles = 1000):
+def random_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
     """Randomly places down gaussian circles and the sum is taken.
 
     Calls circleCreate to make the circles
@@ -496,7 +473,7 @@ def randomCircles(sz=256, rad=20., sigma=1, num_circles = 1000):
     Returns
     -------
     X : 2D array
-        Returns the summed gaussian circles. Size (sz,sz).
+        Summed gaussian circles. Size (sz,sz).
 
     """
 
@@ -565,8 +542,8 @@ def circle_in_circle(rad_list, sz=256, num_blobs=1000):
 
     Returns
     -------
-    blobs : 2D array of shape (sz,sz)
-        2D array of the circles within circles.
+    blobs : 2D array
+        Array of the circles within circles of shape (sz,sz).
 
     """
 
@@ -660,7 +637,7 @@ def blobber2(r, c, rad1, sz):
 
     return X
 
-def circlesWithStuff(sz=256, rad1=5, rad2=8, num_blobs=100):
+def circles_with_stuff(sz=256, rad1=5, rad2=8, num_blobs=100):
     """Create circles with random smaller circles spread around randomly.
 
     Same number of large circles and smaller circles. Calls blobber2.
@@ -722,7 +699,7 @@ def circlesWithStuff(sz=256, rad1=5, rad2=8, num_blobs=100):
 
     return blobs
 
-def randomSizedCircles(rad_list, val_list, sz=512, num_blobs=3000):
+def random_sized_circles(rad_list, val_list, sz=512, num_blobs=3000):
     """
     Create random sized circles spread around randomly and assign them
     to classes: 1:27
@@ -741,7 +718,7 @@ def randomSizedCircles(rad_list, val_list, sz=512, num_blobs=3000):
     Returns
     -------
     blobs : 2D array
-        Array containing a all circles.
+        Array containing all circles.
 
     """
 
@@ -781,7 +758,7 @@ def randomSizedCircles(rad_list, val_list, sz=512, num_blobs=3000):
     return blobs
 
 
-def voronoiMatrix(sz=512, percent=0.1, num_classes=27):
+def voronoi_matrix(sz=512, percent=0.1, num_classes=27):
     """Create voronoi polygons.
 
     Parameters

@@ -448,23 +448,24 @@ def keep_diversity(X, thresh=1.):
     ----------
     X : 2d array of ints
         Array to evaluate for diversity
+    thresh : float
+        Percent of species that need to be unique.
 
     Returns
     -------
     keep : 1d boolean array
         Array where true means there is more than one class in that row.
 
-    Example:
-    [1 1 1 1]
+    Examples
+    --------
+
+    >>> x = np.array([[1 1 1 1]
     [2 1 2 3]
     [2 2 2 2]
-    [3 2 1 4]
+    [3 2 1 4]])
+    >>> keep_diversity(x)
+    array([F,T,F,T])
 
-    returns:
-    [F]
-    [T]
-    [F]
-    [T]
     """
 
     X = X.astype(int)
