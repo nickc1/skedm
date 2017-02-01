@@ -144,7 +144,7 @@
 <p>There is a function in <code class="docutils literal"><span class="pre">skedm.data</span></code> that numerically solves the lorenz system using scipy&#8217;s built in integrator with a step size of 0.1 seconds. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skedm.data</span> <span class="k">as</span> <span class="nn">data</span>
 
-<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lorenz</span><span class="p">()[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#only going to use the x values</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lorenz</span><span class="p">()[::</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#only going to use every other x value</span>
 </pre></div>
 </div>
 <img alt="_images/lorenz.png" class="align-center" src="_images/lorenz.png" />
