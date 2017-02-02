@@ -5,7 +5,7 @@ tags:
   - Nonlinear Forecasting
   - Dynamic Systems
 authors:
- - name: Nick Cortale
+ - name: Nicholas Cortale
    orcid: 0000-0003-2262-663X
    affiliation: 1
  - name: Dylan McNamara

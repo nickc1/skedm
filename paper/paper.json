@@ -1,0 +1,31 @@
+{
+  "@context": "https://raw.githubusercontent.com/mbjones/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "http://orcid.org/0000-0003-2262-663X",
+      "@type": "Person",
+      "email": "cortalen@uncw.edu",
+      "name": "Nicholas Cortale",
+      "affiliation": "Department of Physics and Physical Oceanography/Center for Marine Science, University of North Carolina Wilmington"
+    },
+    {
+      "@id": "http://orcid.org/0000-0001-8752-1586",
+      "@type": "Person",
+      "email": "mcnamarad@uncw.edu",
+      "name": "Dylan McNamara",
+      "affiliation": "Department of Physics and Physical Oceanography/Center for Marine Science, University of North Carolina Wilmington"
+    }
+
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/nickc1/skedm",
+  "datePublished": "2017-01-28",
+  "dateModified": "2017-01-28",
+  "dateCreated": "2017-01-28",
+  "description": "Emperical Dynamic Modeling",
+  "keywords": "Empirical Dynamic Modeling, Nonlinear Forecasting, Dynamic Systems",
+  "license": "MIT",
+  "title": "skedm",
+  "version": "v0.0.1"
+}
