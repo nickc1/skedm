@@ -2,7 +2,7 @@
 skedm
 =================================
 
-[![build status](https://travis-ci.org/NickC1/skedm.svg?branch=master)]
+[![build status](https://travis-ci.org/NickC1/skedm.svg?branch=master)](https://travis-ci.org/NickC1/skedm)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/NickC1/skedm/blob/master/LICENSE)
 
 
