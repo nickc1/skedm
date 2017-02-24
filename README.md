@@ -8,7 +8,7 @@ skedm
 
 [DOCUMENTATION][read-the-docs]
 
-Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time series, spatio-temporal 2D or 3D arrays, and even discrete spatial arrangements. More importantly, skedm can provide insight into the underlying dynamics of a system, specifically whether a system is nonlinear and deterministic or whether it is dominated by noise.
+Scikit Empirical Dynamic Modeling (skedm) can be used as a way to forecast time series, spatio-temporal 2D or 3D arrays, and even discrete spatial arrangements. More importantly, skedm can provide insight into the underlying dynamics of a system, specifically whether a system is nonlinear and deterministic or whether it is dominated by noise.
 
 For a quick explanation of this package, I suggest checking the wikipedia article on [nonlinear analysis][nonlinear-wiki] . Additionally, [Dr. Sugihara's lab][sugihara-lab] has produced some good summary videos of the topic:
 
