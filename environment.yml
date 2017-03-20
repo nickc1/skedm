@@ -6,3 +6,5 @@ dependencies:
   - scikit-learn
   - pytest
   - scipy
+  - pip:
+    - skedm
