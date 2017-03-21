@@ -1,8 +1,5 @@
-"""
-Scikit learn implementation of nonlinear forecasting.
-
-By Nick Cortale
-"""
+#Scikit Empirical Dynamic Modeling
+# By Nick Cortale
 
 from . import utilities
 from scipy import stats as stats
@@ -11,8 +8,9 @@ import numpy as np
 from sklearn import metrics as skmetrics
 
 class Regression:
-    """
-    Nonlinear Regression
+    """Regression using a k-nearest neighbors method. Predictions can be made
+    for each nearest neighbor (`predict_individual`) or by averaging the k
+    nearest neighbors (`predict`).
 
     Parameters
     ----------
@@ -21,6 +19,17 @@ class Regression:
 
             - 'uniform' : uniform weighting
             - 'distance' : weighted as 1/distance
+
+    Example
+    -------
+    >>> X # embed time series of shape (nsamples, embedding dimension)
+    >>> y # future trajectory of a point of shape (nsamples, num predictions)
+    >>> import skedm as edm
+    >>> R = edm.Regression()
+    >>> train_len = int(len(X)*.75) # train on 75 percent
+    >>> R.fit(X[0:train_len], y[0:train_len])
+    >>> preds = R.predict(X[train_len:], [0,10,20]) # test at 1, 10, and 20 nn
+    >>> score = M.score(ytest) # Calculate coefficient of determination
     """
 
     def __init__(self,weights='uniform'):
@@ -34,9 +43,9 @@ class Regression:
         Parameters
         ----------
         Xtrain : 2D array
-            Features (nsamples,nfeatures).
+            Embed training time series. Features shape (nsamples, nfeatures).
         ytrain : 2D array
-            Targets (nsamples,ntargets).
+            Future trajectory of the points. Targets Shape (nsamples,ntargets).
 
         """
 
@@ -108,7 +117,7 @@ class Regression:
         return ypred
 
 
-    def score(self,ytest,how='score'):
+    def score(self, ytest, how='score'):
         """Score the predictions.
 
         Parameters
@@ -201,8 +210,9 @@ class Regression:
         return mean, std
 
 class Classification:
-    """
-    Nonlinear classification.
+    """Classification using a k-nearest neighbors method. Predictions can be
+    made for each nearest neighbor (`predict_individual`) or by averaging the k
+    nearest neighbors (`predict`).
 
     Parameters
     ----------
@@ -211,6 +221,17 @@ class Classification:
 
         - 'uniform' : uniform weighting
         - 'distance' : weighted as 1/distance
+
+    Example
+    -------
+    >>> X # embed series of shape (nsamples, embedding dimension)
+    >>> y # future trajectory of a point of shape (nsamples, num predictions)
+    >>> import skedm as edm
+    >>> R = edm.Classification()
+    >>> train_len = int(len(X)*.75) # train on 75 percent
+    >>> R.fit(X[0:train_len], y[0:train_len])
+    >>> preds = R.predict(X[train_len:], [0,10,20]) # test at 1, 10, and 20 nn
+    >>> score = M.score(ytest) # Calculate klecka's tau
     """
 
     def __init__(self,weights='uniform'):
@@ -261,6 +282,11 @@ class Classification:
         nn_list : 1d array of ints
             Neighbors to be tested.
 
+        Returns
+        -------
+        Ypred : list
+            Predictions returned for each nn value in nn_list. It is the same
+            length as nn_list.
         """
 
         self.dist_calc(Xtest)
@@ -311,6 +337,11 @@ class Classification:
         nn_list : 1d array of ints
             Neighbors to be tested.
 
+        Returns
+        -------
+        Ypred : list
+            Predictions returned for each nn value in nn_list. It is the same
+            length as nn_list.
         """
 
         #calculate distances first
@@ -340,10 +371,16 @@ class Classification:
         how : str
             How to score the predictions. Possible values:
 
-                - 'classCompare' : percent correctly predicted
-                - 'classError' : Dont use this
-                - 'tau' : kleckas tau
+                - 'compare' : Percent correctly predicted. For more info, see
+                    utilities.class_compare.
+                - 'error' : Percent correct scaled by the most common prediction
+                    of the series. See utilities.classification_error for more.
+                - 'tau' : Kleckas tau
 
+        Returns
+        -------
+        scores : 2d array
+            Scores for the predicted values. Shape (len(nn_list),num_preds)
         """
 
         num_preds = ytest.shape[1]
@@ -359,11 +396,11 @@ class Classification:
 
                 p = pred[:,i]
 
-                if how == 'classCompare':
-                    sc[i] = utilities.classCompare(p,ytest[:,i])
+                if how == 'compare':
+                    sc[i] = utilities.class_compare(p,ytest[:,i])
 
-                elif how == 'classError':
-                    sc[i] = utilities.classificationError(p,ytest[:,i])
+                elif how == 'error':
+                    sc[i] = utilities.classification_error(p,ytest[:,i])
 
                 elif how == 'tau':
                     sc[i] = utilities.kleckas_tau(p,ytest[:,i])
@@ -373,9 +410,8 @@ class Classification:
         scores = np.vstack(scores)
         return scores
 
-    def dist_stats(self,nn_list):
-        """
-        Returns the mean and std of the distances for the given nn_list
+    def dist_stats(self, nn_list):
+        """Returns the mean and std of the distances for the given nn_list
         """
 
         nn_list = np.array(nn_list)
@@ -387,20 +423,31 @@ class Classification:
         return mean, std
 
 class Embed:
+    """Embed a 1d, 2d array, or 3d array in n-dimensional space. Assists in
+    choosing an embedding dimension and a lag value.
 
-    def __init__(self,X):
-        """
-        Parameters
-        ----------
-        X : series, 2d array, or 3d array to be embedded
-        """
+    Parameters
+    ----------
+    X : 1d, 2d, or 3d array
+        Array to be embedded in n-dimensional space.
+    """
 
+    def __init__(self, X):
         self.X = X
 
+    def mutual_information(self, max_lag):
+        """Calculates the mutual information between a time series and a shifted
+        version of itself. Uses numpy's mutual information for the calculation.
 
-    def mutual_information(self,max_lag):
-        """
-        Uses numpy's mutual information
+        Parameters
+        ----------
+        max_lag : int
+            Maximum amount to shift the time series.
+
+        Returns
+        -------
+        mi : 1d array
+            Mutual information values for every shift value. Shape (max_lag,).
         """
 
         digi = utilities.mi_digitize(self.X)
@@ -417,41 +464,34 @@ class Embed:
 
         return mi
 
-    def mutual_information_spatial(self,max_lag,percent_calc=.5,digitize=True):
-        """
-        Calculates the mutual information along the rows and down columns at a
-        certain number of indices (percent_calc) and returns
-        the sum of the mutual informaiton along the columns and along the rows.
+    def mutual_information_spatial(self, max_lag, percent_calc=.5,
+                                    digitize=True):
+        """Calculates the mutual information along the rows and down columns at
+        a certain number of indices (percent_calc) and returns the sum of the
+        mutual informaiton along the columns and along the rows.
 
         Parameters
         ----------
-
         M : 2-D array
-            input two-dimensional image
-
+            Input two-dimensional image.
         max_lag : integer
-            maximum amount to shift the space
-
+            Maximum amount to shift the space.
         percent_calc : float
-            How many rows and columns to use to calculate the mutual information
+            Percent of rows and columns to use for the mutual information
+            calculation.
 
         Returns
         -------
-
         R_mut : 1-D array
-            the mutual inforation averaged down the rows (vertical)
-
+            The mutual inforation averaged down the rows (vertical).
         C_mut : 1-D array
-            the mutual information averaged across the columns (horizontal)
-
+            The mutual information averaged across the columns (horizontal).
         r_mi : 2-D array
-            the mutual information down each row (vertical)
-
+            The mutual information down each row (vertical).
         c_mi : 2-D array
-            the mutual information across the columns (horizontal)
-
-
+            The mutual information across the columns (horizontal).
         """
+
         if digitize:
             M = utilities.mi_digitize(self.X)
         else:
@@ -494,37 +534,28 @@ class Embed:
         return r_mut, c_mut, r_mi, c_mi
 
     def mutual_information_3d(self,max_lag,percent_calc=.5,digitize=True):
-        """
-        Calculates the mutual information along the rows and down columns at a
-        certain number of indices (percent_calc) and returns
-        the sum of the mutual informaiton along the columns and along the rows.
+        """Calculates the mutual information along the rows and down columns at
+        a certain number of indices (percent_calc) and returns the sum of the
+        mutual informaiton along the columns and along the rows.
 
         Parameters
         ----------
-
-        M : 2-D array
-            input two-dimensional image
-
+        M : 3-D array
+            Input three-dimensional array.
         max_lag : integer
-            maximum amount to shift the space
-
+            Maximum amount to shift the space.
         percent_calc : float
-            How many rows and columns to use to calculate the mutual information
+            Percent of rows and columns to use for the mutual information
+            calculation.
 
         Returns
         -------
-
         R_mut : 1-D array
-            the mutual inforation averaged down the rows (vertical)
-
+            The mutual inforation averaged down the rows (vertical)
         C_mut : 1-D array
-            the mutual information averaged across the columns (horizontal)
-
-        r_mi : 2-D array
-            the mutual information down each row (vertical)
-
-        c_mi : 2-D array
-            the mutual information across the columns (horizontal)
+            The mutual information averaged across the columns (horizontal)
+        Z_mut : 1-D array
+            The mutual information averaged along the depth.
         """
 
         if digitize:
@@ -586,43 +617,35 @@ class Embed:
 
 
     def embed_vectors_1d(self,lag,embed,predict):
-        """
-        Embeds vectors from a two dimensional image in m-dimensional space.
+        """Embeds vectors from a one dimensional array in m-dimensional space.
 
         Parameters
         ----------
         X : array
             A 1-D array representing the training or testing set.
-
         lag : int
-            lag values as calculated from the first minimum of the mutual info.
-
+            Lag values as calculated from the first minimum of the mutual info.
         embed : int
-            embedding dimension, how many lag values to take
-
+            Embedding dimension. How many lag values to take.
         predict : int
-            distance to forecast (see example)
-
+            Distance to forecast (see example).
 
         Returns
         -------
         features : array of shape [num_vectors,embed]
-            A 2-D array containing all of the embedded vectors
-
+            A 2-D array containing all of the embedded vectors.
         targets : array of shape [num_vectors,predict]
-            A 2-D array containing the evolution of the embedded vectors
+            A 2-D array containing the evolution of the embedded vectors.
 
         Example
         -------
-        X = [0,1,2,3,4,5,6,7,8,9,10]
-
-        em = 3
-        lag = 2
-        predict=3
-
-        returns:
-        features = [[0,2,4], [1,3,5], [2,4,6], [3,5,7]]
-        targets = [[5,6,7], [6,7,8], [7,8,9], [8,9,10]]
+        >>> X = [0,1,2,3,4,5,6,7,8,9,10]
+        >>> em = 3
+        >>> lag = 2
+        >>> predict=3
+        >>> features, targets = embed_vectors_1d(lag, embed, predict)
+        >>> features # [[0,2,4], [1,3,5], [2,4,6], [3,5,7]]
+        >>> targets # [[5,6,7], [6,7,8], [7,8,9], [8,9,10]]
         """
 
         tsize = self.X.shape[0]
@@ -641,45 +664,41 @@ class Embed:
             targets[ii,:] = self.X[end_val:end_val+predict]
         return features, targets
 
-
-
-
-    def embed_vectors_2d(self,lag,embed,predict,percent=0.1):
-        """
-        Embeds vectors from a two dimensional image in m-dimensional space.
+    def embed_vectors_2d(self, lag, embed, predict, percent=0.1):
+        """Embeds vectors from a two dimensional image in m-dimensional space.
 
         Parameters
         ----------
         X : array
             A 2-D array representing the training set or testing set.
-
         lag : tuple of ints (r,c)
-            row and column lag values (r,c) can think of as (height,width).
-
+            Row and column lag values (r,c) can think of as (height,width).
         embed : tuple of ints (r,c)
-            row and column embedding shape (r,c) can think of as (height,width).
-            c must be odd
-
+            Row and column embedding shape (r,c) can think of as (height,width).
+            c must be odd.
         predict : int
-            distance in the space to forecast (see example)
-
+            Distance in the space to forecast (see example).
         percent : float (default = None)
-            percent of the space to embed. Used for computation efficiency
+            Percent of the space to embed. Used for computation efficiency.
 
         Returns
         -------
         features : array of shape [num_vectors,r*c]
-            A 2-D array containing all of the embedded vectors
-
+            A 2-D array containing all of the embedded vectors.
         targets : array of shape [num_vectors,predict]
-            A 2-D array containing the evolution of the embedded vectors
+            A 2-D array containing the evolution of the embedded vectors.
 
 
-        Example:
-        lag = (3,4)
-        embed = (2,5)
-        predict = 2
+        Example
+        -------
+        >>> lag = (3,4)
+        >>> embed = (2,5)
+        >>> predict = 2
+        >>> features, targets = embed_vectors_2d(lag, embed, predict)
 
+        Notes
+        -----
+        The embed space above looks like the following:
 
         [f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
          |         |         |         |         |
@@ -694,7 +713,6 @@ class Embed:
 
         r_lag,c_lag = lag
         rem,cem = embed
-
 
         # determine how many iterations we will have and
         # the empty feature and target matrices
@@ -732,42 +750,40 @@ class Embed:
 
 
     def embed_vectors_3d(self,lag,embed,predict,percent=0.1):
-        """
-        Embeds vectors from a three-dimensional matrix in m-dimensional space.
-        The third dimension is assumed to be time.
+        """Embeds vectors from a 3-dimensional matrix in n-dimensional space.
 
         Parameters
         ----------
         X : array
             A 3-D array representing the training set or testing set.
-
         lag : tuple of ints (r,c)
-            row and column lag values (r,c) can think of as (height,width).
-
+            Row and column lag values (r,c) can think of as (height,width).
         embed : tuple of ints (r,c,t)
-            row and column, and time embedding shape (r,c,t) can think of as
-            (height,width,time). c must be odd
-
+            Row and column, and time embedding shape (r,c,t) can think of as
+            (height,width,time). c must be odd.
         predict : int
-            distance in the space to forecast (see example)
-
+            Distance in the space to forecast (see example).
         percent : float (default = None)
-            percent of the space to embed. Used for computation efficiency
+            Percent of the space to embed. Used for computation efficiency.
 
         Returns
         -------
         features : array of shape [num_vectors,r*c]
             A 2-D array containing all of the embedded vectors
-
         targets : array of shape [num_vectors,predict]
             A 2-D array containing the evolution of the embedded vectors
 
 
-        Example:
-        lag = (3,4,2) #height,width,time
-        embed = (3,3)
-        predict = 2
+        Example
+        -------
+        >>> lag = (3,4,2) #height,width,time
+        >>> embed = (3,3)
+        >>> predict = 2
+        >>> features, targets = embed_vectors_3d(lag, embed, predict)
 
+        Notes
+        -----
+        The above example would look like the following:
 
         [f] _ _ _ [f] _ _ _ [f]
          |         |         |
@@ -777,8 +793,7 @@ class Embed:
          |         |         |
         [f] _ _ _ [f] _ _ _ [f]
 
-        The targets would be directly below the center [f]
-
+        The targets would be directly below the center [f].
         """
 
         rsize = self.X.shape[0]
@@ -787,7 +802,6 @@ class Embed:
 
         r_lag,c_lag,t_lag = lag
         rem,cem,tem = embed
-
 
         # determine how many iterations we will have and
         # the empty feature and target matrices
@@ -819,7 +833,6 @@ class Embed:
             cs = c_inds[ii]
             ts = t_inds[ii]
 
-
             r_end_val = rs + r_lag * (rem-1) + 1
             c_end_val = cs + c_lag * (cem-1) + 1
             t_end_val = ts + t_lag * (tem-1) + 1
@@ -828,11 +841,9 @@ class Embed:
 
             features[ii,:] = part[::r_lag,::c_lag,::t_lag].ravel()
 
-
             rs_target = rs + r_lag
             cs_target = cs + c_lag
             targets[ii,:] = self.X[rs + int(r_lag*(rem-1)/2),
                 cs+ int(c_lag*(cem-1)/2), t_end_val:t_end_val+predict].ravel()
-
 
         return features,targets
