@@ -22,7 +22,7 @@ bibliography: paper.bib
 
 This python package implements nonlinear time series analysis techniques, also referred
 to as empirical dynamic modeling, based on many of the workflows and routines
-within TISEAN[@tisean]. The package provides a modern api, is written in pure python,
+within TISEAN[@tisean] and [@rEDM]. The package provides a modern api, is written in pure python,
 and provides additional analysis routines not provided by TISEAN. skedm is capable
 of reconstructing state spaces from one, two, and even three-dimensional series.
 Additionally, it provides various methods for analyzing the evolution of nearby

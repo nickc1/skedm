@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="skedm 0.1 documentation" href="index.html"/>
         <link rel="next" title="Generate Data" href="generate-data.html"/>
         <link rel="prev" title="Install" href="install.html"/> 
@@ -125,7 +128,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/quick-example.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/quick-example.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -144,7 +147,7 @@
 <p>There is a function in <code class="docutils literal"><span class="pre">skedm.data</span></code> that numerically solves the lorenz system using scipy&#8217;s built in integrator with a step size of 0.1 seconds. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skedm.data</span> <span class="k">as</span> <span class="nn">data</span>
 
-<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lorenz</span><span class="p">()[::</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#only going to use every other x value</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lorenz</span><span class="p">(</span><span class="n">sz</span><span class="o">=</span><span class="mi">10000</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#only going to use the x values from the lorenz system</span>
 </pre></div>
 </div>
 <img alt="_images/lorenz.png" class="align-center" src="_images/lorenz.png" />
@@ -158,16 +161,16 @@
 </pre></div>
 </div>
 <img alt="_images/lorenz_mutual_info.png" class="align-center" src="_images/lorenz_mutual_info.png" />
-<p>The first minimum of the mutual information is at <span class="math">\(n=18\)</span>. This is the lag that will be used to rebuild a shadow manifold. This is done by the <code class="docutils literal"><span class="pre">embed_vectors_1d</span></code> method. A longer discussion about embedding dimension (how the value for <code class="docutils literal"><span class="pre">embed</span></code> is chosen) is found in the <a class="reference internal" href="embed.html#embed"><span class="std std-ref">Embed</span></a> section.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lag</span> <span class="o">=</span> <span class="mi">18</span>
+<p>The first minimum of the mutual information is at <span class="math">\(n=15\)</span>. This is the lag that will be used to rebuild a shadow manifold. This is done by the <code class="docutils literal"><span class="pre">embed_vectors_1d</span></code> method. A longer discussion about embedding dimension (how the value for <code class="docutils literal"><span class="pre">embed</span></code> is chosen) is found in the <a class="reference internal" href="embed.html#embed"><span class="std std-ref">Embed</span></a> section.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lag</span> <span class="o">=</span> <span class="mi">15</span>
 <span class="n">embed</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">predict</span> <span class="o">=</span> <span class="mi">36</span> <span class="c1">#predicting out to double to lag</span>
+<span class="n">predict</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1">#predicting out to double to lag</span>
 <span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">E</span><span class="o">.</span><span class="n">embed_vectors_1d</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span><span class="n">embed</span><span class="p">,</span><span class="n">predict</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="_images/embedded_lorenz.png" class="align-center" src="_images/embedded_lorenz.png" />
 <p>The plot above is showing only <code class="docutils literal"><span class="pre">X[:,0]</span></code> and <code class="docutils literal"><span class="pre">X[:,1]</span></code>. The full three dimensional embedding preserves the geometric features of the original lorenz attractor.</p>
-<p>Now that we have embeded the time series, we can use trajectories in the state space near a point in question to generate forecasts of system behavior and see if the system contains the hallmarks of nonlinearity, namely high forecast skill when using local neighbor trajectories in the reconstructed space. First we split the data into a training set and testing set. Additionally, we will initiate the Regression class.</p>
+<p>Now that we have embed the time series, we can use trajectories in the state space near a point in question to generate forecasts of system behavior and see if the system contains the hallmarks of nonlinearity, namely high forecast skill when using local neighbor trajectories in the reconstructed space. First we split the data into a training set and testing set. Additionally, we will initiate the Regression class.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#split it into training and testing sets</span>
 <span class="n">train_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="o">.</span><span class="mi">75</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
 <span class="n">Xtrain</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">]</span>
@@ -179,54 +182,77 @@
 <span class="n">M</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Regression</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="c1"># initiate the nonlinear forecasting class</span>
 </pre></div>
 </div>
-<p>Next, we need to fit the training data (rebuild the shadow manifold) and make predictions for the test set. (22 seconds on a macbook air)</p>
+<p>Next, we need to fit the training data (rebuild the shadow manifold) and make predictions for the test set (22 seconds on a macbook air).</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">M</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">)</span> <span class="c1">#fit the data (rebuilding the attractor)</span>
 
-<span class="n">nn_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span> <span class="c1">#first 200 NN</span>
-<span class="n">ypred</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">nn_list</span><span class="p">)</span>
-
-<span class="n">score</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span> <span class="c1">#score</span>
+<span class="n">nn_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
+<span class="n">ypred</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span><span class="n">nn_list</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="_images/lorenz_forecast_range.png" class="align-center" src="_images/lorenz_forecast_range.png" />
-<p>As can be seen from the image above, the highest forecast skill is found at a small number of near neighbor trajectories used to make forecasts and at small forecast distances. In order to view the actual predictions for different numbers of near neighbors we can do the following:</p>
+<p><code class="docutils literal"><span class="pre">ypred</span></code> is a list of 2d arrays that is the same length as nn_list. Each 2d array is of shape <code class="docutils literal"><span class="pre">(len(Xtest),</span> <span class="pre">predict)</span></code>. For example, the second item in <code class="docutils literal"><span class="pre">ypred</span></code> is the predictions made by taking a weighted average of the closest 10 neighbor&#8217;s trajectories. We can view the predictions using 10, 100, 500, and 1000 neighbors at a forecast distance of 30 by doing the following:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span><span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">35</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="mi">35</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">29</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="mi">29</span><span class="p">])</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">35</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">24</span><span class="p">][:,</span><span class="mi">35</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">24</span><span class="p">]))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">29</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="mi">29</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
-<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">35</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">49</span><span class="p">][:,</span><span class="mi">35</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">49</span><span class="p">]))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">29</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">2</span><span class="p">][:,</span><span class="mi">29</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
 
 
-<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">35</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">99</span><span class="p">][:,</span><span class="mi">35</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">99</span><span class="p">]))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ytest</span><span class="p">[:,</span><span class="mi">29</span><span class="p">],</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ypred</span><span class="p">[</span><span class="mi">3</span><span class="p">][:,</span><span class="mi">29</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;NN : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
 
 <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="_images/lorenz_weighted_predictions.png" class="align-center" src="_images/lorenz_weighted_predictions.png" />
-<p>As expected, the forecast accuracy decreases as more and more near neighbor trajectories are averaged together to make a prediction.</p>
-<p>Additionally, instead of averaging near neighbors, it is possible to look at the forecast skill of each near neighbor. This is computed as:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">M</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">)</span> <span class="c1">#fit the data (rebuilding the attractor)</span>
+<img alt="_images/lorenz_predictions.png" class="align-center" src="_images/lorenz_predictions.png" />
+<p>The next step is to evaluate the predictions with the <code class="docutils literal"><span class="pre">score</span></code> method. The score method defaults to using the <a class="reference external" href="https://www.wikiwand.com/en/Coefficient_of_determination">coefficient of determination</a> between the actual values and predicted values.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span> <span class="c1">#score</span>
 
-<span class="n">nn_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
-<span class="n">ypred</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">predict_individual</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">nn_list</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 
-<span class="n">score</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span> <span class="c1">#score</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;NN: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">31</span><span class="p">),</span><span class="n">score</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Coefficient of Determination&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Forecast Distance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/lorenz_score.png" class="align-center" src="_images/lorenz_score.png" />
+<p><code class="docutils literal"><span class="pre">scores</span></code> has shape <code class="docutils literal"><span class="pre">(len(nn_list),predictions)</span></code>. So this example will  have a shape that is <code class="docutils literal"><span class="pre">(4,</span> <span class="pre">30)</span></code>. For example, the first spot in the score array will be the coefficient of determination between the actual values one time step ahead and the predicted values one time step ahead using 10 near neighbors. As expected, the forecast accuracy decreases as more near neighbor trajectories are averaged together to make a prediction and as we increase the forecast distance.</p>
+<p>Additionally, instead of averaging near neighbor trajectories, it is possible to look at the forecast of each neighbor individually. This is done by simply calling the <code class="docutils literal"><span class="pre">predict_individual</span></code> method as below.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ypred</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">predict_individual</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span><span class="n">nn_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/lorenz_predictions_individual.png" class="align-center" src="_images/lorenz_predictions_individual.png" />
+<p>Then again, we can calculate the score and visualize it as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">score</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;NN: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nn_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">31</span><span class="p">),</span><span class="n">score</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Coefficient of Determination&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Forecast Distance&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">36</span><span class="p">);</span>
 </pre></div>
 </div>
 <img alt="_images/lorenz_score_individual.png" class="align-center" src="_images/lorenz_score_individual.png" />
-<p>Likewise, we can look at the actual forecast made by the algorithm and compare it to the actual evolution of the time series.</p>
-<img alt="_images/lorenz_individual_predictions.png" class="align-center" src="_images/lorenz_individual_predictions.png" />
 <p>As we can see, by not averaging the near neighbors, the forecast skill decreases and the actual forecast made becomes quite noisy. This is because we are now using single trajectories that are not nearby in the reconstructed space to make predictions. This should intuitively do worse than picking nearby regions.</p>
 </div>
 

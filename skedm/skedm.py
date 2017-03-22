@@ -127,8 +127,8 @@ class Regression:
         how : str
             How to score the predictions. Options include:
 
-                -'score' : see scikit-learn's score function
-                -'corrcoef' : correlation coefficient
+                -'score' : Coefficient of determination.
+                -'corrcoef' : Correlation coefficient.
         Returns
         -------
         score : 2d array

@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="skedm 0.1 documentation" href="index.html"/>
         <link rel="next" title="Acknowledgements" href="acknowledgements.html"/>
         <link rel="prev" title="Score" href="score.html"/> 
@@ -128,7 +131,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/module-reference.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/module-reference.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -140,12 +143,12 @@
             
   <div class="section" id="module-skedm.skedm">
 <span id="module-reference"></span><h1>Module Reference<a class="headerlink" href="#module-skedm.skedm" title="Permalink to this headline">¶</a></h1>
-<p>Scikit learn implementation of nonlinear forecasting.</p>
-<p>By Nick Cortale</p>
 <dl class="class">
 <dt id="skedm.skedm.Classification">
 <em class="property">class </em><code class="descclassname">skedm.skedm.</code><code class="descname">Classification</code><span class="sig-paren">(</span><em>weights='uniform'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nonlinear classification.</p>
+<dd><p>Classification using a k-nearest neighbors method. Predictions can be
+made for each nearest neighbor (<cite>predict_individual</cite>) or by averaging the k
+nearest neighbors (<cite>predict</cite>).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -159,6 +162,17 @@
 </tr>
 </tbody>
 </table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="c1"># embed series of shape (nsamples, embedding dimension)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="c1"># future trajectory of a point of shape (nsamples, num predictions)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skedm</span> <span class="k">as</span> <span class="nn">edm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">R</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Classification</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">*.</span><span class="mi">75</span><span class="p">)</span> <span class="c1"># train on 75 percent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">R</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preds</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">train_len</span><span class="p">:],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">])</span> <span class="c1"># test at 1, 10, and 20 nn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">score</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span> <span class="c1"># Calculate klecka&#39;s tau</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="skedm.skedm.Classification.dist_calc">
 <code class="descname">dist_calc</code><span class="sig-paren">(</span><em>Xtest</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Classification.dist_calc" title="Permalink to this definition">¶</a></dt>
@@ -207,10 +221,17 @@ the attractor.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>Xtest</strong> (<em>2d array</em>) &#8211; Contains the test features.</li>
 <li><strong>nn_list</strong> (<em>1d array of ints</em>) &#8211; Neighbors to be tested.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Ypred</strong> &#8211; Predictions returned for each nn value in nn_list. It is the same
+length as nn_list.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
 </td>
 </tr>
 </tbody>
@@ -225,10 +246,17 @@ the attractor.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>Xtest</strong> (<em>2d array</em>) &#8211; Contains the test features.</li>
 <li><strong>nn_list</strong> (<em>1d array of ints</em>) &#8211; Neighbors to be tested.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Ypred</strong> &#8211; Predictions returned for each nn value in nn_list. It is the same
+length as nn_list.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
 </td>
 </tr>
 </tbody>
@@ -243,18 +271,267 @@ the attractor.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>ytest</strong> (<em>2d array</em>) &#8211; Contains the target values.</li>
 <li><strong>how</strong> (<em>str</em>) &#8211; <p>How to score the predictions. Possible values:</p>
 <blockquote>
 <div><ul>
-<li>&#8216;classCompare&#8217; : percent correctly predicted</li>
-<li>&#8216;classError&#8217; : Dont use this</li>
-<li>&#8216;tau&#8217; : kleckas tau</li>
+<li><dl class="first docutils">
+<dt>&#8216;compare&#8217;</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">Percent correctly predicted. For more info, see</span><dd>utilities.class_compare.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>&#8216;error&#8217;</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">Percent correct scaled by the most common prediction</span><dd>of the series. See utilities.classification_error for more.</dd>
+</dl>
+</li>
+<li>&#8216;tau&#8217; : Kleckas tau</li>
 </ul>
 </div></blockquote>
 </li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>scores</strong> &#8211; Scores for the predicted values. Shape (len(nn_list),num_preds)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2d array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="skedm.skedm.Embed">
+<em class="property">class </em><code class="descclassname">skedm.skedm.</code><code class="descname">Embed</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Embed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Embed a 1d, 2d array, or 3d array in n-dimensional space. Assists in
+choosing an embedding dimension and a lag value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>1d</em><em>, </em><em>2d</em><em>, or </em><em>3d array</em>) &#8211; Array to be embedded in n-dimensional space.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="skedm.skedm.Embed.embed_vectors_1d">
+<code class="descname">embed_vectors_1d</code><span class="sig-paren">(</span><em>lag</em>, <em>embed</em>, <em>predict</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Embed.embed_vectors_1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Embeds vectors from a one dimensional array in m-dimensional space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>array</em>) &#8211; A 1-D array representing the training or testing set.</li>
+<li><strong>lag</strong> (<em>int</em>) &#8211; Lag values as calculated from the first minimum of the mutual info.</li>
+<li><strong>embed</strong> (<em>int</em>) &#8211; Embedding dimension. How many lag values to take.</li>
+<li><strong>predict</strong> (<em>int</em>) &#8211; Distance to forecast (see example).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>features</strong> (<em>array of shape [num_vectors,embed]</em>) &#8211; A 2-D array containing all of the embedded vectors.</li>
+<li><strong>targets</strong> (<em>array of shape [num_vectors,predict]</em>) &#8211; A 2-D array containing the evolution of the embedded vectors.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lag</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">predict</span><span class="o">=</span><span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">embed_vectors_1d</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">embed</span><span class="p">,</span> <span class="n">predict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span> <span class="c1"># [[0,2,4], [1,3,5], [2,4,6], [3,5,7]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">targets</span> <span class="c1"># [[5,6,7], [6,7,8], [7,8,9], [8,9,10]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Embed.embed_vectors_2d">
+<code class="descname">embed_vectors_2d</code><span class="sig-paren">(</span><em>lag</em>, <em>embed</em>, <em>predict</em>, <em>percent=0.1</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Embed.embed_vectors_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Embeds vectors from a two dimensional image in m-dimensional space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>array</em>) &#8211; A 2-D array representing the training set or testing set.</li>
+<li><strong>lag</strong> (<em>tuple of ints</em><em> (</em><em>r</em><em>,</em><em>c</em><em>)</em><em></em>) &#8211; Row and column lag values (r,c) can think of as (height,width).</li>
+<li><strong>embed</strong> (<em>tuple of ints</em><em> (</em><em>r</em><em>,</em><em>c</em><em>)</em><em></em>) &#8211; Row and column embedding shape (r,c) can think of as (height,width).
+c must be odd.</li>
+<li><strong>predict</strong> (<em>int</em>) &#8211; Distance in the space to forecast (see example).</li>
+<li><strong>percent</strong> (<em>float</em><em> (</em><em>default = None</em><em>)</em><em></em>) &#8211; Percent of the space to embed. Used for computation efficiency.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>features</strong> (<em>array of shape [num_vectors,r*c]</em>) &#8211; A 2-D array containing all of the embedded vectors.</li>
+<li><strong>targets</strong> (<em>array of shape [num_vectors,predict]</em>) &#8211; A 2-D array containing the evolution of the embedded vectors.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lag</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">embed</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">predict</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">embed_vectors_2d</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">embed</span><span class="p">,</span> <span class="n">predict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<p>The embed space above looks like the following:</p>
+<dl class="docutils">
+<dt>[f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]</dt>
+<dd><div class="first last line-block">
+<div class="line">|         |         |         |</div>
+<div class="line">|         |         |         |</div>
+</div>
+</dd>
+<dt>[f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]</dt>
+<dd>[t]
+[t]</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Embed.embed_vectors_3d">
+<code class="descname">embed_vectors_3d</code><span class="sig-paren">(</span><em>lag</em>, <em>embed</em>, <em>predict</em>, <em>percent=0.1</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Embed.embed_vectors_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Embeds vectors from a 3-dimensional matrix in n-dimensional space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>array</em>) &#8211; A 3-D array representing the training set or testing set.</li>
+<li><strong>lag</strong> (<em>tuple of ints</em><em> (</em><em>r</em><em>,</em><em>c</em><em>)</em><em></em>) &#8211; Row and column lag values (r,c) can think of as (height,width).</li>
+<li><strong>embed</strong> (<em>tuple of ints</em><em> (</em><em>r</em><em>,</em><em>c</em><em>,</em><em>t</em><em>)</em><em></em>) &#8211; Row and column, and time embedding shape (r,c,t) can think of as
+(height,width,time). c must be odd.</li>
+<li><strong>predict</strong> (<em>int</em>) &#8211; Distance in the space to forecast (see example).</li>
+<li><strong>percent</strong> (<em>float</em><em> (</em><em>default = None</em><em>)</em><em></em>) &#8211; Percent of the space to embed. Used for computation efficiency.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>features</strong> (<em>array of shape [num_vectors,r*c]</em>) &#8211; A 2-D array containing all of the embedded vectors</li>
+<li><strong>targets</strong> (<em>array of shape [num_vectors,predict]</em>) &#8211; A 2-D array containing the evolution of the embedded vectors</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lag</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#height,width,time</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">embed</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">predict</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">embed_vectors_3d</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">embed</span><span class="p">,</span> <span class="n">predict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<p>The above example would look like the following:</p>
+<dl class="docutils">
+<dt>[f] _ _ _ [f] _ _ _ [f]</dt>
+<dd><div class="first last line-block">
+<div class="line">|         |</div>
+<div class="line">|         |</div>
+</div>
+</dd>
+<dt>[f] _ _ _ [f] _ _ _ [f]</dt>
+<dd><div class="first last line-block">
+<div class="line">|         |</div>
+<div class="line">|         |</div>
+</div>
+</dd>
+</dl>
+<p>[f] _ _ _ [f] _ _ _ [f]</p>
+<p>The targets would be directly below the center [f].</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Embed.mutual_information">
+<code class="descname">mutual_information</code><span class="sig-paren">(</span><em>max_lag</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Embed.mutual_information" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the mutual information between a time series and a shifted
+version of itself. Uses numpy&#8217;s mutual information for the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_lag</strong> (<em>int</em>) &#8211; Maximum amount to shift the time series.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>mi</strong> &#8211; Mutual information values for every shift value. Shape (max_lag,).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">1d array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Embed.mutual_information_3d">
+<code class="descname">mutual_information_3d</code><span class="sig-paren">(</span><em>max_lag</em>, <em>percent_calc=0.5</em>, <em>digitize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Embed.mutual_information_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the mutual information along the rows and down columns at
+a certain number of indices (percent_calc) and returns the sum of the
+mutual informaiton along the columns and along the rows.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>M</strong> (<em>3-D array</em>) &#8211; Input three-dimensional array.</li>
+<li><strong>max_lag</strong> (<em>integer</em>) &#8211; Maximum amount to shift the space.</li>
+<li><strong>percent_calc</strong> (<em>float</em>) &#8211; Percent of rows and columns to use for the mutual information
+calculation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>R_mut</strong> (<em>1-D array</em>) &#8211; The mutual inforation averaged down the rows (vertical)</li>
+<li><strong>C_mut</strong> (<em>1-D array</em>) &#8211; The mutual information averaged across the columns (horizontal)</li>
+<li><strong>Z_mut</strong> (<em>1-D array</em>) &#8211; The mutual information averaged along the depth.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="skedm.skedm.Embed.mutual_information_spatial">
+<code class="descname">mutual_information_spatial</code><span class="sig-paren">(</span><em>max_lag</em>, <em>percent_calc=0.5</em>, <em>digitize=True</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Embed.mutual_information_spatial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the mutual information along the rows and down columns at
+a certain number of indices (percent_calc) and returns the sum of the
+mutual informaiton along the columns and along the rows.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>M</strong> (<em>2-D array</em>) &#8211; Input two-dimensional image.</li>
+<li><strong>max_lag</strong> (<em>integer</em>) &#8211; Maximum amount to shift the space.</li>
+<li><strong>percent_calc</strong> (<em>float</em>) &#8211; Percent of rows and columns to use for the mutual information
+calculation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>R_mut</strong> (<em>1-D array</em>) &#8211; The mutual inforation averaged down the rows (vertical).</li>
+<li><strong>C_mut</strong> (<em>1-D array</em>) &#8211; The mutual information averaged across the columns (horizontal).</li>
+<li><strong>r_mi</strong> (<em>2-D array</em>) &#8211; The mutual information down each row (vertical).</li>
+<li><strong>c_mi</strong> (<em>2-D array</em>) &#8211; The mutual information across the columns (horizontal).</li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
@@ -266,7 +543,9 @@ the attractor.</p>
 <dl class="class">
 <dt id="skedm.skedm.Regression">
 <em class="property">class </em><code class="descclassname">skedm.skedm.</code><code class="descname">Regression</code><span class="sig-paren">(</span><em>weights='uniform'</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nonlinear Regression</p>
+<dd><p>Regression using a k-nearest neighbors method. Predictions can be made
+for each nearest neighbor (<cite>predict_individual</cite>) or by averaging the k
+nearest neighbors (<cite>predict</cite>).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -282,6 +561,17 @@ the attractor.</p>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="c1"># embed time series of shape (nsamples, embedding dimension)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="c1"># future trajectory of a point of shape (nsamples, num predictions)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skedm</span> <span class="k">as</span> <span class="nn">edm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">R</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Regression</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">*.</span><span class="mi">75</span><span class="p">)</span> <span class="c1"># train on 75 percent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">R</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preds</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">train_len</span><span class="p">:],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">])</span> <span class="c1"># test at 1, 10, and 20 nn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">score</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span> <span class="c1"># Calculate coefficient of determination</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="skedm.skedm.Regression.dist_calc">
 <code class="descname">dist_calc</code><span class="sig-paren">(</span><em>Xtest</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.skedm.Regression.dist_calc" title="Permalink to this definition">¶</a></dt>
@@ -326,8 +616,8 @@ space.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>Xtrain</strong> (<em>2D array</em>) &#8211; Features (nsamples,nfeatures).</li>
-<li><strong>ytrain</strong> (<em>2D array</em>) &#8211; Targets (nsamples,ntargets).</li>
+<li><strong>Xtrain</strong> (<em>2D array</em>) &#8211; Embed training time series. Features shape (nsamples, nfeatures).</li>
+<li><strong>ytrain</strong> (<em>2D array</em>) &#8211; Future trajectory of the points. Targets Shape (nsamples,ntargets).</li>
 </ul>
 </td>
 </tr>
@@ -389,8 +679,8 @@ space.</p>
 <li><strong>ytest</strong> (<em>2d array</em>) &#8211; Target values.</li>
 <li><strong>how</strong> (<em>str</em>) &#8211; <p>How to score the predictions. Options include:</p>
 <blockquote>
-<div>-&#8216;score&#8217; : see scikit-learn&#8217;s score function
--&#8216;corrcoef&#8217; : correlation coefficient</div></blockquote>
+<div>-&#8216;score&#8217; : Coefficient of determination.
+-&#8216;corrcoef&#8217; : Correlation coefficient.</div></blockquote>
 </li>
 </ul>
 </td>
@@ -468,7 +758,7 @@ to the most common prediction of the space.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>preds</strong> (<em>1D array</em>) &#8211; Predicted values of shape (num samples,).</li>
-<li><strong>test</strong> (<em>array of shape (num samples,)</em>) &#8211; Actual values from the testing set.</li>
+<li><strong>test</strong> (<em>array of shape</em><em> (</em><em>num samples</em><em>,</em><em></em><em>)</em><em></em>) &#8211; Actual values from the testing set.</li>
 </ul>
 </td>
 </tr>
@@ -706,7 +996,7 @@ The bin-count for the modal bins is also returned.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>a</strong> (<em>array_like</em>) &#8211; n-dimensional array of which to find mode(s).</li>
 <li><strong>w</strong> (<em>array_like</em>) &#8211; n-dimensional array of weights for each value.</li>
-<li><strong>axis</strong> (<em>int, optional</em>) &#8211; Axis along which to operate. Default is 0, i.e. the first axis.</li>
+<li><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; Axis along which to operate. Default is 0, i.e. the first axis.</li>
 </ul>
 </td>
 </tr>

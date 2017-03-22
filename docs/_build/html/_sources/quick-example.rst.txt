@@ -81,7 +81,7 @@ Next, we need to fit the training data (rebuild the shadow manifold) and make pr
   nn_list = [10, 100, 500, 1000]
   ypred = M.predict(Xtest,nn_list)
 
-``ypred`` is a list of 2d arrays that is the same length as nn_list. Each 2d array is of shape ``(len(Xtest), predict)``. For example, the second item in ``ypred`` is the predictions made by taking a weighted average of the closest 100 neighbor's trajectories. We can view the predictions using 10, 100, 500, and 1000 neighbors at a forecast distance of 30 by doing the following:
+``ypred`` is a list of 2d arrays that is the same length as nn_list. Each 2d array is of shape ``(len(Xtest), predict)``. For example, the second item in ``ypred`` is the predictions made by taking a weighted average of the closest 10 neighbor's trajectories. We can view the predictions using 10, 100, 500, and 1000 neighbors at a forecast distance of 30 by doing the following:
 
 ::
 
