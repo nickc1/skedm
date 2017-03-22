@@ -794,6 +794,7 @@ class Embed:
         [f] _ _ _ [f] _ _ _ [f]
 
         The targets would be directly below the center [f].
+
         """
 
         rsize = self.X.shape[0]
