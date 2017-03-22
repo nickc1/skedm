@@ -13,7 +13,7 @@ In this section of the Lorenz attractor, we can see that the red points closest 
 
 Grabbing more points, however, might prove to be useful since our box lies between a couple of the points. It might be better to average the trajectories of, for example, the three nearest points to make a forecast.
 
-For this case, grabbing more and more near neighbor trajectory points will be detrimental to the forecast as those far away points are be providing information from regions of the space that are not useful for projecting the local dynamics of our test, green point.
+For this case, grabbing more and more near neighbor trajectory points will be detrimental to the forecast as those far away points are providing information from regions of the space that are not useful for projecting the local dynamics of our test, green point.
 
 It is illustrative to see the effects of adding noise to this system as shown in the plot below.
 

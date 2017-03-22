@@ -145,7 +145,7 @@
 <img alt="_images/zoom_embedded_lorenz.png" class="align-center" src="_images/zoom_embedded_lorenz.png" />
 <p>In this section of the Lorenz attractor, we can see that the red points closest to the green box all follow the same trajectory. If we wanted to forecast this green box, we could grab the closest red point and see where that ends up. We would then say that this is where the green box will end up.</p>
 <p>Grabbing more points, however, might prove to be useful since our box lies between a couple of the points. It might be better to average the trajectories of, for example, the three nearest points to make a forecast.</p>
-<p>For this case, grabbing more and more near neighbor trajectory points will be detrimental to the forecast as those far away points are be providing information from regions of the space that are not useful for projecting the local dynamics of our test, green point.</p>
+<p>For this case, grabbing more and more near neighbor trajectory points will be detrimental to the forecast as those far away points are providing information from regions of the space that are not useful for projecting the local dynamics of our test, green point.</p>
 <p>It is illustrative to see the effects of adding noise to this system as shown in the plot below.</p>
 <img alt="_images/zoom_embedded_lorenz_noise.png" class="align-center" src="_images/zoom_embedded_lorenz_noise.png" />
 <p>To the extent that noise becomes dominant relative to the local space dynamics, the gain from using only local trajectories goes away and predictability levels off or increases as one grabs more and more neighbor trajectories.</p>

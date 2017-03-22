@@ -91,7 +91,12 @@
 <li class="toctree-l1"><a class="reference internal" href="generate-data.html">Generate Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="embed.html">Embed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="predict.html">Predict</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Score</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Score</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#regression">Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classification">Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distinguishing-determinism">Distinguishing Determinism</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="module-reference.html">Module Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 </ul>
@@ -140,15 +145,36 @@
             
   <div class="section" id="score">
 <h1>Score<a class="headerlink" href="#score" title="Permalink to this headline">¶</a></h1>
-<p>The next step is to examine the forecast skill. This is done by comparing the actual trajectories to the forecasted trajectories. We will see different patterns in the forecast skill depending on whether the system is dominated by deterministic or noisy dynamics. Consider the two systems below.</p>
-<img alt="_images/scoring_example_ts.png" class="align-center" src="_images/scoring_example_ts.png" />
-<p>The top plot is the <a class="reference external" href="https://www.wikiwand.com/en/Logistic_map">logistic map</a>, a classic chaotic system in a certain parameter range. There is also a small amount of noise added to the system. The bottom plot is a white noise series. After calculating near neighbors, calculating the forecast and forecast skill, the following plot is produced.</p>
-<img alt="_images/scoring_example.png" class="align-center" src="_images/scoring_example.png" />
-<p>The logistic map&#8217;s <span class="math">\(R^2\)</span> values fall off as the state space distance of neighbor trajectories used for forcasting is increased. The plot is a little different from what was shown in the <a class="reference internal" href="quick-example.html#example"><span class="std std-ref">Quick Example</span></a> section. Here we are looking at the forecast skill (y-axis) plotted against the average distance to a particular near neighbor (x-axis). To clarify, the first point on the plots above is the average distance to the first near neighbor for all the points in the testing set. For example, if there were 3 samples in our testing set and the first near neighbor to those points had distances [1.3, 4.5, 2.7] respectively. We would say that the average distance for the first near neighbor is:</p>
-<div class="math">
-\[\frac{.18 + .45 + .27}{3} = .30\]</div>
-<p>This would be plotted against the <span class="math">\(R^2\)</span> calculated for those three points.</p>
-<p>For these series, different trends are apparent. The first is the initial value of the forecast skill. The logistic map has a high forecast skill at low distances in the phase space. The white noise, however, has a forecast skill of near-zero for the first near neighbor. This is to be expected as forecasting a truly noisy system is impossible. Additionally, the logistic map&#8217;s forecast skill falls off as average distance is increased while the noisy system stays steady around 0.</p>
+<p>The next step is to examine the forecast skill. This is done by comparing the actual trajectories to the forecasted trajectories. We will see different patterns in the forecast skill depending on whether the system is dominated by deterministic or noisy dynamics.</p>
+<div class="section" id="regression">
+<h2>Regression<a class="headerlink" href="#regression" title="Permalink to this headline">¶</a></h2>
+<p>For regression, there are two ways to measure the accuracy of the results. The default <code class="docutils literal"><span class="pre">score</span></code> method is the <a class="reference external" href="https://www.wikiwand.com/en/Coefficient_of_determination">coefficient of determination</a>. This is the default for many of scikit-learn&#8217;s scoring functions as well. Additionally, the <a class="reference external" href="https://www.wikiwand.com/en/Pearson_correlation_coefficient">correlation coefficient</a> can also be used to score a continuous variable.</p>
+<p>These can be called by:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">score1</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;score&#39;</span><span class="p">)</span> <span class="c1"># Coefficient of determination</span>
+<span class="n">score2</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;coeff&#39;</span><span class="p">)</span> <span class="c1"># Correlation coefficient</span>
+</pre></div>
+</div>
+<p>Coefficient is useful when you are interested in making precise forecasts and correlation coefficient is useful when you are interested in accurate forecasts. For example, consider to following plot where the blue is the actual values and the green is the predicted values.</p>
+<img alt="_images/corrcoef_vs_score.png" class="align-center" src="_images/corrcoef_vs_score.png" />
+<p>The correlation coefficient for these predictions would be equal to one, while the coefficient of determination would be 0.19. Depending on what you are looking for, both statistics could be useful.</p>
+</div>
+<div class="section" id="classification">
+<h2>Classification<a class="headerlink" href="#classification" title="Permalink to this headline">¶</a></h2>
+<p>For classification, there are two ways to measure prediction skill. The first is by a simple percent accuracy. This calculates what percent were correctly predicted. The second way is by <a class="reference external" href="https://www.wikiwand.com/en/Klecka's_tau">klecka&#8217;s tau</a> which attempts to normalize by the distribution of classes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">score1</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;compare&#39;</span><span class="p">)</span> <span class="c1"># Percent correct</span>
+<span class="n">score2</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;tau&#39;</span><span class="p">)</span> <span class="c1"># Kleck&#39;s tau</span>
+</pre></div>
+</div>
+<p>Percent correct is useful when you have balanced classes, but not useful when the classes are skewed. For example, if there are two classes and class 1 makes up 95% of the data. Predicting a 1 everywhere would show you 95% accuracy while klecka&#8217;s tau would show an accuracy of about -8.8. Again, both stastics could be useful in the correct context.</p>
+</div>
+<div class="section" id="distinguishing-determinism">
+<h2>Distinguishing Determinism<a class="headerlink" href="#distinguishing-determinism" title="Permalink to this headline">¶</a></h2>
+<p>Here we analyze the logistic map with varying levels of noise as indicated by the title.</p>
+<img alt="_images/different_noise_levels.png" class="align-center" src="_images/different_noise_levels.png" />
+<p>To begin, we follow the <code class="docutils literal"><span class="pre">fit</span></code>, <code class="docutils literal"><span class="pre">predict_individual</span></code>, and <code class="docutils literal"><span class="pre">score</span></code> routine as usual for every time series. Interested readers can find the code in the <a class="reference external" href="https://github.com/nickc1/skedm/blob/master/scripts/skedm_examples.ipynb">jupyter notebook</a>. Next we look at the correlation coefficient for each series for one prediction forward in time. The legend refers to the level of noise that was added to the time series.</p>
+<img alt="_images/different_noise_levels_score.png" class="align-center" src="_images/different_noise_levels_score.png" />
+<p>Analyzing the plot above, we can see that as the amount of noise increases, the forecast skill decreases. This is to be expected as adding stochasticity to a system makes it inherently more difficult to forecast. The next thing to notice is that the forecast skill decreases more rapidly for the series with less noise. It is more important in deterministic systems to grab neighbors that are nearby in space.</p>
+</div>
 </div>
 
 
