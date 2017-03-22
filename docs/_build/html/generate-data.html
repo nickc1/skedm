@@ -151,7 +151,7 @@
 <dt id="skedm.data.logistic_map">
 <code class="descclassname">skedm.data.</code><code class="descname">logistic_map</code><span class="sig-paren">(</span><em>sz=256</em>, <em>A=3.99</em>, <em>seed=36</em>, <em>noise=0</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.logistic_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Logistic map.</p>
-<p>X(t+1) = rX(t)(1 - X(t)) + random</p>
+<p>X(t+1) = AX(t)(1 - X(t)) + noise</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -179,7 +179,8 @@ chaotic behaviour.</li>
 <dt id="skedm.data.noisy_periodic">
 <code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple periodic equation with a a specified amplitude of noise.</p>
-<p>X = sin(x) + .5cos(x) + random</p>
+<p>t = linspace(0, freq*pi, sz)
+X = sin(t) + .5cos(t) + noise</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -206,7 +207,8 @@ chaotic behaviour.</li>
 <dt id="skedm.data.noisy_periodic_complicated">
 <code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic_complicated</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic_complicated" title="Permalink to this definition">¶</a></dt>
 <dd><p>A complicated periodic equation with a a specified amplitude of noise.</p>
-<p>X = sin(x) + .5cos(.5x) + .25sin(.25x) + random</p>
+<p>t = linspace(0, freq*pi, sz)
+X = sin(t) + .5cos(.5t) + .25sin(.25t) + noise</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -317,7 +319,6 @@ easily reproduced.</li>
 <dt id="skedm.data.periodic_2d">
 <code class="descclassname">skedm.data.</code><code class="descname">periodic_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple 2D periodic equation with a specified amplitude of noise.</p>
-<p>X = sin(y) + .5cos(x) + random</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -455,7 +456,7 @@ fully developed before collection.</li>
 <dt id="skedm.data.random_circles">
 <code class="descclassname">skedm.data.</code><code class="descname">random_circles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad=20.0</em>, <em>sigma=1</em>, <em>num_circles=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.random_circles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomly places down gaussian circles and the sum is taken.</p>
-<p>Calls circleCreate to make the circles</p>
+<p>Calls circle_create to make the circles.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
