@@ -15,7 +15,7 @@ from sklearn import neighbors
 def logistic_map(sz=256, A=3.99, seed=36, noise=0):
     """Logistic map.
 
-    X(t+1) = rX(t)(1 - X(t)) + random
+    X(t+1) = AX(t)(1 - X(t)) + noise
 
     Parameters
     ----------
@@ -53,9 +53,10 @@ def logistic_map(sz=256, A=3.99, seed=36, noise=0):
     return X
 
 def noisy_periodic(sz=256,freq=52,seed=36,noise=.5):
-    """ A simple periodic equation with a a specified amplitude of noise.
+    """A simple periodic equation with a a specified amplitude of noise.
 
-    X = sin(x) + .5cos(x) + random
+    t = linspace(0, freq*pi, sz)
+    X = sin(t) + .5cos(t) + noise
 
     Parameters
     ----------
@@ -77,9 +78,9 @@ def noisy_periodic(sz=256,freq=52,seed=36,noise=.5):
 
     np.random.seed(seed=seed)
 
-    x = np.linspace(0,freq*np.pi,sz)  #prep range for averages
+    t = np.linspace(0, freq*np.pi, sz)  #prep range for averages
 
-    X = np.sin(x) + .5*np.cos(x) + noise*np.random.rand(sz)
+    X = np.sin(t) + .5*np.cos(t) + noise * np.random.rand(sz)
 
     #all positive and between 0 and 1
     X = X + np.abs(np.min(X))
@@ -89,7 +90,8 @@ def noisy_periodic(sz=256,freq=52,seed=36,noise=.5):
 def noisy_periodic_complicated(sz=256, freq=52, seed=36, noise=.5):
     """A complicated periodic equation with a a specified amplitude of noise.
 
-    X = sin(x) + .5cos(.5x) + .25sin(.25x) + random
+    t = linspace(0, freq*pi, sz)
+    X = sin(t) + .5cos(.5t) + .25sin(.25t) + noise
 
     Parameters
     ----------
@@ -111,9 +113,9 @@ def noisy_periodic_complicated(sz=256, freq=52, seed=36, noise=.5):
 
     np.random.seed(seed=seed)
 
-    x = np.linspace(0,freq*np.pi,sz)  #prep range for averages
+    t = np.linspace(0,freq*np.pi,sz)  #prep range for averages
 
-    X = np.sin(x) + .5*np.cos(.5*x) +.25*np.sin(.25*x) + noise*np.random.rand(sz)
+    X = np.sin(t) + .5*np.cos(.5*t) +.25*np.sin(.25*t) + noise*np.random.rand(sz)
 
     #all positive and between 0 and 1
     X = X + np.abs(np.min(X))
@@ -122,7 +124,7 @@ def noisy_periodic_complicated(sz=256, freq=52, seed=36, noise=.5):
     return X
 
 def noise_1D(sz=256, seed=36):
-    """ A random distribution of numbers. White Noise.
+    """A random distribution of numbers. White Noise.
 
     Parameters
     ----------
@@ -235,8 +237,6 @@ def chaos_2d(sz=128, A=3.99, eps=1., seed=36, noise=None):
 def periodic_2d(sz=128, freq=36, seed=36, noise=0.5):
     """A simple 2D periodic equation with a specified amplitude of noise.
 
-    X = sin(y) + .5cos(x) + random
-
     Parameters
     ----------
     sz : int
@@ -265,47 +265,6 @@ def periodic_2d(sz=128, freq=36, seed=36, noise=0.5):
 
     X += noise*np.random.rand(sz,sz)
 
-
-    #normalize
-    X += np.abs(X.min())
-    X /= X.max()
-
-    return X
-
-
-def periodic_brown(sz=128, freq=36, seed=15, noise=1.5):
-    """ A periodic equation with a specified amplitude of brown noise.
-    Calls the function brownNoise.
-
-    X = sin(y + noise*2pi)
-
-    Parameters
-    ----------
-    sz : int
-        Length of the spatiotemporal series.
-    freq : int
-        Frequency of the periodic equation.
-    noise : float
-        Amplitude of the noise.
-    seed : int
-        Sets the random seed for reproducible results.
-
-    Returns
-    -------
-    X : 2D array
-    	Array containing the periodic equation with brown noise added.
-    """
-
-    # set random seed
-    np.random.seed(seed=seed)
-
-    x = np.linspace(0,freq*np.pi,sz)  #prep range for averages
-    y = np.linspace(0,freq*np.pi,sz)
-    xx,yy = np.meshgrid(x,y)
-
-    noise = brownNoise(sz=sz)
-
-    X = np.sin(yy+noise*2*np.pi) #+ np.cos(xx+noise*2*np.pi)
 
     #normalize
     X += np.abs(X.min())
@@ -375,6 +334,48 @@ def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
         X = X[0::2,0::2]
 
     return X
+
+
+def periodic_brown(sz=128, freq=36, seed=15, noise=1.5):
+    """A periodic equation with a specified amplitude of brown noise.
+    Calls the function brownNoise.
+
+    X = sin(y + noise*2pi)
+
+    Parameters
+    ----------
+    sz : int
+        Length of the spatiotemporal series.
+    freq : int
+        Frequency of the periodic equation.
+    noise : float
+        Amplitude of the noise.
+    seed : int
+        Sets the random seed for reproducible results.
+
+    Returns
+    -------
+    X : 2D array
+    	Array containing the periodic equation with brown noise added.
+    """
+
+    # set random seed
+    np.random.seed(seed=seed)
+
+    x = np.linspace(0,freq*np.pi,sz)  #prep range for averages
+    y = np.linspace(0,freq*np.pi,sz)
+    xx,yy = np.meshgrid(x,y)
+
+    noise = brown_noise(sz=sz)
+
+    X = np.sin(yy+noise*2*np.pi) #+ np.cos(xx+noise*2*np.pi)
+
+    #normalize
+    X += np.abs(X.min())
+    X /= X.max()
+
+    return X
+
 
 def noise_2d(sz=128,seed=36):
     """A 2D random distribution of numbers.
@@ -457,7 +458,7 @@ def chaos_3d(sz=128,A=3.99,eps=1.,steps=100,tstart = 50):
 def random_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
     """Randomly places down gaussian circles and the sum is taken.
 
-    Calls circleCreate to make the circles
+    Calls circle_create to make the circles.
 
     Parameters
     ----------
@@ -484,7 +485,7 @@ def random_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
         r = np.floor(np.random.rand()*sz)
         c = np.floor(np.random.rand()*sz)
 
-        circ_store[:,:,ii] = self.circleCreate(r,c,sz,rad,sigma)
+        circ_store[:,:,ii] = circle_create(r,c,sz,rad,sigma)
 
     X = circ_store.sum(axis=2)
     X = X/np.max(X)
@@ -579,7 +580,7 @@ def circle_in_circle(rad_list, sz=256, num_blobs=1000):
 def blobber(r, c, rad_list, sz):
     """Creates a single circle sorrounded by a larger circle.
 
-    To be used within circleInCircle.
+    To be used within circle_in_circle.
 
     Parameters
     ----------
