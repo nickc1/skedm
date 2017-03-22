@@ -35,6 +35,7 @@ For a more complete background, I suggest checking out `Nonlinear Analysis by Ka
    predict
    score
    module-reference
+   performance
    acknowledgements
 
 
