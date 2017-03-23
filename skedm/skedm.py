@@ -700,12 +700,15 @@ class Embed:
         -----
         The embed space above looks like the following:
 
-        [f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
-         |         |         |         |         |
-         |         |         |         |         |
-        [f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
-                            [t]
-                            [t]
+        ::
+
+          [f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
+           |         |         |         |         |
+           |         |         |         |         |
+          [f] _ _ _ [f] _ _ _ [f] _ _ _ [f] _ _ _ [f]
+                              [t]
+                              [t]
+
         """
 
         rsize = self.X.shape[0]
@@ -785,13 +788,15 @@ class Embed:
         -----
         The above example would look like the following:
 
-        [f] _ _ _ [f] _ _ _ [f]
-         |         |         |
-         |         |         |
-        [f] _ _ _ [f] _ _ _ [f]
-         |         |         |
-         |         |         |
-        [f] _ _ _ [f] _ _ _ [f]
+        ::
+
+            [f] _ _ _ [f] _ _ _ [f]
+             |         |         |
+             |         |         |
+            [f] _ _ _ [f] _ _ _ [f]
+             |         |         |
+             |         |         |
+            [f] _ _ _ [f] _ _ _ [f]
 
         The targets would be directly below the center [f].
 

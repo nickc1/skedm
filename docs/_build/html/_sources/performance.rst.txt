@@ -6,7 +6,7 @@ Here we provide some basic guidelines on performance. All of these were run on a
 As a baseline, the example given in the Quick Example section completes in 4.2 seconds.
 
 ::
-  
+
   X = data.lorenz(sz=10000)[:,0] #only going to use the x values
   E = edm.Embed(X)
 
