@@ -15,12 +15,12 @@ These can be called by:
   score1 = M.score(ytest, how='score') # Coefficient of determination
   score2 = M.score(ytest, how='coeff') # Correlation coefficient
 
-Coefficient is useful when you are interested in making precise forecasts and correlation coefficient is useful when you are interested in accurate forecasts. For example, consider to following plot where the blue is the actual values and the green is the predicted values.
+Coefficient is useful when you are interested in making precise forecasts and correlation coefficient is useful when you are interested in accurate forecasts. For example, consider the following plot where blue are the actual values and green are the predicted values.
 
 .. image:: /_static/edm/corrcoef_vs_score.png
    :align: center
 
-The correlation coefficient for these predictions would be equal to one, while the coefficient of determination would be 0.19. Depending on what you are looking for, both statistics could be useful.
+The correlation coefficient for these predictions would be equal to one, while the coefficient of determination would be 0.19. Depending on on your interest, either statistic could be useful.
 
 
 Classification
