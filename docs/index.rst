@@ -21,7 +21,7 @@ For a quick explanation of this package, I suggest checking out the :ref:`exampl
 
 For a more complete background, I suggest checking out `Nonlinear Analysis by Kantz`_ as well as `Practical implementation of nonlinear time series methods: The TISEAN package`_.
 
-
+This software is useful both for forecasting and exploring underlying dynamical processes in a broad range of systems.  The target audience is also wide-ranging as the software can be used to explore any dynamical system.  Previous work using similar analyses has explored `ecological systems`_, `physical systems`_, and `physiological applications`_.
 
 
 .. toctree::
@@ -54,6 +54,12 @@ For a more complete background, I suggest checking out `Nonlinear Analysis by Ka
 .. _Reconstructed Shadow Manifold: https://www.youtube.com/watch?v=rs3gYeZeJcw
 
 .. _phase spaces: https://github.com/ericholscher/reStructuredText-Philosophy
+
+.. _ecological systems: http://deepeco.ucsd.edu/~george/publications/90_nonlinear_forecasting.pdf
+
+.. _physical systems: http://aip.scitation.org/doi/abs/10.1063/1.4931801
+
+.. _physiological applications: http://www.pnas.org/content/93/6/2608.short
 
 .. |License Type| image:: https://img.shields.io/github/license/mashape/apistatus.svg
     :target: https://github.com/NickC1/skedm/blob/master/LICENSE
