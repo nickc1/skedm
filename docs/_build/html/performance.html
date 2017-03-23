@@ -148,26 +148,28 @@
 <h1>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h1>
 <p>Here we provide some basic guidelines on performance. All of these were run on an early 2015 macbook air. The code can be found in the accompanying <a class="reference external" href="https://github.com/nickc1/skedm/blob/master/scripts/skedm_examples.ipynb">jupyter notebook</a>.</p>
 <p>As a baseline, the example given in the Quick Example section completes in 4.2 seconds.</p>
-<dl class="docutils">
-<dt>::</dt>
-<dd><p class="first">X = data.lorenz(sz=10000)[:,0] #only going to use the x values
-E = edm.Embed(X)</p>
-<p>lag = 15
-embed = 3
-predict = 30 #predicting out to double to lag
-X,y = E.embed_vectors_1d(lag,embed,predict)</p>
-<p>train_len = int(.75*len(X))
-Xtrain = X[0:train_len]
-ytrain = y[0:train_len]
-Xtest = X[train_len:]
-ytest = y[train_len:]</p>
-<p>M = edm.Regression() # initiate the nonlinear forecasting class
-M.fit(Xtrain,ytrain) #fit the training data</p>
-<p class="last">nn_list = [10,100,500,1000]
-ypred = M.predict(Xtest,nn_list)
-score = M.score(ytest) #score the predictions against the actual values</p>
-</dd>
-</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lorenz</span><span class="p">(</span><span class="n">sz</span><span class="o">=</span><span class="mi">10000</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#only going to use the x values</span>
+<span class="n">E</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Embed</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">lag</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">embed</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">predict</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1">#predicting out to double to lag</span>
+<span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">E</span><span class="o">.</span><span class="n">embed_vectors_1d</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span><span class="n">embed</span><span class="p">,</span><span class="n">predict</span><span class="p">)</span>
+
+<span class="n">train_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="o">.</span><span class="mi">75</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="n">Xtrain</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">]</span>
+<span class="n">ytrain</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">train_len</span><span class="p">]</span>
+<span class="n">Xtest</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_len</span><span class="p">:]</span>
+<span class="n">ytest</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_len</span><span class="p">:]</span>
+
+<span class="n">M</span> <span class="o">=</span> <span class="n">edm</span><span class="o">.</span><span class="n">Regression</span><span class="p">()</span> <span class="c1"># initiate the nonlinear forecasting class</span>
+<span class="n">M</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span><span class="n">ytrain</span><span class="p">)</span> <span class="c1">#fit the training data</span>
+
+<span class="n">nn_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">]</span>
+<span class="n">ypred</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span><span class="n">nn_list</span><span class="p">)</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">ytest</span><span class="p">)</span> <span class="c1">#score the predictions against the actual values</span>
+</pre></div>
+</div>
 <p>In the following sections we expand this example by changing the amount of near neighbors, training size, and testing size. This will give us an idea of the performance impacts of exploring different data sets.</p>
 <div class="section" id="near-neighbor">
 <h2>Near Neighbor<a class="headerlink" href="#near-neighbor" title="Permalink to this headline">¶</a></h2>
