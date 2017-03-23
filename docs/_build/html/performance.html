@@ -148,6 +148,27 @@
 <h1>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h1>
 <p>Here we provide some basic guidelines on performance. All of these were run on an early 2015 macbook air. The code can be found in the accompanying <a class="reference external" href="https://github.com/nickc1/skedm/blob/master/scripts/skedm_examples.ipynb">jupyter notebook</a>.</p>
 <p>As a baseline, the example given in the Quick Example section completes in 4.2 seconds.</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first">X = data.lorenz(sz=10000)[:,0] #only going to use the x values
+E = edm.Embed(X)</p>
+<p>lag = 15
+embed = 3
+predict = 30 #predicting out to double to lag
+X,y = E.embed_vectors_1d(lag,embed,predict)</p>
+<p>train_len = int(.75*len(X))
+Xtrain = X[0:train_len]
+ytrain = y[0:train_len]
+Xtest = X[train_len:]
+ytest = y[train_len:]</p>
+<p>M = edm.Regression() # initiate the nonlinear forecasting class
+M.fit(Xtrain,ytrain) #fit the training data</p>
+<p class="last">nn_list = [10,100,500,1000]
+ypred = M.predict(Xtest,nn_list)
+score = M.score(ytest) #score the predictions against the actual values</p>
+</dd>
+</dl>
+<p>In the following sections we expand this example by changing the amount of near neighbors, training size, and testing size. This will give us an idea of the performance impacts of exploring different data sets.</p>
 <div class="section" id="near-neighbor">
 <h2>Near Neighbor<a class="headerlink" href="#near-neighbor" title="Permalink to this headline">¶</a></h2>
 <p>Here we increase the amount of near neighbors with everything else held constant. This is the time it takes to complete every near neighbor value between the one given on the x axis and 1. For example, the first point is the amount of time it takes to complete the near neighbor calculation for [1,2,3,4,5,6,7,8,9,10] near neighbors.</p>
@@ -156,7 +177,7 @@
 <div class="section" id="train-size">
 <h2>Train Size<a class="headerlink" href="#train-size" title="Permalink to this headline">¶</a></h2>
 <p>Here the testing size, and the number of near neighbors is held constant. We simply iterate through the length of the training set.</p>
-<img alt="_images/benchmark_test_size.png" class="align-center" src="_images/benchmark_test_size.png" />
+<img alt="_images/benchmark_train_size.png" class="align-center" src="_images/benchmark_train_size.png" />
 </div>
 <div class="section" id="test-size">
 <h2>Test Size<a class="headerlink" href="#test-size" title="Permalink to this headline">¶</a></h2>

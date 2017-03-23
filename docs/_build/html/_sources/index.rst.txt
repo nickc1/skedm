@@ -57,5 +57,5 @@ For a more complete background, I suggest checking out `Nonlinear Analysis by Ka
 
 .. |License Type| image:: https://img.shields.io/github/license/mashape/apistatus.svg
     :target: https://github.com/NickC1/skedm/blob/master/LICENSE
-.. |Travis CI| image:: https://travis-ci.org/NickC1/skedm.svg?branch=master
+.. |Travis CI| image:: https://travis-ci.org/nickc1/skedm.svg?branch=master
     :target: https://travis-ci.org/NickC1/skedm
