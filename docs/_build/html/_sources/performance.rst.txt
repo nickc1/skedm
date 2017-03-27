@@ -51,7 +51,7 @@ Here the testing size, and the number of near neighbors is held constant. We sim
 Test Size
 ^^^^^^^^^
 
-Here the training size and the number of near neighbors is held constant. We simply iterate through the length of the training set.
+Here the training size and the number of near neighbors is held constant. We simply iterate through the length of the testing set.
 
 .. image:: /_static/edm/benchmark_test_size.png
    :align: center

@@ -29,7 +29,7 @@ Using the skedm package, this would be represented as:
   X, y = E.embed_vectors_1d(lag, emb, predict)
 
 
-Here ``X`` is the red matrix (features) and ``y`` is the red matrix above (targets). More examples of 1d embeddings are shown below. E is the embedding dimension, L is the lag, and F is the prediction distance.
+Here ``X`` is the red matrix (features) and ``y`` is the green matrix above (targets). More examples of 1d embeddings are shown below. E is the embedding dimension, L is the lag, and F is the prediction distance.
 
 .. image:: /_static/edm/1d_embedding_examples.png
    :align: center
@@ -57,7 +57,7 @@ This would be implemented in code as:
   X,y = E.embed_vectors_2d(lag, emb, predict)
 
 
-Here ``X`` is the red matrix (features) and ``y`` is the red matrix above (targets). More examples of 2d embeddings are shown below. L is the lag, E is the embedding dimension, and F is the prediction distance.
+Here ``X`` is the red matrix (features) and ``y`` is the green matrix above (targets). More examples of 2d embeddings are shown below. L is the lag, E is the embedding dimension, and F is the prediction distance.
 
 .. image:: /_static/edm/2d_embedding_examples.png
    :align: center
