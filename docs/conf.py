@@ -21,6 +21,12 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
+
+print("HERE WE GO NICK!")
+
+print(os.getcwd())
+print(sys.path)
+
 from unittest.mock import MagicMock
 
 class Mock(MagicMock):
@@ -28,7 +34,7 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
             return MagicMock()
 
-MOCK_MODULES = ['numpy', 'numba','sklearn', 'scipy']
+MOCK_MODULES = ['numpy', 'numba','sklearn', 'scipy','scipy.ndimage']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 # -- General configuration ------------------------------------------------
 

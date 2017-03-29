@@ -145,14 +145,17 @@
             
   <div class="section" id="generate-data">
 <h1>Generate Data<a class="headerlink" href="#generate-data" title="Permalink to this headline">¶</a></h1>
-<p>skedm comes with both 1D and 2D test data. These built in functions allow you to quickly explore the behavior of different systems.</p>
+<p>skedm comes with both 1D and 2D test data. These built in functions allow you to quickly explore the behavior of different systems. Check the <a class="reference external" href="https://github.com/nickc1/skedm/tree/master/scripts">notebook</a> for visual examples.</p>
 <div class="section" id="module-skedm.data">
 <span id="dimensional"></span><h2>1 Dimensional<a class="headerlink" href="#module-skedm.data" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="skedm.data.logistic_map">
-<code class="descclassname">skedm.data.</code><code class="descname">logistic_map</code><span class="sig-paren">(</span><em>sz=256</em>, <em>A=3.99</em>, <em>seed=36</em>, <em>noise=0</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.logistic_map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logistic map.</p>
-<p>X(t+1) = AX(t)(1 - X(t)) + noise</p>
+<code class="descclassname">skedm.data.</code><code class="descname">logistic_map</code><span class="sig-paren">(</span><em>sz=256</em>, <em>A=3.99</em>, <em>seed=36</em>, <em>eta=0</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.logistic_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solutions to the logistic map for a given amount of time steps <a href="#id10"><span class="problematic" id="id11"><span id="id1"></span>[1]_</span></a>.</p>
+<div class="math">
+\[X_{t+1} = AX_t(1 - X_t) + \eta\]</div>
+<p>where <span class="math">\(A\)</span> is the parameter that controls chaos, and <span class="math">\(\eta\)</span> is
+the amplitude of the noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -161,8 +164,8 @@
 <li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series.</li>
 <li><strong>A</strong> (<em>float</em>) &#8211; Parameter for the logistic map. Values beyond 3.56995 exhibit
 chaotic behaviour.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for the logistic map.</li>
-<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of noise to add to the logistic map.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
+<li><strong>eta</strong> (<em>float</em>) &#8211; Amplitude of noise to add to the logistic map.</li>
 </ul>
 </td>
 </tr>
@@ -174,14 +177,17 @@ chaotic behaviour.</li>
 </tr>
 </tbody>
 </table>
+<p class="rubric">References</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="skedm.data.noisy_periodic">
-<code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>eta=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple periodic equation with a a specified amplitude of noise.</p>
-<p>t = linspace(0, freq*pi, sz)
-X = sin(t) + .5cos(t) + noise</p>
+<div class="math">
+\[X(t) = sin( 2\pi ft ) + 0.5cos( 2\pi ft ) + \eta\]</div>
+<p>Where <span class="math">\(f\)</span> is the frequency and <span class="math">\(\eta\)</span> is the amplitude of the
+noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -189,8 +195,8 @@ X = sin(t) + .5cos(t) + noise</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series.</li>
 <li><strong>freq</strong> (<em>int</em>) &#8211; Frequency of the periodic equation.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
-<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
+<li><strong>eta</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 </ul>
 </td>
 </tr>
@@ -205,44 +211,17 @@ X = sin(t) + .5cos(t) + noise</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.noisy_periodic_complicated">
-<code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic_complicated</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic_complicated" title="Permalink to this definition">¶</a></dt>
-<dd><p>A complicated periodic equation with a a specified amplitude of noise.</p>
-<p>t = linspace(0, freq*pi, sz)
-X = sin(t) + .5cos(.5t) + .25sin(.25t) + noise</p>
+<dt id="skedm.data.noise_1d">
+<code class="descclassname">skedm.data.</code><code class="descname">noise_1d</code><span class="sig-paren">(</span><em>sz=256</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noise_1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>White noise with values between 0 and 1. Uses numpy&#8217;s random number
+generator.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series.</li>
-<li><strong>freq</strong> (<em>int</em>) &#8211; Frequency of the periodic equation.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
-<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Periodic array of size (sz) with values between 0 and 2.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1D array</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="skedm.data.noise_1D">
-<code class="descclassname">skedm.data.</code><code class="descname">noise_1D</code><span class="sig-paren">(</span><em>sz=256</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noise_1D" title="Permalink to this definition">¶</a></dt>
-<dd><p>A random distribution of numbers. White Noise.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
 </ul>
 </td>
 </tr>
@@ -258,12 +237,12 @@ X = sin(t) + .5cos(.5t) + .25sin(.25t) + noise</p>
 
 <dl class="function">
 <dt id="skedm.data.lorenz">
-<code class="descclassname">skedm.data.</code><code class="descname">lorenz</code><span class="sig-paren">(</span><em>sz=10000</em>, <em>max_t=100.0</em>, <em>noise=0</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.lorenz" title="Permalink to this definition">¶</a></dt>
-<dd><p>Integrates the lorenz equations.</p>
-<p>dx/dt = sigma(y - x)
-dy/dt = x(rho - z) - y
-dz/dt = xy - Bz</p>
-<p>sigma=10, beta=8/3, rho=28</p>
+<code class="descclassname">skedm.data.</code><code class="descname">lorenz</code><span class="sig-paren">(</span><em>sz=10000</em>, <em>max_t=100.0</em>, <em>noise=0</em>, <em>parameters=(10</em>, <em>2.6666666666666665</em>, <em>28.0)</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.lorenz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrates the lorenz equations. Which are defined as:</p>
+<div class="math">
+\[ \begin{align}\begin{aligned}\frac{dx}{dt} = \sigma (y - x)\\\frac{dy}{dt} = x(\rho - z) - y\\\frac{dz}{dt} = xy - \beta z\end{aligned}\end{align} \]</div>
+<p>Where <span class="math">\(\sigma=10\)</span>, <span class="math">\(\beta=8/3\)</span>, and <span class="math">\(rho=28\)</span> lead to
+chaotic behavior.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -272,6 +251,8 @@ dz/dt = xy - Bz</p>
 <li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series to be integrated.</li>
 <li><strong>max_t</strong> (<em>float</em>) &#8211; Length of time to solve the lorenz equation over,</li>
 <li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of noise to be added to the lorenz equation.</li>
+<li><strong>parameters</strong> (<em>tuple</em>) &#8211; Sigma, beta, and rho parameters for the lorenz equations.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
 </ul>
 </td>
 </tr>
@@ -287,11 +268,18 @@ dz/dt = xy - Bz</p>
 
 </div>
 <div class="section" id="module-skedm.data">
-<span id="id1"></span><h2>2 Dimensional<a class="headerlink" href="#module-skedm.data" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2>2 Dimensional<a class="headerlink" href="#module-skedm.data" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="skedm.data.chaos_2d">
-<code class="descclassname">skedm.data.</code><code class="descname">chaos_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>seed=36</em>, <em>noise=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logistic map diffused in space.</p>
+<code class="descclassname">skedm.data.</code><code class="descname">chaos_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>seed=36</em>, <em>eta=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logistic map diffused in space which takes the following form:</p>
+<div class="math">
+\[x_{t+1} = A x_t(1-x_t) \equiv f(x_t)\]</div>
+<div class="math">
+\[x_{t+1,s} = \frac{1}{1+3\epsilon}[f(x_{t,s})+ \      \epsilon f(x_{t,s \pm 1})] +\alpha\eta\]</div>
+<p>Where <span class="math">\(A\)</span> is the parameter that controls chaos, <span class="math">\(\eta\)</span> is the
+amplitude of the noise, and <span class="math">\(\epsilon\)</span> is the strength of the spatial
+coupling.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -300,9 +288,9 @@ dz/dt = xy - Bz</p>
 <li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the spatio-temporal series to be generated.</li>
 <li><strong>A</strong> (<em>float</em>) &#8211; Parameter for the logistic map. Values beyond 3.56995 exhibit chaotic
 behaviour.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for the logistic map. Allows results to be
-easily reproduced.</li>
-<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of noise to add to the logistic map.</li>
+<li><strong>eps</strong> (<em>float</em>) &#8211; Spatial coupling strength.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
+<li><strong>eta</strong> (<em>float</em>) &#8211; Amplitude of noise to add to the logistic map.</li>
 </ul>
 </td>
 </tr>
@@ -318,8 +306,13 @@ easily reproduced.</li>
 
 <dl class="function">
 <dt id="skedm.data.periodic_2d">
-<code class="descclassname">skedm.data.</code><code class="descname">periodic_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=36</em>, <em>noise=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>A simple 2D periodic equation with a specified amplitude of noise.</p>
+<code class="descclassname">skedm.data.</code><code class="descname">periodic_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=36</em>, <em>eta=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple 2D periodic equation with a specified amplitude of noise. This
+is a sine wave down the rows, added to a cosine wave across the columns.</p>
+<div class="math">
+\[X(r,c) = sin(2\pi fr) + 0.5cos(2\pi fc) + \eta\]</div>
+<p>Where <span class="math">\(r\)</span> and <span class="math">\(c\)</span> are the row and column values, and <span class="math">\(f\)</span>
+is the frequency.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -327,8 +320,8 @@ easily reproduced.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series.</li>
 <li><strong>freq</strong> (<em>int</em>) &#8211; Frequency of the periodic equation.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
-<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
+<li><strong>eta</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 </ul>
 </td>
 </tr>
@@ -343,11 +336,49 @@ easily reproduced.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="skedm.data.brown_noise">
+<code class="descclassname">skedm.data.</code><code class="descname">brown_noise</code><span class="sig-paren">(</span><em>sz=128</em>, <em>num_walks=500</em>, <em>walk_sz=100000</em>, <em>spread=1000</em>, <em>seed=3</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.brown_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates brown noise with a bunch of random walks. [1]</p>
+<p>Subsamples to generate sizes: 128, 256, or 512. 512 is the full size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the array to be returned.</li>
+<li><strong>num_walks</strong> (<em>int</em>) &#8211; Number of random walks.</li>
+<li><strong>walk_sz</strong> (<em>int</em>) &#8211; Length of the random walk to take.</li>
+<li><strong>spread</strong> (<em>int</em>) &#8211; Normal distribution of walks. Sizes randn*spread.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; 2D brown noise array size (sz,sz).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>Wikipedia, &#8220;Brown Noise&#8221;, <a class="reference external" href="https://en.wikipedia.org/wiki/Brownian_noise">https://en.wikipedia.org/wiki/Brownian_noise</a>.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="skedm.data.periodic_brown">
-<code class="descclassname">skedm.data.</code><code class="descname">periodic_brown</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=15</em>, <em>noise=1.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_brown" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">skedm.data.</code><code class="descname">periodic_brown</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=15</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_brown" title="Permalink to this definition">¶</a></dt>
 <dd><p>A periodic equation with a specified amplitude of brown noise.
-Calls the function brownNoise.</p>
-<p>X = sin(y + noise*2pi)</p>
+Calls the function brown_noise.</p>
+<div class="math">
+\[X(r,c) = sin(2\pi fr + \eta)\]</div>
+<p>Where <span class="math">\(r\)</span> and <span class="math">\(c\)</span> are the row and column values, <span class="math">\(f\)</span>
+is the frequency, and <span class="math">\(\eta\)</span> is the brown noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -355,8 +386,7 @@ Calls the function brownNoise.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sz</strong> (<em>int</em>) &#8211; Length of the spatiotemporal series.</li>
 <li><strong>freq</strong> (<em>int</em>) &#8211; Frequency of the periodic equation.</li>
-<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
 </ul>
 </td>
 </tr>
@@ -371,44 +401,17 @@ Calls the function brownNoise.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.brown_noise">
-<code class="descclassname">skedm.data.</code><code class="descname">brown_noise</code><span class="sig-paren">(</span><em>sz=128</em>, <em>num_walks=500</em>, <em>walk_sz=100000</em>, <em>spread=1000</em>, <em>seed=3</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.brown_noise" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates brown noise with a bunch of random walks.</p>
-<p>Subsamples to generate sizes: 128, 256, or 512. 512 is the full size.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the array to be returned.</li>
-<li><strong>num_walks</strong> (<em>int</em>) &#8211; Number of random walks.</li>
-<li><strong>walk_sz</strong> (<em>int</em>) &#8211; Length of the random walk to take.</li>
-<li><strong>spread</strong> (<em>int</em>) &#8211; Normal distribution of walks. Sizes randn*spread.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; 2D brown noise array size (sz,sz).</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="skedm.data.noise_2d">
 <code class="descclassname">skedm.data.</code><code class="descname">noise_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noise_2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 2D random distribution of numbers.</p>
+<dd><p>A 2D random distribution of numbers. Uses numpy&#8217;s random number
+generator.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sz</strong> (<em>int</em>) &#8211; row and column size of array.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for reproducible results.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
 </ul>
 </td>
 </tr>
@@ -423,41 +426,11 @@ Calls the function brownNoise.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.chaos_3d">
-<code class="descclassname">skedm.data.</code><code class="descname">chaos_3d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>steps=100</em>, <em>tstart=50</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_3d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logistic map diffused in space and then taken through time.</p>
-<p>Chaos evolves in 3rd dimension.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the spatio-temporal series to be generated.</li>
-<li><strong>A</strong> (<em>float</em>) &#8211; Parameter for the logistic map. Values beyond 3.56995 exhibit chaotic
-behaviour.</li>
-<li><strong>eps</strong> (<em>float</em>) &#8211; Amount of coupling/diffusion between adjecent cells.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; sets the random seed for the logistic map. Allows results to be
-easily reproduced.</li>
-<li><strong>tstart</strong> (<em>int</em>) &#8211; When to start collecting the data. This allows the chaos to be
-fully developed before collection.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Spatiotemporal logistic map of size (sz,sz,steps).</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="skedm.data.random_circles">
-<code class="descclassname">skedm.data.</code><code class="descname">random_circles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad=20.0</em>, <em>sigma=1</em>, <em>num_circles=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.random_circles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Randomly places down gaussian circles and the sum is taken.</p>
-<p>Calls circle_create to make the circles.</p>
+<dt id="skedm.data.overlapping_circles">
+<code class="descclassname">skedm.data.</code><code class="descname">overlapping_circles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad=20.0</em>, <em>sigma=1</em>, <em>num_circles=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.overlapping_circles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly places down circles that have been gaussian blurred <a href="#id12"><span class="problematic" id="id13"><span id="id5"></span>[1]_</span></a>.
+Overlapping circles are summed together. Uses scipy&#8217;s gaussian filter.</p>
+<p>Calls _gauss_circle_create to make the circles.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -465,12 +438,12 @@ fully developed before collection.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the space.</li>
 <li><strong>rad</strong> (<em>float</em>) &#8211; Radius of the circles.</li>
-<li><strong>sigma</strong> (<em>float</em>) &#8211; Constant to create gaussian circles. Changes the distribution of values.</li>
+<li><strong>sigma</strong> (<em>float</em>) &#8211; Constant that controlls the strength of the filter.</li>
 <li><strong>num_circles</strong> (<em>int</em>) &#8211; Number of circles to place down randomly.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Summed gaussian circles. Size (sz,sz).</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Summed circles. Size (sz,sz).</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
@@ -478,25 +451,36 @@ fully developed before collection.</li>
 </tr>
 </tbody>
 </table>
+<p class="rubric">References</p>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>: Wikipedia, &#8220;Gaussian Blur&#8221;, <a class="reference external" href="https://en.wikipedia.org/wiki/Gaussian_blur">https://en.wikipedia.org/wiki/Gaussian_blur</a>.</td></tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.circle_in_circle">
-<code class="descclassname">skedm.data.</code><code class="descname">circle_in_circle</code><span class="sig-paren">(</span><em>rad_list</em>, <em>sz=256</em>, <em>num_blobs=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.circle_in_circle" title="Permalink to this definition">¶</a></dt>
+<dt id="skedm.data.concentric_circles">
+<code class="descclassname">skedm.data.</code><code class="descname">concentric_circles</code><span class="sig-paren">(</span><em>rad_list</em>, <em>sz=256</em>, <em>num_circs=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.concentric_circles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create circles inside larger circles. These circles cannot overlap.
-Calls the function blobber.</p>
+Calls the function _concentric_circle.</p>
+<p>For example, if rad_list=[2,4,6], and sz=256; _concentric_circle will
+generate concentric circles in a 256x256 matrix with the innermost radius
+equal to 2 and the outermost radius equal to six. The values of the circles
+will be 1, 2, and 3 respectively.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>rad_list</strong> (<em>list of ints</em>) &#8211; Radii of the circles.</li>
+<li><strong>rad_list</strong> (<em>list of ints</em>) &#8211; Radii of the cocentric circles circles. Must be increasing.</li>
 <li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the returned space.</li>
-<li><strong>num_blobs</strong> (<em>int</em>) &#8211; Number of circles to create.</li>
+<li><strong>num_circs</strong> (<em>int</em>) &#8211; Number of circles to create.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>blobs</strong> &#8211; Array of the circles within circles of shape (sz,sz).</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>blobs</strong> &#8211; Array of integers with shape (sz,sz).</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
@@ -507,10 +491,10 @@ Calls the function blobber.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="skedm.data.circles_with_stuff">
-<code class="descclassname">skedm.data.</code><code class="descname">circles_with_stuff</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad1=5</em>, <em>rad2=8</em>, <em>num_blobs=100</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.circles_with_stuff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create circles with random smaller circles spread around randomly.</p>
-<p>Same number of large circles and smaller circles. Calls blobber2.</p>
+<dt id="skedm.data.small_and_large_circles">
+<code class="descclassname">skedm.data.</code><code class="descname">small_and_large_circles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad1=5</em>, <em>rad2=8</em>, <em>num_circs=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.small_and_large_circles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create larger circles with smaller circles spread around randomly.</p>
+<p>Same number of large circles and smaller circles. Calls _circle_create.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -519,7 +503,7 @@ Calls the function blobber.</p>
 <li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the space in which the circle is placed.</li>
 <li><strong>rad1</strong> (<em>int</em>) &#8211; Radius of the smaller circle.</li>
 <li><strong>rad2</strong> (<em>int</em>) &#8211; Radius of the larger circle.</li>
-<li><strong>num_blobs</strong> (<em>int</em>) &#8211; Number of large and small circles to create.</li>
+<li><strong>num_circs</strong> (<em>int</em>) &#8211; Number of large and small circles to attempt to create.</li>
 </ul>
 </td>
 </tr>
@@ -535,9 +519,11 @@ Calls the function blobber.</p>
 
 <dl class="function">
 <dt id="skedm.data.random_sized_circles">
-<code class="descclassname">skedm.data.</code><code class="descname">random_sized_circles</code><span class="sig-paren">(</span><em>rad_list</em>, <em>val_list</em>, <em>sz=512</em>, <em>num_blobs=3000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.random_sized_circles" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">skedm.data.</code><code class="descname">random_sized_circles</code><span class="sig-paren">(</span><em>rad_list</em>, <em>val_list</em>, <em>sz=512</em>, <em>num_circs=3000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.random_sized_circles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create random sized circles spread around randomly and assign them
-to classes: 1:27</p>
+to classes in val_list.</p>
+<p>For example, rad_list=[1,2,3] and val_list=[4,5,6] will create circles with
+radius 1, 2, and 3 and values 4, 5, and 6 respectively.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -546,11 +532,12 @@ to classes: 1:27</p>
 <li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the space in which the circle is placed.</li>
 <li><strong>rad_list</strong> (<em>list of ints</em>) &#8211; List of radii.</li>
 <li><strong>val_list</strong> (<em>list ints</em>) &#8211; List of values associated with the radii.</li>
-<li><strong>num_blobs</strong> (<em>int</em>) &#8211; Total number of circles to create.</li>
+<li><strong>num_circs</strong> (<em>int</em>) &#8211; Total number of circles to create.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>blobs</strong> &#8211; Array containing all circles.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>blobs</strong> &#8211; Array of integers corresponding to the values given in val_list. Areas
+without a circle will be zero.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
@@ -562,14 +549,14 @@ to classes: 1:27</p>
 
 <dl class="function">
 <dt id="skedm.data.voronoi_matrix">
-<code class="descclassname">skedm.data.</code><code class="descname">voronoi_matrix</code><span class="sig-paren">(</span><em>sz=512</em>, <em>percent=0.1</em>, <em>num_classes=27</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.voronoi_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create voronoi polygons.</p>
+<code class="descclassname">skedm.data.</code><code class="descname">voronoi_matrix</code><span class="sig-paren">(</span><em>sz=512</em>, <em>percent=0.01</em>, <em>num_classes=27</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.voronoi_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create voronoi polygons <a href="#id14"><span class="problematic" id="id15"><span id="id7"></span>[1]_</span></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the space in which the circle is placed.</li>
+<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the space.</li>
 <li><strong>percent</strong> (<em>float</em>) &#8211; Percent of the space to place down centers of the voronoi polygons.
 Smaller percent makes the polygons larger.</li>
 <li><strong>num_classes</strong> (<em>int</em>) &#8211; Number of classes to assign to each of the voronoi polygons.</li>
@@ -577,6 +564,49 @@ Smaller percent makes the polygons larger.</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; 2D array of size (sz,sz) containing the voronoi polygons.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>: Wikipedia, &#8220;Voronoi Diagram&#8221;, <a class="reference external" href="https://en.wikipedia.org/wiki/Voronoi_diagram">https://en.wikipedia.org/wiki/Voronoi_diagram</a>.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="skedm.data.chaos_3d">
+<code class="descclassname">skedm.data.</code><code class="descname">chaos_3d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>steps=100</em>, <em>tstart=50</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logistic map diffused in space and taken through time. Chaos evolves in
+3rd dimension.</p>
+<div class="math">
+\[x_{t+1} = A x_t(1-x_t) \equiv f(x_t)\]</div>
+<div class="math">
+\[x_{t+1,r,c} = \frac{1}{1+4\epsilon}[f(x_{t,r,c})+ \      \epsilon f(x_{t,r \pm 1, c}) + \epsilon f(x_{t,r, c \pm 1})]\]</div>
+<p>Where <span class="math">\(A\)</span> is the parameter that controls chaos and <span class="math">\(\epsilon\)</span>
+is the strength of the spatial coupling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sz</strong> (<em>int</em>) &#8211; Row and column size of the spatio-temporal series to be generated.</li>
+<li><strong>A</strong> (<em>float</em>) &#8211; Parameter for the logistic map. Values beyond 3.56995 exhibit chaotic
+behaviour.</li>
+<li><strong>eps</strong> (<em>float</em>) &#8211; Amount of coupling/diffusion between adjecent cells.</li>
+<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
+<li><strong>tstart</strong> (<em>int</em>) &#8211; When to start collecting the data. This allows the chaos to be
+fully developed before collection.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> &#8211; Spatiotemporal logistic map of size (sz, sz, steps).</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
@@ -633,7 +663,8 @@ Smaller percent makes the polygons larger.</li>
             VERSION:'0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

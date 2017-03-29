@@ -1,21 +1,24 @@
 #
 # Generates data for skedm (SciKit Emperical Dynamic Modeling)
 #
-# Available data:
 # By Nick Cortale
-
-
 
 import numpy as np
 from numpy import genfromtxt
-from scipy import integrate
+#from scipy import integrate
 from sklearn import neighbors
+import scipy.ndimage
 
 
-def logistic_map(sz=256, A=3.99, seed=36, noise=0):
-    """Logistic map.
+def logistic_map(sz=256, A=3.99, seed=36, eta=0):
+    """Solutions to the logistic map for a given amount of time steps [1]_.
 
-    X(t+1) = AX(t)(1 - X(t)) + noise
+    .. math::
+
+      X_{t+1} = AX_t(1 - X_t) + \eta
+
+    where :math:`A` is the parameter that controls chaos, and :math:`\eta` is
+    the amplitude of the noise.
 
     Parameters
     ----------
@@ -25,14 +28,18 @@ def logistic_map(sz=256, A=3.99, seed=36, noise=0):
         Parameter for the logistic map. Values beyond 3.56995 exhibit
         chaotic behaviour.
     seed : int
-        Sets the random seed for the logistic map.
-    noise : float
+        Sets the random seed for numpy's random number generator.
+    eta : float
         Amplitude of noise to add to the logistic map.
 
     Returns
     -------
     X : 1D array
         Logistic map of size (sz).
+
+    References
+    ----------
+    __ [1] : Wikipedia, "Logistic Map", https://en.wikipedia.org/wiki/Logistic_map.
 
     """
 
@@ -48,15 +55,19 @@ def logistic_map(sz=256, A=3.99, seed=36, noise=0):
         # logistic equation in space
         X[tt+1] = A*X[tt]*(1-X[tt])
 
-    X += noise*np.random.rand(sz)
+    X += eta*np.random.rand(sz)
 
     return X
 
-def noisy_periodic(sz=256,freq=52,seed=36,noise=.5):
+def noisy_periodic(sz=256, freq=52, seed=36, eta=.5):
     """A simple periodic equation with a a specified amplitude of noise.
 
-    t = linspace(0, freq*pi, sz)
-    X = sin(t) + .5cos(t) + noise
+    .. math::
+
+      X(t) = sin( 2\pi ft ) + 0.5cos( 2\pi ft ) + \eta
+
+    Where :math:`f` is the frequency and :math:`\eta` is the amplitude of the
+    noise.
 
     Parameters
     ----------
@@ -65,8 +76,8 @@ def noisy_periodic(sz=256,freq=52,seed=36,noise=.5):
     freq : int
         Frequency of the periodic equation.
     seed : int
-        Sets the random seed for reproducible results.
-    noise : float
+        Sets the random seed for numpy's random number generator.
+    eta : float
         Amplitude of the noise.
 
     Returns
@@ -78,60 +89,25 @@ def noisy_periodic(sz=256,freq=52,seed=36,noise=.5):
 
     np.random.seed(seed=seed)
 
-    t = np.linspace(0, freq*np.pi, sz)  #prep range for averages
+    t = np.linspace(0, freq, sz)  #prep range for averages
 
-    X = np.sin(t) + .5*np.cos(t) + noise * np.random.rand(sz)
+    X = np.sin(2*np.pi*t) + .5*np.cos(2*np.pi*t) + eta * np.random.rand(sz)
 
     #all positive and between 0 and 1
     X = X + np.abs(np.min(X))
     X = X/np.max(X)
     return X
 
-def noisy_periodic_complicated(sz=256, freq=52, seed=36, noise=.5):
-    """A complicated periodic equation with a a specified amplitude of noise.
-
-    t = linspace(0, freq*pi, sz)
-    X = sin(t) + .5cos(.5t) + .25sin(.25t) + noise
-
-    Parameters
-    ----------
-    sz : int
-        Length of the time series.
-    freq : int
-        Frequency of the periodic equation.
-    seed : int
-        Sets the random seed for reproducible results.
-    noise : float
-        Amplitude of the noise.
-
-    Returns
-    -------
-    X : 1D array
-        Periodic array of size (sz) with values between 0 and 2.
-
-    """
-
-    np.random.seed(seed=seed)
-
-    t = np.linspace(0,freq*np.pi,sz)  #prep range for averages
-
-    X = np.sin(t) + .5*np.cos(.5*t) +.25*np.sin(.25*t) + noise*np.random.rand(sz)
-
-    #all positive and between 0 and 1
-    X = X + np.abs(np.min(X))
-    X = X/np.max(X)
-
-    return X
-
-def noise_1D(sz=256, seed=36):
-    """A random distribution of numbers. White Noise.
+def noise_1d(sz=256, seed=36):
+    """White noise with values between 0 and 1. Uses numpy's random number
+    generator.
 
     Parameters
     ----------
     sz : int
         Length of the time series.
     seed : int
-        Sets the random seed for reproducible results.
+        Sets the random seed for numpy's random number generator.
 
     Returns
     -------
@@ -146,14 +122,19 @@ def noise_1D(sz=256, seed=36):
     return X
 
 
-def lorenz(sz=10000, max_t=100., noise=0):
-    """ Integrates the lorenz equations.
+def lorenz(sz=10000, max_t=100., noise=0, parameters=(10,8./3,28.0), seed=36):
+    """Integrates the lorenz equations. Which are defined as:
 
-    dx/dt = sigma(y - x)
-    dy/dt = x(rho - z) - y
-    dz/dt = xy - Bz
+    .. math::
 
-    sigma=10, beta=8/3, rho=28
+      \\frac{dx}{dt} = \\sigma (y - x)
+
+      \\frac{dy}{dt} = x(\\rho - z) - y
+
+      \\frac{dz}{dt} = xy - \\beta z
+
+    Where :math:`\\sigma=10`, :math:`\\beta=8/3`, and :math:`rho=28` lead to
+    chaotic behavior.
 
     Parameters
     ----------
@@ -163,20 +144,25 @@ def lorenz(sz=10000, max_t=100., noise=0):
         Length of time to solve the lorenz equation over,
     noise : float
         Amplitude of noise to be added to the lorenz equation.
-
+    parameters : tuple
+        Sigma, beta, and rho parameters for the lorenz equations.
+    seed : int
+        Sets the random seed for numpy's random number generator.
     Returns
     -------
     X : 2D array
         X solutions in the first column, Y in the second, and Z in the third.
-    """
 
-    def lorenz_deriv(xyz, t0, sigma=10., beta=8./3, rho=28.0):
+    """
+    sigma, beta, rho = parameters
+
+    def lorenz_deriv(xyz, t0, sigma=sigma, beta=beta, rho=rho):
         x,y,z = xyz
         return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
 
     x0 = [1, 1, 1]  # starting vector
     t = np.linspace(0, max_t, sz)  # one thousand time steps
-    X = integrate.odeint(lorenz_deriv, x0, t) + noise*np.random.rand(sz,3)
+    X = scipy.integrate.odeint(lorenz_deriv, x0, t) + noise*np.random.rand(sz,3)
 
     return X
 
@@ -188,8 +174,17 @@ TWO DIMENSIONAL
 """
 
 
-def chaos_2d(sz=128, A=3.99, eps=1., seed=36, noise=None):
-    """Logistic map diffused in space.
+def chaos_2d(sz=128, A=3.99, eps=1., seed=36, eta=None):
+    """Logistic map diffused in space which takes the following form:
+
+    .. math:: x_{t+1} = A x_t(1-x_t) \\equiv f(x_t)
+
+    .. math:: x_{t+1,s} = \\frac{1}{1+3\\epsilon}[f(x_{t,s})+ \\\
+      \\epsilon f(x_{t,s \\pm 1})] +\\alpha\\eta
+
+    Where :math:`A` is the parameter that controls chaos, :math:`\eta` is the
+    amplitude of the noise, and :math:`\\epsilon` is the strength of the spatial
+    coupling.
 
     Parameters
     ----------
@@ -198,10 +193,11 @@ def chaos_2d(sz=128, A=3.99, eps=1., seed=36, noise=None):
     A : float
         Parameter for the logistic map. Values beyond 3.56995 exhibit chaotic
         behaviour.
+    eps : float
+        Spatial coupling strength.
     seed : int
-        Sets the random seed for the logistic map. Allows results to be
-        easily reproduced.
-    noise : float
+        Sets the random seed for numpy's random number generator.
+    eta : float
         Amplitude of noise to add to the logistic map.
 
     Returns
@@ -229,13 +225,19 @@ def chaos_2d(sz=128, A=3.99, eps=1., seed=36, noise=None):
 
         X[tt+1,:] = (A/(1+2*eps)) * (reg + left + right)
 
-    if noise:
-        X += noise * np.random.rand(sz,sz)
+    if eta:
+        X += eta * np.random.rand(sz,sz)
 
     return X
 
-def periodic_2d(sz=128, freq=36, seed=36, noise=0.5):
-    """A simple 2D periodic equation with a specified amplitude of noise.
+def periodic_2d(sz=128, freq=36, seed=36, eta=0.5):
+    """A simple 2D periodic equation with a specified amplitude of noise. This
+    is a sine wave down the rows, added to a cosine wave across the columns.
+
+    .. math:: X(r,c) = sin(2\pi fr) + 0.5cos(2\pi fc) + \eta
+
+    Where :math:`r` and :math:`c` are the row and column values, and :math:`f`
+    is the frequency.
 
     Parameters
     ----------
@@ -244,8 +246,8 @@ def periodic_2d(sz=128, freq=36, seed=36, noise=0.5):
     freq : int
         Frequency of the periodic equation.
     seed : int
-        Sets the random seed for reproducible results.
-    noise : float
+        Sets the random seed for numpy's random number generator.
+    eta : float
         Amplitude of the noise.
 
     Returns
@@ -261,9 +263,9 @@ def periodic_2d(sz=128, freq=36, seed=36, noise=0.5):
     y = np.linspace(0,freq*np.pi,sz)
     xx,yy = np.meshgrid(x,y)
 
-    X = np.sin(yy) + .5*np.cos(xx) #+ np.cos(.5*yy)  + np.cos(.25*xx)
+    X = np.sin(yy) + .5*np.cos(xx)
 
-    X += noise*np.random.rand(sz,sz)
+    X += eta*np.random.rand(sz,sz)
 
 
     #normalize
@@ -273,7 +275,7 @@ def periodic_2d(sz=128, freq=36, seed=36, noise=0.5):
     return X
 
 def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
-    """Creates brown noise with a bunch of random walks.
+    """Creates brown noise with a bunch of random walks. [1]
 
     Subsamples to generate sizes: 128, 256, or 512. 512 is the full size.
 
@@ -288,12 +290,16 @@ def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
     spread : int
         Normal distribution of walks. Sizes randn*spread.
     seed : int
-        Sets the random seed for reproducible results.
+        Sets the random seed for numpy's random number generator.
 
     Returns
     -------
     X : 2D array
         2D brown noise array size (sz,sz).
+
+    References
+    ----------
+    .. [1] Wikipedia, "Brown Noise", https://en.wikipedia.org/wiki/Brownian_noise.
 
     """
 
@@ -336,11 +342,14 @@ def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
     return X
 
 
-def periodic_brown(sz=128, freq=36, seed=15, noise=1.5):
+def periodic_brown(sz=128, freq=36, seed=15):
     """A periodic equation with a specified amplitude of brown noise.
-    Calls the function brownNoise.
+    Calls the function brown_noise.
 
-    X = sin(y + noise*2pi)
+    .. math:: X(r,c) = sin(2\pi fr + \eta)
+
+    Where :math:`r` and :math:`c` are the row and column values, :math:`f`
+    is the frequency, and :math:`\eta` is the brown noise.
 
     Parameters
     ----------
@@ -348,10 +357,8 @@ def periodic_brown(sz=128, freq=36, seed=15, noise=1.5):
         Length of the spatiotemporal series.
     freq : int
         Frequency of the periodic equation.
-    noise : float
-        Amplitude of the noise.
     seed : int
-        Sets the random seed for reproducible results.
+        Sets the random seed for numpy's random number generator.
 
     Returns
     -------
@@ -378,14 +385,15 @@ def periodic_brown(sz=128, freq=36, seed=15, noise=1.5):
 
 
 def noise_2d(sz=128,seed=36):
-    """A 2D random distribution of numbers.
+    """A 2D random distribution of numbers. Uses numpy's random number
+    generator.
 
     Parameters
     ----------
     sz : int
         row and column size of array.
     seed : int
-        Sets the random seed for reproducible results.
+        Sets the random seed for numpy's random number generator.
 
     Returns
     -------
@@ -401,99 +409,9 @@ def noise_2d(sz=128,seed=36):
 
     return X
 
-
-def chaos_3d(sz=128,A=3.99,eps=1.,steps=100,tstart = 50):
-    """Logistic map diffused in space and then taken through time.
-
-    Chaos evolves in 3rd dimension.
-
-    Parameters
-    ----------
-
-    sz : int
-        Row and column size of the spatio-temporal series to be generated.
-    A : float
-        Parameter for the logistic map. Values beyond 3.56995 exhibit chaotic
-        behaviour.
-    eps : float
-        Amount of coupling/diffusion between adjecent cells.
-    seed : int
-        sets the random seed for the logistic map. Allows results to be
-        easily reproduced.
-    tstart : int
-        When to start collecting the data. This allows the chaos to be
-        fully developed before collection.
-
-    Returns
-    -------
-    X : 2D array
-        Spatiotemporal logistic map of size (sz,sz,steps).
-
-    """
-
-    X = np.random.rand(sz,sz)
-    storeX = []
-
-    for tt in range(tstart + steps + 1):
-        left_X = np.roll(X,1,axis=1)  # shift it around for diffusion
-        right_X = np.roll(X,-1,axis=1)
-        top_X = np.roll(X,1,axis=0)
-        bot_X = np.roll(X,1,axis=0)
-
-        # logistic equation in space
-        reg = X * (1 - X)
-        left = eps * left_X * (1 - left_X)
-        right = eps * right_X * (1 - right_X)
-        top = eps * top_X * (1 - top_X)
-        bot = eps * bot_X * (1 - bot_X)
-
-        X = (A/(1+4*eps)) * (reg + left + right + top + bot)
-
-        if tt > tstart:
-            storeX.append(X)
-
-    return np.dstack(storeX)
-
-
-def random_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
-    """Randomly places down gaussian circles and the sum is taken.
-
-    Calls circle_create to make the circles.
-
-    Parameters
-    ----------
-    sz : int
-        Row and column size of the space.
-    rad : float
-        Radius of the circles.
-    sigma : float
-        Constant to create gaussian circles. Changes the distribution of values.
-    num_circles : int
-        Number of circles to place down randomly.
-
-    Returns
-    -------
-    X : 2D array
-        Summed gaussian circles. Size (sz,sz).
-
-    """
-
-    circ_store = np.empty((sz,sz,num_circles))
-
-    for ii in range(num_circles):
-
-        r = np.floor(np.random.rand()*sz)
-        c = np.floor(np.random.rand()*sz)
-
-        circ_store[:,:,ii] = circle_create(r,c,sz,rad,sigma)
-
-    X = circ_store.sum(axis=2)
-    X = X/np.max(X)
-
-    return X
-
-def circle_create(r, c, sz, rad, sigma, gauss=True):
-    """Places down a single circle in a 2d array.
+def _gauss_circle_create(r, c, sz, rad, sigma=1, gauss=True):
+    """Places down a single circle in a 2d array and then applies a gaussian
+    blur filter to the single circle. This effictively diffuses the circle.
 
     Parameters
     ----------
@@ -523,71 +441,69 @@ def circle_create(r, c, sz, rad, sigma, gauss=True):
     array[mask] = 1
 
     if gauss==True:
-        array = filt.gaussian_filter(array,sigma)
+        array = scipy.ndimage.filters.gaussian_filter(array,sigma)
 
     return array
 
+def overlapping_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
+    """Randomly places down circles that have been gaussian blurred [1]_.
+    Overlapping circles are summed together. Uses scipy's gaussian filter.
 
-def circle_in_circle(rad_list, sz=256, num_blobs=1000):
-    """Create circles inside larger circles. These circles cannot overlap.
-    Calls the function blobber.
+    Calls _gauss_circle_create to make the circles.
 
     Parameters
     ----------
-    rad_list : list of ints
-        Radii of the circles.
     sz : int
-        Row and column size of the returned space.
-    num_blobs : int
-        Number of circles to create.
+        Row and column size of the space.
+    rad : float
+        Radius of the circles.
+    sigma : float
+        Constant that controlls the strength of the filter.
+    num_circles : int
+        Number of circles to place down randomly.
 
     Returns
     -------
-    blobs : 2D array
-        Array of the circles within circles of shape (sz,sz).
+    X : 2D array
+        Summed circles. Size (sz,sz).
+
+    References
+    ----------
+    .. [1] : Wikipedia, "Gaussian Blur", https://en.wikipedia.org/wiki/Gaussian_blur.
 
     """
 
-    blobs = np.zeros((sz,sz))
-    blob_count = 0
+    circ_store = np.empty((sz,sz,num_circles))
 
-    for ii in range(num_blobs):
+    for ii in range(num_circles):
 
-        r = int(np.around(np.random.rand()*sz))
-        c = int(np.around(np.random.rand()*sz))
+        r = np.floor(np.random.rand()*sz)
+        c = np.floor(np.random.rand()*sz)
 
-        new_blob = blobber(r,c,rad_list,sz)
+        circ_store[:,:,ii] = _gauss_circle_create(r,c,sz,rad,sigma)
 
-        #check to see if there is any overlap
+    X = circ_store.sum(axis=2)
+    X = X/np.max(X)
 
-        occupied1 = new_blob>0
+    return X
 
-        occupied2 = blobs>0
-
-        overlap = np.logical_and(occupied1,occupied2)
-
-        if np.any(overlap)==False:
-
-            blobs+=new_blob
-
-            blob_count+=1
-
-    print('Blobs Generated:',blob_count)
-
-    return blobs
-
-
-def blobber(r, c, rad_list, sz):
+def _concentric_circle(r, c, rad_list, sz):
     """Creates a single circle sorrounded by a larger circle.
 
-    To be used within circle_in_circle.
+    To be used within concentric_circles. For example, if r=2, c=10,
+    rad_list=[2,4,6], and sz=256; _concentric_circle will generate a series of
+    concentric circles centered at (2,10) in a 256x256 matrix with the innermost
+    radius equal to 2 and the outermost radius equal to six. The values of the
+    circles will be 1, 2, and 3 respectively.
 
     Parameters
     ----------
     r,c : int
         Center of the circles.
     rad_list : list of ints
-        Radius of the interior circle.
+        Radius of the interior circles. The first value is the innermost and the
+        last value is the outermost. So these must be sorted from smallest to
+        largest.
     sz : int
         Size of the space to generated.
 
@@ -608,16 +524,70 @@ def blobber(r, c, rad_list, sz):
 
     # need to flip them so it fills from outside to inside
     for i, mask in enumerate(masks[::-1]):
-        X[mask] = i +1
+        X[mask] = i + 1
 
     return X
 
-def blobber2(r, c, rad1, sz):
+
+def concentric_circles(rad_list, sz=256, num_circs=1000):
+    """Create circles inside larger circles. These circles cannot overlap.
+    Calls the function _concentric_circle.
+
+    For example, if rad_list=[2,4,6], and sz=256; _concentric_circle will
+    generate concentric circles in a 256x256 matrix with the innermost radius
+    equal to 2 and the outermost radius equal to six. The values of the circles
+    will be 1, 2, and 3 respectively.
+
+    Parameters
+    ----------
+    rad_list : list of ints
+        Radii of the cocentric circles circles. Must be increasing.
+    sz : int
+        Row and column size of the returned space.
+    num_circs : int
+        Number of circles to create.
+
+    Returns
+    -------
+    blobs : 2D array
+        Array of integers with shape (sz,sz).
+
+    """
+
+    blobs = np.zeros((sz,sz))
+    blob_count = 0
+
+    for ii in range(num_circs):
+
+        r = int(np.around(np.random.rand()*sz))
+        c = int(np.around(np.random.rand()*sz))
+
+        new_blob = _concentric_circle(r,c,rad_list,sz)
+
+        #check to see if there is any overlap
+
+        occupied1 = new_blob>0
+
+        occupied2 = blobs>0
+
+        overlap = np.logical_and(occupied1,occupied2)
+
+        if np.any(overlap)==False:
+
+            blobs+=new_blob
+
+            blob_count+=1
+
+    print('Circles Generated:', blob_count)
+
+    return blobs
+
+def _circle_create(r, c, rad1, sz):
     """Creates a single circle.
 
     Parameters
     ----------
-    r,c : int
+    r, c : int
         Center of the circle.
     rad : int
         Radius of the circle.
@@ -627,7 +597,8 @@ def blobber2(r, c, rad1, sz):
     Returns
     -------
     X : 2D array
-    	Array containing a single circle. Size (sz,sz).
+    	Array containing a single circle with the circle have a value of 1 and
+        the rest of the array zeros. Size (sz,sz).
     """
 
     y,x = np.ogrid[-r:sz-r, -c:sz-c]
@@ -638,10 +609,10 @@ def blobber2(r, c, rad1, sz):
 
     return X
 
-def circles_with_stuff(sz=256, rad1=5, rad2=8, num_blobs=100):
-    """Create circles with random smaller circles spread around randomly.
+def small_and_large_circles(sz=256, rad1=5, rad2=8, num_circs=1000):
+    """Create larger circles with smaller circles spread around randomly.
 
-    Same number of large circles and smaller circles. Calls blobber2.
+    Same number of large circles and smaller circles. Calls _circle_create.
 
     Parameters
     ----------
@@ -651,8 +622,8 @@ def circles_with_stuff(sz=256, rad1=5, rad2=8, num_blobs=100):
         Radius of the smaller circle.
     rad2 : int
         Radius of the larger circle.
-    num_blobs : int
-        Number of large and small circles to create.
+    num_circs : int
+        Number of large and small circles to attempt to create.
 
     Returns
     -------
@@ -664,7 +635,7 @@ def circles_with_stuff(sz=256, rad1=5, rad2=8, num_blobs=100):
     blobs = np.zeros((sz,sz))
     blob_count = 0
 
-    for ii in range(num_blobs):
+    for ii in range(num_circs):
 
         r1 = np.around(np.random.rand()*sz)
         c1 = np.around(np.random.rand()*sz)
@@ -673,9 +644,9 @@ def circles_with_stuff(sz=256, rad1=5, rad2=8, num_blobs=100):
         c2 = np.around(np.random.rand()*sz)
 
 
-        new_blob1 = blobber2(r1,c1,rad1,sz)
+        new_blob1 = _circle_create(r1,c1,rad1,sz)
 
-        new_blob2 = blobber2(r2,c2,rad2,sz)*2
+        new_blob2 = _circle_create(r2,c2,rad2,sz)*2
 
         #check to see if there is any overlap
 
@@ -696,14 +667,17 @@ def circles_with_stuff(sz=256, rad1=5, rad2=8, num_blobs=100):
 
             blob_count+=1
 
-    print('Number of blobs:',blob_count)
+    print('Number of circles:',blob_count)
 
     return blobs
 
-def random_sized_circles(rad_list, val_list, sz=512, num_blobs=3000):
+def random_sized_circles(rad_list, val_list, sz=512, num_circs=3000):
     """
     Create random sized circles spread around randomly and assign them
-    to classes: 1:27
+    to classes in val_list.
+
+    For example, rad_list=[1,2,3] and val_list=[4,5,6] will create circles with
+    radius 1, 2, and 3 and values 4, 5, and 6 respectively.
 
     Parameters
     ----------
@@ -713,28 +687,29 @@ def random_sized_circles(rad_list, val_list, sz=512, num_blobs=3000):
         List of radii.
     val_list : list ints
         List of values associated with the radii.
-    num_blobs : int
+    num_circs : int
         Total number of circles to create.
 
     Returns
     -------
     blobs : 2D array
-        Array containing all circles.
+        Array of integers corresponding to the values given in val_list. Areas
+        without a circle will be zero.
 
     """
 
     blobs = np.zeros((sz,sz))
     blob_count = 0
-    rad_store = np.zeros((num_blobs,))
+    rad_store = np.zeros((num_circs,))
     r_iter = 0
-    for ii in range(num_blobs):
+    for ii in range(num_circs):
 
         r = np.around(np.random.rand()*sz)
         c = np.around(np.random.rand()*sz)
 
         rad = rad_list[r_iter]
 
-        new_blob = blobber2(r,c,rad,sz)*val_list[r_iter]
+        new_blob = _circle_create(r,c,rad,sz)*val_list[r_iter]
 
         #check to see if there is any overlap
 
@@ -759,13 +734,13 @@ def random_sized_circles(rad_list, val_list, sz=512, num_blobs=3000):
     return blobs
 
 
-def voronoi_matrix(sz=512, percent=0.1, num_classes=27):
-    """Create voronoi polygons.
+def voronoi_matrix(sz=512, percent=0.01, num_classes=27):
+    """Create voronoi polygons [1]_.
 
     Parameters
     ----------
     sz : int
-        Row and column size of the space in which the circle is placed.
+        Row and column size of the space.
     percent : float
         Percent of the space to place down centers of the voronoi polygons.
         Smaller percent makes the polygons larger.
@@ -776,6 +751,10 @@ def voronoi_matrix(sz=512, percent=0.1, num_classes=27):
     -------
     X : 2D array
         2D array of size (sz,sz) containing the voronoi polygons.
+
+    References
+    ----------
+    .. [1] : Wikipedia, "Voronoi Diagram", https://en.wikipedia.org/wiki/Voronoi_diagram.
     """
 
 
@@ -809,3 +788,62 @@ def voronoi_matrix(sz=512, percent=0.1, num_classes=27):
     X[locs[:,0],locs[:,1]] = preds
 
     return X
+
+
+def chaos_3d(sz=128, A=3.99, eps=1., steps=100, tstart = 50):
+    """Logistic map diffused in space and taken through time. Chaos evolves in
+    3rd dimension.
+
+    .. math:: x_{t+1} = A x_t(1-x_t) \\equiv f(x_t)
+
+    .. math:: x_{t+1,r,c} = \\frac{1}{1+4\\epsilon}[f(x_{t,r,c})+ \\\
+      \\epsilon f(x_{t,r \\pm 1, c}) + \\epsilon f(x_{t,r, c \\pm 1})]
+
+    Where :math:`A` is the parameter that controls chaos and :math:`\\epsilon`
+    is the strength of the spatial coupling.
+
+    Parameters
+    ----------
+
+    sz : int
+        Row and column size of the spatio-temporal series to be generated.
+    A : float
+        Parameter for the logistic map. Values beyond 3.56995 exhibit chaotic
+        behaviour.
+    eps : float
+        Amount of coupling/diffusion between adjecent cells.
+    seed : int
+        Sets the random seed for numpy's random number generator.
+    tstart : int
+        When to start collecting the data. This allows the chaos to be
+        fully developed before collection.
+
+    Returns
+    -------
+    X : 2D array
+        Spatiotemporal logistic map of size (sz, sz, steps).
+
+    """
+
+    X = np.random.rand(sz,sz)
+    storeX = []
+
+    for tt in range(tstart + steps + 1):
+        left_X = np.roll(X,1,axis=1)  # shift it around for diffusion
+        right_X = np.roll(X,-1,axis=1)
+        top_X = np.roll(X,1,axis=0)
+        bot_X = np.roll(X,1,axis=0)
+
+        # logistic equation in space
+        reg = X * (1 - X)
+        left = eps * left_X * (1 - left_X)
+        right = eps * right_X * (1 - right_X)
+        top = eps * top_X * (1 - top_X)
+        bot = eps * bot_X * (1 - bot_X)
+
+        X = (A/(1+4*eps)) * (reg + left + right + top + bot)
+
+        if tt > tstart:
+            storeX.append(X)
+
+    return np.dstack(storeX)
