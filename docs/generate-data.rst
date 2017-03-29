@@ -1,7 +1,7 @@
 Generate Data
 =============
 
-skedm comes with both 1D and 2D test data. These built in functions allow you to quickly explore the behavior of different systems. Check the `notebook`_ for visual examples.
+skedm comes with both 1D and 2D test data. These built in functions allow you to quickly explore the behavior of different systems. Check the `skedm_example_data notebook`_ for visual examples.
 
 1 Dimensional
 ^^^^^^^^^^^^^
@@ -16,4 +16,4 @@ skedm comes with both 1D and 2D test data. These built in functions allow you to
 .. automodule:: skedm.data
    :members: chaos_2d, periodic_2d, brown_noise, periodic_brown, noise_2d, overlapping_circles, concentric_circles, small_and_large_circles, random_sized_circles, voronoi_matrix, chaos_3d
 
-.. _notebook: https://github.com/nickc1/skedm/tree/master/scripts
+.. _skedm_example_data notebook: https://github.com/nickc1/skedm/tree/master/scripts

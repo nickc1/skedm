@@ -145,17 +145,17 @@
             
   <div class="section" id="generate-data">
 <h1>Generate Data<a class="headerlink" href="#generate-data" title="Permalink to this headline">¶</a></h1>
-<p>skedm comes with both 1D and 2D test data. These built in functions allow you to quickly explore the behavior of different systems. Check the <a class="reference external" href="https://github.com/nickc1/skedm/tree/master/scripts">notebook</a> for visual examples.</p>
+<p>skedm comes with both 1D and 2D test data. These built in functions allow you to quickly explore the behavior of different systems. Check the <a class="reference external" href="https://github.com/nickc1/skedm/tree/master/scripts">skedm_example_data notebook</a> for visual examples.</p>
 <div class="section" id="module-skedm.data">
 <span id="dimensional"></span><h2>1 Dimensional<a class="headerlink" href="#module-skedm.data" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="skedm.data.logistic_map">
-<code class="descclassname">skedm.data.</code><code class="descname">logistic_map</code><span class="sig-paren">(</span><em>sz=256</em>, <em>A=3.99</em>, <em>seed=36</em>, <em>eta=0</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.logistic_map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solutions to the logistic map for a given amount of time steps <a href="#id10"><span class="problematic" id="id11"><span id="id1"></span>[1]_</span></a>.</p>
+<code class="descclassname">skedm.data.</code><code class="descname">logistic_map</code><span class="sig-paren">(</span><em>sz=256</em>, <em>A=3.99</em>, <em>seed=36</em>, <em>noise=0</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.logistic_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solutions to the <a class="reference external" href="https://en.wikipedia.org/wiki/Logistic_map">logistic map</a> for a given amount of time steps.</p>
 <div class="math">
-\[X_{t+1} = AX_t(1 - X_t) + \eta\]</div>
-<p>where <span class="math">\(A\)</span> is the parameter that controls chaos, and <span class="math">\(\eta\)</span> is
-the amplitude of the noise.</p>
+\[X_{t+1} = AX_t(1 - X_t) + \alpha\eta\]</div>
+<p>where <span class="math">\(A\)</span> is the parameter that controls chaos, <span class="math">\(\eta\)</span> is
+uncorrelated white noise and <span class="math">\(\alpha\)</span> is the amplitude of the noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -165,7 +165,7 @@ the amplitude of the noise.</p>
 <li><strong>A</strong> (<em>float</em>) &#8211; Parameter for the logistic map. Values beyond 3.56995 exhibit
 chaotic behaviour.</li>
 <li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
-<li><strong>eta</strong> (<em>float</em>) &#8211; Amplitude of noise to add to the logistic map.</li>
+<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 </ul>
 </td>
 </tr>
@@ -177,17 +177,16 @@ chaotic behaviour.</li>
 </tr>
 </tbody>
 </table>
-<p class="rubric">References</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="skedm.data.noisy_periodic">
-<code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>seed=36</em>, <em>eta=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">skedm.data.</code><code class="descname">noisy_periodic</code><span class="sig-paren">(</span><em>sz=256</em>, <em>freq=52</em>, <em>noise=0.5</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noisy_periodic" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple periodic equation with a a specified amplitude of noise.</p>
 <div class="math">
-\[X(t) = sin( 2\pi ft ) + 0.5cos( 2\pi ft ) + \eta\]</div>
-<p>Where <span class="math">\(f\)</span> is the frequency and <span class="math">\(\eta\)</span> is the amplitude of the
-noise.</p>
+\[X(t) = sin( 2\pi ft ) + 0.5cos( 2\pi ft ) + \alpha\eta\]</div>
+<p>Where <span class="math">\(f\)</span> is the frequency <span class="math">\(\eta\)</span> is uncorrelated white noise
+and <span class="math">\(\alpha\)</span> is the amplitude of the noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -195,8 +194,8 @@ noise.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series.</li>
 <li><strong>freq</strong> (<em>int</em>) &#8211; Frequency of the periodic equation.</li>
+<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 <li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
-<li><strong>eta</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 </ul>
 </td>
 </tr>
@@ -237,8 +236,8 @@ generator.</p>
 
 <dl class="function">
 <dt id="skedm.data.lorenz">
-<code class="descclassname">skedm.data.</code><code class="descname">lorenz</code><span class="sig-paren">(</span><em>sz=10000</em>, <em>max_t=100.0</em>, <em>noise=0</em>, <em>parameters=(10</em>, <em>2.6666666666666665</em>, <em>28.0)</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.lorenz" title="Permalink to this definition">¶</a></dt>
-<dd><p>Integrates the lorenz equations. Which are defined as:</p>
+<code class="descclassname">skedm.data.</code><code class="descname">lorenz</code><span class="sig-paren">(</span><em>sz=10000</em>, <em>max_t=100.0</em>, <em>noise=0</em>, <em>parameters=(10</em>, <em>2.6666666666666665</em>, <em>28.0)</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.lorenz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrates the <a class="reference external" href="https://en.wikipedia.org/wiki/Lorenz_system">lorenz equations</a>. Which are defined as:</p>
 <div class="math">
 \[ \begin{align}\begin{aligned}\frac{dx}{dt} = \sigma (y - x)\\\frac{dy}{dt} = x(\rho - z) - y\\\frac{dz}{dt} = xy - \beta z\end{aligned}\end{align} \]</div>
 <p>Where <span class="math">\(\sigma=10\)</span>, <span class="math">\(\beta=8/3\)</span>, and <span class="math">\(rho=28\)</span> lead to
@@ -252,7 +251,6 @@ chaotic behavior.</p>
 <li><strong>max_t</strong> (<em>float</em>) &#8211; Length of time to solve the lorenz equation over,</li>
 <li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of noise to be added to the lorenz equation.</li>
 <li><strong>parameters</strong> (<em>tuple</em>) &#8211; Sigma, beta, and rho parameters for the lorenz equations.</li>
-<li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
 </ul>
 </td>
 </tr>
@@ -268,18 +266,18 @@ chaotic behavior.</p>
 
 </div>
 <div class="section" id="module-skedm.data">
-<span id="id3"></span><h2>2 Dimensional<a class="headerlink" href="#module-skedm.data" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>2 Dimensional<a class="headerlink" href="#module-skedm.data" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="skedm.data.chaos_2d">
-<code class="descclassname">skedm.data.</code><code class="descname">chaos_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>seed=36</em>, <em>eta=None</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logistic map diffused in space which takes the following form:</p>
+<code class="descclassname">skedm.data.</code><code class="descname">chaos_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>noise=None</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Logistic_map">Logistic map</a> diffused in space. It takes the following form:</p>
 <div class="math">
 \[x_{t+1} = A x_t(1-x_t) \equiv f(x_t)\]</div>
 <div class="math">
 \[x_{t+1,s} = \frac{1}{1+3\epsilon}[f(x_{t,s})+ \      \epsilon f(x_{t,s \pm 1})] +\alpha\eta\]</div>
-<p>Where <span class="math">\(A\)</span> is the parameter that controls chaos, <span class="math">\(\eta\)</span> is the
-amplitude of the noise, and <span class="math">\(\epsilon\)</span> is the strength of the spatial
-coupling.</p>
+<p>Where <span class="math">\(A\)</span> is the parameter that controls chaos, <span class="math">\(\eta\)</span> is
+uncorrelated white noise, <span class="math">\(\alpha\)</span> is the amplitude of the noise and
+<span class="math">\(\epsilon\)</span> is the strength of the spatial coupling.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -290,7 +288,7 @@ coupling.</p>
 behaviour.</li>
 <li><strong>eps</strong> (<em>float</em>) &#8211; Spatial coupling strength.</li>
 <li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
-<li><strong>eta</strong> (<em>float</em>) &#8211; Amplitude of noise to add to the logistic map.</li>
+<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 </ul>
 </td>
 </tr>
@@ -306,13 +304,14 @@ behaviour.</li>
 
 <dl class="function">
 <dt id="skedm.data.periodic_2d">
-<code class="descclassname">skedm.data.</code><code class="descname">periodic_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=36</em>, <em>eta=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_2d" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">skedm.data.</code><code class="descname">periodic_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>noise=0.5</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple 2D periodic equation with a specified amplitude of noise. This
 is a sine wave down the rows, added to a cosine wave across the columns.</p>
 <div class="math">
-\[X(r,c) = sin(2\pi fr) + 0.5cos(2\pi fc) + \eta\]</div>
-<p>Where <span class="math">\(r\)</span> and <span class="math">\(c\)</span> are the row and column values, and <span class="math">\(f\)</span>
-is the frequency.</p>
+\[X(r,c) = sin(2\pi fr) + 0.5cos(2\pi fc) + \alpha\eta\]</div>
+<p>Where <span class="math">\(r\)</span> and <span class="math">\(c\)</span> are the row and column values, <span class="math">\(f\)</span>
+is the frequency, <span class="math">\(\eta\)</span> is uncorrelated white noise and
+<span class="math">\(\alpha\)</span> is the amplitude of the noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -320,8 +319,8 @@ is the frequency.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sz</strong> (<em>int</em>) &#8211; Length of the time series.</li>
 <li><strong>freq</strong> (<em>int</em>) &#8211; Frequency of the periodic equation.</li>
+<li><strong>noise</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 <li><strong>seed</strong> (<em>int</em>) &#8211; Sets the random seed for numpy&#8217;s random number generator.</li>
-<li><strong>eta</strong> (<em>float</em>) &#8211; Amplitude of the noise.</li>
 </ul>
 </td>
 </tr>
@@ -338,7 +337,7 @@ is the frequency.</p>
 <dl class="function">
 <dt id="skedm.data.brown_noise">
 <code class="descclassname">skedm.data.</code><code class="descname">brown_noise</code><span class="sig-paren">(</span><em>sz=128</em>, <em>num_walks=500</em>, <em>walk_sz=100000</em>, <em>spread=1000</em>, <em>seed=3</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.brown_noise" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates brown noise with a bunch of random walks. [1]</p>
+<dd><p>Creates <a class="reference external" href="https://en.wikipedia.org/wiki/Brownian_noise">brown noise</a> with a bunch of random walks.</p>
 <p>Subsamples to generate sizes: 128, 256, or 512. 512 is the full size.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -361,19 +360,12 @@ is the frequency.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">References</p>
-<table class="docutils footnote" frame="void" id="id4" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label">[1]</td><td>Wikipedia, &#8220;Brown Noise&#8221;, <a class="reference external" href="https://en.wikipedia.org/wiki/Brownian_noise">https://en.wikipedia.org/wiki/Brownian_noise</a>.</td></tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="skedm.data.periodic_brown">
-<code class="descclassname">skedm.data.</code><code class="descname">periodic_brown</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=15</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_brown" title="Permalink to this definition">¶</a></dt>
-<dd><p>A periodic equation with a specified amplitude of brown noise.
+<code class="descclassname">skedm.data.</code><code class="descname">periodic_brown</code><span class="sig-paren">(</span><em>sz=128</em>, <em>freq=36</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.periodic_brown" title="Permalink to this definition">¶</a></dt>
+<dd><p>A periodic equation with a specified amplitude of <a class="reference external" href="https://en.wikipedia.org/wiki/Brownian_noise">brown noise</a>.
 Calls the function brown_noise.</p>
 <div class="math">
 \[X(r,c) = sin(2\pi fr + \eta)\]</div>
@@ -403,8 +395,8 @@ is the frequency, and <span class="math">\(\eta\)</span> is the brown noise.</p>
 <dl class="function">
 <dt id="skedm.data.noise_2d">
 <code class="descclassname">skedm.data.</code><code class="descname">noise_2d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>seed=36</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.noise_2d" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 2D random distribution of numbers. Uses numpy&#8217;s random number
-generator.</p>
+<dd><p>2D array of white noise values between 0 and 1. Uses numpy&#8217;s random
+number generator.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -428,7 +420,7 @@ generator.</p>
 <dl class="function">
 <dt id="skedm.data.overlapping_circles">
 <code class="descclassname">skedm.data.</code><code class="descname">overlapping_circles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad=20.0</em>, <em>sigma=1</em>, <em>num_circles=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.overlapping_circles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Randomly places down circles that have been gaussian blurred <a href="#id12"><span class="problematic" id="id13"><span id="id5"></span>[1]_</span></a>.
+<dd><p>Randomly places down circles that have been <cite>gaussian blurred</cite>.
 Overlapping circles are summed together. Uses scipy&#8217;s gaussian filter.</p>
 <p>Calls _gauss_circle_create to make the circles.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -449,13 +441,6 @@ Overlapping circles are summed together. Uses scipy&#8217;s gaussian filter.</p>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D array</p>
 </td>
 </tr>
-</tbody>
-</table>
-<p class="rubric">References</p>
-<table class="docutils footnote" frame="void" id="id6" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label">[1]</td><td>: Wikipedia, &#8220;Gaussian Blur&#8221;, <a class="reference external" href="https://en.wikipedia.org/wiki/Gaussian_blur">https://en.wikipedia.org/wiki/Gaussian_blur</a>.</td></tr>
 </tbody>
 </table>
 </dd></dl>
@@ -550,7 +535,7 @@ without a circle will be zero.</p>
 <dl class="function">
 <dt id="skedm.data.voronoi_matrix">
 <code class="descclassname">skedm.data.</code><code class="descname">voronoi_matrix</code><span class="sig-paren">(</span><em>sz=512</em>, <em>percent=0.01</em>, <em>num_classes=27</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.voronoi_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create voronoi polygons <a href="#id14"><span class="problematic" id="id15"><span id="id7"></span>[1]_</span></a>.</p>
+<dd><p>Create <a class="reference external" href="https://en.wikipedia.org/wiki/Voronoi_diagram">voronoi polygons</a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -571,19 +556,12 @@ Smaller percent makes the polygons larger.</li>
 </tr>
 </tbody>
 </table>
-<p class="rubric">References</p>
-<table class="docutils footnote" frame="void" id="id8" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label">[1]</td><td>: Wikipedia, &#8220;Voronoi Diagram&#8221;, <a class="reference external" href="https://en.wikipedia.org/wiki/Voronoi_diagram">https://en.wikipedia.org/wiki/Voronoi_diagram</a>.</td></tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="skedm.data.chaos_3d">
 <code class="descclassname">skedm.data.</code><code class="descname">chaos_3d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>steps=100</em>, <em>tstart=50</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_3d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logistic map diffused in space and taken through time. Chaos evolves in
+<dd><p><cite>Logistic map</cite> diffused in space and taken through time. Chaos evolves in
 3rd dimension.</p>
 <div class="math">
 \[x_{t+1} = A x_t(1-x_t) \equiv f(x_t)\]</div>

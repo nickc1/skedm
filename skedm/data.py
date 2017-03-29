@@ -5,20 +5,19 @@
 
 import numpy as np
 from numpy import genfromtxt
-#from scipy import integrate
 from sklearn import neighbors
 import scipy.ndimage
 
 
-def logistic_map(sz=256, A=3.99, seed=36, eta=0):
-    """Solutions to the logistic map for a given amount of time steps [1]_.
+def logistic_map(sz=256, A=3.99, seed=36, noise=0):
+    """Solutions to the `logistic map`_ for a given amount of time steps.
 
     .. math::
 
-      X_{t+1} = AX_t(1 - X_t) + \eta
+      X_{t+1} = AX_t(1 - X_t) + \\alpha\\eta
 
-    where :math:`A` is the parameter that controls chaos, and :math:`\eta` is
-    the amplitude of the noise.
+    where :math:`A` is the parameter that controls chaos, :math:`\eta` is
+    uncorrelated white noise and :math:`\\alpha` is the amplitude of the noise.
 
     Parameters
     ----------
@@ -29,17 +28,16 @@ def logistic_map(sz=256, A=3.99, seed=36, eta=0):
         chaotic behaviour.
     seed : int
         Sets the random seed for numpy's random number generator.
-    eta : float
-        Amplitude of noise to add to the logistic map.
+    noise : float
+        Amplitude of the noise.
 
     Returns
     -------
     X : 1D array
         Logistic map of size (sz).
 
-    References
-    ----------
-    __ [1] : Wikipedia, "Logistic Map", https://en.wikipedia.org/wiki/Logistic_map.
+
+    .. _logistic map : https://en.wikipedia.org/wiki/Logistic_map
 
     """
 
@@ -55,19 +53,19 @@ def logistic_map(sz=256, A=3.99, seed=36, eta=0):
         # logistic equation in space
         X[tt+1] = A*X[tt]*(1-X[tt])
 
-    X += eta*np.random.rand(sz)
+    X += noise*np.random.rand(sz)
 
     return X
 
-def noisy_periodic(sz=256, freq=52, seed=36, eta=.5):
+def noisy_periodic(sz=256, freq=52, noise=.5, seed=36):
     """A simple periodic equation with a a specified amplitude of noise.
 
     .. math::
 
-      X(t) = sin( 2\pi ft ) + 0.5cos( 2\pi ft ) + \eta
+      X(t) = sin( 2\pi ft ) + 0.5cos( 2\pi ft ) + \\alpha\\eta
 
-    Where :math:`f` is the frequency and :math:`\eta` is the amplitude of the
-    noise.
+    Where :math:`f` is the frequency :math:`\eta` is uncorrelated white noise
+    and :math:`\\alpha` is the amplitude of the noise.
 
     Parameters
     ----------
@@ -75,10 +73,10 @@ def noisy_periodic(sz=256, freq=52, seed=36, eta=.5):
         Length of the time series.
     freq : int
         Frequency of the periodic equation.
+    noise : float
+        Amplitude of the noise.
     seed : int
         Sets the random seed for numpy's random number generator.
-    eta : float
-        Amplitude of the noise.
 
     Returns
     -------
@@ -91,7 +89,7 @@ def noisy_periodic(sz=256, freq=52, seed=36, eta=.5):
 
     t = np.linspace(0, freq, sz)  #prep range for averages
 
-    X = np.sin(2*np.pi*t) + .5*np.cos(2*np.pi*t) + eta * np.random.rand(sz)
+    X = np.sin(2*np.pi*t) + .5*np.cos(2*np.pi*t) + noise * np.random.rand(sz)
 
     #all positive and between 0 and 1
     X = X + np.abs(np.min(X))
@@ -122,8 +120,8 @@ def noise_1d(sz=256, seed=36):
     return X
 
 
-def lorenz(sz=10000, max_t=100., noise=0, parameters=(10,8./3,28.0), seed=36):
-    """Integrates the lorenz equations. Which are defined as:
+def lorenz(sz=10000, max_t=100., noise=0, parameters=(10,8./3,28.0)):
+    """Integrates the `lorenz equations`_. Which are defined as:
 
     .. math::
 
@@ -146,14 +144,16 @@ def lorenz(sz=10000, max_t=100., noise=0, parameters=(10,8./3,28.0), seed=36):
         Amplitude of noise to be added to the lorenz equation.
     parameters : tuple
         Sigma, beta, and rho parameters for the lorenz equations.
-    seed : int
-        Sets the random seed for numpy's random number generator.
+
     Returns
     -------
     X : 2D array
         X solutions in the first column, Y in the second, and Z in the third.
 
+
+    .. _lorenz equations: https://en.wikipedia.org/wiki/Lorenz_system
     """
+
     sigma, beta, rho = parameters
 
     def lorenz_deriv(xyz, t0, sigma=sigma, beta=beta, rho=rho):
@@ -174,17 +174,17 @@ TWO DIMENSIONAL
 """
 
 
-def chaos_2d(sz=128, A=3.99, eps=1., seed=36, eta=None):
-    """Logistic map diffused in space which takes the following form:
+def chaos_2d(sz=128, A=3.99, eps=1., noise=None, seed=36):
+    """`Logistic map`_ diffused in space. It takes the following form:
 
     .. math:: x_{t+1} = A x_t(1-x_t) \\equiv f(x_t)
 
     .. math:: x_{t+1,s} = \\frac{1}{1+3\\epsilon}[f(x_{t,s})+ \\\
       \\epsilon f(x_{t,s \\pm 1})] +\\alpha\\eta
 
-    Where :math:`A` is the parameter that controls chaos, :math:`\eta` is the
-    amplitude of the noise, and :math:`\\epsilon` is the strength of the spatial
-    coupling.
+    Where :math:`A` is the parameter that controls chaos, :math:`\eta` is
+    uncorrelated white noise, :math:`\\alpha` is the amplitude of the noise and
+    :math:`\\epsilon` is the strength of the spatial coupling.
 
     Parameters
     ----------
@@ -197,8 +197,8 @@ def chaos_2d(sz=128, A=3.99, eps=1., seed=36, eta=None):
         Spatial coupling strength.
     seed : int
         Sets the random seed for numpy's random number generator.
-    eta : float
-        Amplitude of noise to add to the logistic map.
+    noise : float
+        Amplitude of the noise.
 
     Returns
     -------
@@ -225,19 +225,20 @@ def chaos_2d(sz=128, A=3.99, eps=1., seed=36, eta=None):
 
         X[tt+1,:] = (A/(1+2*eps)) * (reg + left + right)
 
-    if eta:
-        X += eta * np.random.rand(sz,sz)
+    if noise:
+        X += noise * np.random.rand(sz,sz)
 
     return X
 
-def periodic_2d(sz=128, freq=36, seed=36, eta=0.5):
+def periodic_2d(sz=128, freq=36, noise=0.5, seed=36):
     """A simple 2D periodic equation with a specified amplitude of noise. This
     is a sine wave down the rows, added to a cosine wave across the columns.
 
-    .. math:: X(r,c) = sin(2\pi fr) + 0.5cos(2\pi fc) + \eta
+    .. math:: X(r,c) = sin(2\pi fr) + 0.5cos(2\pi fc) + \\alpha\\eta
 
-    Where :math:`r` and :math:`c` are the row and column values, and :math:`f`
-    is the frequency.
+    Where :math:`r` and :math:`c` are the row and column values, :math:`f`
+    is the frequency, :math:`\eta` is uncorrelated white noise and
+    :math:`\\alpha` is the amplitude of the noise.
 
     Parameters
     ----------
@@ -245,10 +246,10 @@ def periodic_2d(sz=128, freq=36, seed=36, eta=0.5):
         Length of the time series.
     freq : int
         Frequency of the periodic equation.
+    noise : float
+        Amplitude of the noise.
     seed : int
         Sets the random seed for numpy's random number generator.
-    eta : float
-        Amplitude of the noise.
 
     Returns
     -------
@@ -265,7 +266,7 @@ def periodic_2d(sz=128, freq=36, seed=36, eta=0.5):
 
     X = np.sin(yy) + .5*np.cos(xx)
 
-    X += eta*np.random.rand(sz,sz)
+    X += noise*np.random.rand(sz,sz)
 
 
     #normalize
@@ -275,7 +276,7 @@ def periodic_2d(sz=128, freq=36, seed=36, eta=0.5):
     return X
 
 def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
-    """Creates brown noise with a bunch of random walks. [1]
+    """Creates `brown noise`_ with a bunch of random walks.
 
     Subsamples to generate sizes: 128, 256, or 512. 512 is the full size.
 
@@ -297,9 +298,8 @@ def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
     X : 2D array
         2D brown noise array size (sz,sz).
 
-    References
-    ----------
-    .. [1] Wikipedia, "Brown Noise", https://en.wikipedia.org/wiki/Brownian_noise.
+
+    .. _brown noise: https://en.wikipedia.org/wiki/Brownian_noise
 
     """
 
@@ -342,11 +342,11 @@ def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
     return X
 
 
-def periodic_brown(sz=128, freq=36, seed=15):
-    """A periodic equation with a specified amplitude of brown noise.
+def periodic_brown(sz=128, freq=36, seed=36):
+    """A periodic equation with a specified amplitude of `brown noise`_.
     Calls the function brown_noise.
 
-    .. math:: X(r,c) = sin(2\pi fr + \eta)
+    .. math:: X(r,c) = sin(2\pi fr + \\eta)
 
     Where :math:`r` and :math:`c` are the row and column values, :math:`f`
     is the frequency, and :math:`\eta` is the brown noise.
@@ -385,8 +385,8 @@ def periodic_brown(sz=128, freq=36, seed=15):
 
 
 def noise_2d(sz=128,seed=36):
-    """A 2D random distribution of numbers. Uses numpy's random number
-    generator.
+    """2D array of white noise values between 0 and 1. Uses numpy's random
+    number generator.
 
     Parameters
     ----------
@@ -410,8 +410,8 @@ def noise_2d(sz=128,seed=36):
     return X
 
 def _gauss_circle_create(r, c, sz, rad, sigma=1, gauss=True):
-    """Places down a single circle in a 2d array and then applies a gaussian
-    blur filter to the single circle. This effictively diffuses the circle.
+    """Places down a single circle in a 2d array and then applies a `gaussian
+    blur filter` to the single circle. This effictively diffuses the circle.
 
     Parameters
     ----------
@@ -431,6 +431,9 @@ def _gauss_circle_create(r, c, sz, rad, sigma=1, gauss=True):
     X : 2D array
         Array of size (sz,sz) containing a single circle of size pi*rad^2.
 
+
+    .. _gaussian blur filter: https://en.wikipedia.org/wiki/Gaussian_blur
+
     """
 
     rad = np.around(np.random.rand()*rad)
@@ -446,7 +449,7 @@ def _gauss_circle_create(r, c, sz, rad, sigma=1, gauss=True):
     return array
 
 def overlapping_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
-    """Randomly places down circles that have been gaussian blurred [1]_.
+    """Randomly places down circles that have been `gaussian blurred`.
     Overlapping circles are summed together. Uses scipy's gaussian filter.
 
     Calls _gauss_circle_create to make the circles.
@@ -467,9 +470,8 @@ def overlapping_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
     X : 2D array
         Summed circles. Size (sz,sz).
 
-    References
-    ----------
-    .. [1] : Wikipedia, "Gaussian Blur", https://en.wikipedia.org/wiki/Gaussian_blur.
+
+    .. _gaussian blur filter: https://en.wikipedia.org/wiki/Gaussian_blur
 
     """
 
@@ -672,8 +674,7 @@ def small_and_large_circles(sz=256, rad1=5, rad2=8, num_circs=1000):
     return blobs
 
 def random_sized_circles(rad_list, val_list, sz=512, num_circs=3000):
-    """
-    Create random sized circles spread around randomly and assign them
+    """Create random sized circles spread around randomly and assign them
     to classes in val_list.
 
     For example, rad_list=[1,2,3] and val_list=[4,5,6] will create circles with
@@ -735,7 +736,7 @@ def random_sized_circles(rad_list, val_list, sz=512, num_circs=3000):
 
 
 def voronoi_matrix(sz=512, percent=0.01, num_classes=27):
-    """Create voronoi polygons [1]_.
+    """Create `voronoi polygons`_.
 
     Parameters
     ----------
@@ -752,9 +753,9 @@ def voronoi_matrix(sz=512, percent=0.01, num_classes=27):
     X : 2D array
         2D array of size (sz,sz) containing the voronoi polygons.
 
-    References
-    ----------
-    .. [1] : Wikipedia, "Voronoi Diagram", https://en.wikipedia.org/wiki/Voronoi_diagram.
+
+    .. _voronoi polygons: https://en.wikipedia.org/wiki/Voronoi_diagram
+
     """
 
 
@@ -791,7 +792,7 @@ def voronoi_matrix(sz=512, percent=0.01, num_classes=27):
 
 
 def chaos_3d(sz=128, A=3.99, eps=1., steps=100, tstart = 50):
-    """Logistic map diffused in space and taken through time. Chaos evolves in
+    """`Logistic map` diffused in space and taken through time. Chaos evolves in
     3rd dimension.
 
     .. math:: x_{t+1} = A x_t(1-x_t) \\equiv f(x_t)
