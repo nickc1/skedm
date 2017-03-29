@@ -16,8 +16,9 @@ def logistic_map(sz=256, A=3.99, seed=36, noise=0):
 
       X_{t+1} = AX_t(1 - X_t) + \\alpha\\eta
 
-    where :math:`A` is the parameter that controls chaos, :math:`\eta` is
-    uncorrelated white noise and :math:`\\alpha` is the amplitude of the noise.
+    where the value of the parameter :math:`A` determines if the system
+    is chaotic, :math:`\eta` is uncorrelated white noise and :math:`\\alpha` is
+    the amplitude of the noise.
 
     Parameters
     ----------
@@ -131,7 +132,7 @@ def lorenz(sz=10000, max_t=100., noise=0, parameters=(10,8./3,28.0)):
 
       \\frac{dz}{dt} = xy - \\beta z
 
-    Where :math:`\\sigma=10`, :math:`\\beta=8/3`, and :math:`rho=28` lead to
+    Where :math:`\\sigma=10`, :math:`\\beta=8/3`, and :math:`\\rho=28` lead to
     chaotic behavior.
 
     Parameters
@@ -179,7 +180,7 @@ def chaos_2d(sz=128, A=3.99, eps=1., noise=None, seed=36):
 
     .. math:: x_{t+1} = A x_t(1-x_t) \\equiv f(x_t)
 
-    .. math:: x_{t+1,s} = \\frac{1}{1+3\\epsilon}[f(x_{t,s})+ \\\
+    .. math:: x_{t+1,s} = \\frac{1}{1+2\\epsilon}[f(x_{t,s})+ \\\
       \\epsilon f(x_{t,s \\pm 1})] +\\alpha\\eta
 
     Where :math:`A` is the parameter that controls chaos, :math:`\eta` is
@@ -237,7 +238,7 @@ def periodic_2d(sz=128, freq=36, noise=0.5, seed=36):
     .. math:: X(r,c) = sin(2\pi fr) + 0.5cos(2\pi fc) + \\alpha\\eta
 
     Where :math:`r` and :math:`c` are the row and column values, :math:`f`
-    is the frequency, :math:`\eta` is uncorrelated white noise and
+    is the spatial frequency, :math:`\eta` is uncorrelated white noise and
     :math:`\\alpha` is the amplitude of the noise.
 
     Parameters
@@ -276,7 +277,7 @@ def periodic_2d(sz=128, freq=36, noise=0.5, seed=36):
     return X
 
 def brown_noise(sz=128, num_walks=500, walk_sz=100000, spread=1000, seed=3):
-    """Creates `brown noise`_ with a bunch of random walks.
+    """Creates `brown noise`_ by summing many random walks.
 
     Subsamples to generate sizes: 128, 256, or 512. 512 is the full size.
 
@@ -349,7 +350,7 @@ def periodic_brown(sz=128, freq=36, seed=36):
     .. math:: X(r,c) = sin(2\pi fr + \\eta)
 
     Where :math:`r` and :math:`c` are the row and column values, :math:`f`
-    is the frequency, and :math:`\eta` is the brown noise.
+    is the spatial frequency, and :math:`\eta` is the brown noise.
 
     Parameters
     ----------
@@ -449,7 +450,7 @@ def _gauss_circle_create(r, c, sz, rad, sigma=1, gauss=True):
     return array
 
 def overlapping_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
-    """Randomly places down circles that have been `gaussian blurred`.
+    """Randomly places circles that have been `gaussian blurred`_.
     Overlapping circles are summed together. Uses scipy's gaussian filter.
 
     Calls _gauss_circle_create to make the circles.
@@ -471,7 +472,7 @@ def overlapping_circles(sz=256, rad=20., sigma=1, num_circles = 1000):
         Summed circles. Size (sz,sz).
 
 
-    .. _gaussian blur filter: https://en.wikipedia.org/wiki/Gaussian_blur
+    .. _gaussian blurred: https://en.wikipedia.org/wiki/Gaussian_blur
 
     """
 
@@ -612,7 +613,7 @@ def _circle_create(r, c, rad1, sz):
     return X
 
 def small_and_large_circles(sz=256, rad1=5, rad2=8, num_circs=1000):
-    """Create larger circles with smaller circles spread around randomly.
+    """Create larger circles with smaller circles spread randomly in space.
 
     Same number of large circles and smaller circles. Calls _circle_create.
 
@@ -674,7 +675,7 @@ def small_and_large_circles(sz=256, rad1=5, rad2=8, num_circs=1000):
     return blobs
 
 def random_sized_circles(rad_list, val_list, sz=512, num_circs=3000):
-    """Create random sized circles spread around randomly and assign them
+    """Create random sized circles spread randomly in space and assign them
     to classes in val_list.
 
     For example, rad_list=[1,2,3] and val_list=[4,5,6] will create circles with
@@ -792,7 +793,7 @@ def voronoi_matrix(sz=512, percent=0.01, num_classes=27):
 
 
 def chaos_3d(sz=128, A=3.99, eps=1., steps=100, tstart = 50):
-    """`Logistic map` diffused in space and taken through time. Chaos evolves in
+    """`Logistic map`_ diffused in space and taken through time. Chaos evolves in
     3rd dimension.
 
     .. math:: x_{t+1} = A x_t(1-x_t) \\equiv f(x_t)

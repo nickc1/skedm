@@ -154,8 +154,9 @@
 <dd><p>Solutions to the <a class="reference external" href="https://en.wikipedia.org/wiki/Logistic_map">logistic map</a> for a given amount of time steps.</p>
 <div class="math">
 \[X_{t+1} = AX_t(1 - X_t) + \alpha\eta\]</div>
-<p>where <span class="math">\(A\)</span> is the parameter that controls chaos, <span class="math">\(\eta\)</span> is
-uncorrelated white noise and <span class="math">\(\alpha\)</span> is the amplitude of the noise.</p>
+<p>where the value of the parameter <span class="math">\(A\)</span> determines if the system
+is chaotic, <span class="math">\(\eta\)</span> is uncorrelated white noise and <span class="math">\(\alpha\)</span> is
+the amplitude of the noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -240,7 +241,7 @@ generator.</p>
 <dd><p>Integrates the <a class="reference external" href="https://en.wikipedia.org/wiki/Lorenz_system">lorenz equations</a>. Which are defined as:</p>
 <div class="math">
 \[ \begin{align}\begin{aligned}\frac{dx}{dt} = \sigma (y - x)\\\frac{dy}{dt} = x(\rho - z) - y\\\frac{dz}{dt} = xy - \beta z\end{aligned}\end{align} \]</div>
-<p>Where <span class="math">\(\sigma=10\)</span>, <span class="math">\(\beta=8/3\)</span>, and <span class="math">\(rho=28\)</span> lead to
+<p>Where <span class="math">\(\sigma=10\)</span>, <span class="math">\(\beta=8/3\)</span>, and <span class="math">\(\rho=28\)</span> lead to
 chaotic behavior.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -274,7 +275,7 @@ chaotic behavior.</p>
 <div class="math">
 \[x_{t+1} = A x_t(1-x_t) \equiv f(x_t)\]</div>
 <div class="math">
-\[x_{t+1,s} = \frac{1}{1+3\epsilon}[f(x_{t,s})+ \      \epsilon f(x_{t,s \pm 1})] +\alpha\eta\]</div>
+\[x_{t+1,s} = \frac{1}{1+2\epsilon}[f(x_{t,s})+ \      \epsilon f(x_{t,s \pm 1})] +\alpha\eta\]</div>
 <p>Where <span class="math">\(A\)</span> is the parameter that controls chaos, <span class="math">\(\eta\)</span> is
 uncorrelated white noise, <span class="math">\(\alpha\)</span> is the amplitude of the noise and
 <span class="math">\(\epsilon\)</span> is the strength of the spatial coupling.</p>
@@ -310,7 +311,7 @@ is a sine wave down the rows, added to a cosine wave across the columns.</p>
 <div class="math">
 \[X(r,c) = sin(2\pi fr) + 0.5cos(2\pi fc) + \alpha\eta\]</div>
 <p>Where <span class="math">\(r\)</span> and <span class="math">\(c\)</span> are the row and column values, <span class="math">\(f\)</span>
-is the frequency, <span class="math">\(\eta\)</span> is uncorrelated white noise and
+is the spatial frequency, <span class="math">\(\eta\)</span> is uncorrelated white noise and
 <span class="math">\(\alpha\)</span> is the amplitude of the noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -337,7 +338,7 @@ is the frequency, <span class="math">\(\eta\)</span> is uncorrelated white noise
 <dl class="function">
 <dt id="skedm.data.brown_noise">
 <code class="descclassname">skedm.data.</code><code class="descname">brown_noise</code><span class="sig-paren">(</span><em>sz=128</em>, <em>num_walks=500</em>, <em>walk_sz=100000</em>, <em>spread=1000</em>, <em>seed=3</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.brown_noise" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates <a class="reference external" href="https://en.wikipedia.org/wiki/Brownian_noise">brown noise</a> with a bunch of random walks.</p>
+<dd><p>Creates <a class="reference external" href="https://en.wikipedia.org/wiki/Brownian_noise">brown noise</a> by summing many random walks.</p>
 <p>Subsamples to generate sizes: 128, 256, or 512. 512 is the full size.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -370,7 +371,7 @@ Calls the function brown_noise.</p>
 <div class="math">
 \[X(r,c) = sin(2\pi fr + \eta)\]</div>
 <p>Where <span class="math">\(r\)</span> and <span class="math">\(c\)</span> are the row and column values, <span class="math">\(f\)</span>
-is the frequency, and <span class="math">\(\eta\)</span> is the brown noise.</p>
+is the spatial frequency, and <span class="math">\(\eta\)</span> is the brown noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -420,7 +421,7 @@ number generator.</p>
 <dl class="function">
 <dt id="skedm.data.overlapping_circles">
 <code class="descclassname">skedm.data.</code><code class="descname">overlapping_circles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad=20.0</em>, <em>sigma=1</em>, <em>num_circles=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.overlapping_circles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Randomly places down circles that have been <cite>gaussian blurred</cite>.
+<dd><p>Randomly places circles that have been <a class="reference external" href="https://en.wikipedia.org/wiki/Gaussian_blur">gaussian blurred</a>.
 Overlapping circles are summed together. Uses scipy&#8217;s gaussian filter.</p>
 <p>Calls _gauss_circle_create to make the circles.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -478,7 +479,7 @@ will be 1, 2, and 3 respectively.</p>
 <dl class="function">
 <dt id="skedm.data.small_and_large_circles">
 <code class="descclassname">skedm.data.</code><code class="descname">small_and_large_circles</code><span class="sig-paren">(</span><em>sz=256</em>, <em>rad1=5</em>, <em>rad2=8</em>, <em>num_circs=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.small_and_large_circles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create larger circles with smaller circles spread around randomly.</p>
+<dd><p>Create larger circles with smaller circles spread randomly in space.</p>
 <p>Same number of large circles and smaller circles. Calls _circle_create.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -505,7 +506,7 @@ will be 1, 2, and 3 respectively.</p>
 <dl class="function">
 <dt id="skedm.data.random_sized_circles">
 <code class="descclassname">skedm.data.</code><code class="descname">random_sized_circles</code><span class="sig-paren">(</span><em>rad_list</em>, <em>val_list</em>, <em>sz=512</em>, <em>num_circs=3000</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.random_sized_circles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create random sized circles spread around randomly and assign them
+<dd><p>Create random sized circles spread randomly in space and assign them
 to classes in val_list.</p>
 <p>For example, rad_list=[1,2,3] and val_list=[4,5,6] will create circles with
 radius 1, 2, and 3 and values 4, 5, and 6 respectively.</p>
@@ -561,7 +562,7 @@ Smaller percent makes the polygons larger.</li>
 <dl class="function">
 <dt id="skedm.data.chaos_3d">
 <code class="descclassname">skedm.data.</code><code class="descname">chaos_3d</code><span class="sig-paren">(</span><em>sz=128</em>, <em>A=3.99</em>, <em>eps=1.0</em>, <em>steps=100</em>, <em>tstart=50</em><span class="sig-paren">)</span><a class="headerlink" href="#skedm.data.chaos_3d" title="Permalink to this definition">¶</a></dt>
-<dd><p><cite>Logistic map</cite> diffused in space and taken through time. Chaos evolves in
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Logistic_map">Logistic map</a> diffused in space and taken through time. Chaos evolves in
 3rd dimension.</p>
 <div class="math">
 \[x_{t+1} = A x_t(1-x_t) \equiv f(x_t)\]</div>
