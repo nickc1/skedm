@@ -3,6 +3,8 @@ dependencies:
   - python=3
   - numpy
   - numba
+  -seaborn
+  -jupyter
   - scikit-learn
   - pytest
   - scipy
