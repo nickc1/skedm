@@ -1,7 +1,7 @@
 import os
 from distutils.core import setup
 
-# Get version and release info, which is all stored in shablona/version.py
+# setup taken from shablona outline
 ver_file = os.path.join('skedm', 'version.py')
 with open(ver_file) as f:
     exec(f.read())

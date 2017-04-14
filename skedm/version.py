@@ -2,9 +2,9 @@ from os.path import join as pjoin
 
 # Format expected by setup.py and doc/source/conf.py: string of form "X.Y.Z"
 _version_major = 0
-_version_minor = 2
-_version_micro = ''  # use '' for first of series, number for 1 and above
-_version_extra = 'dev'
+_version_minor = 0
+_version_micro = '3'  # use '' for first of series, number for 1 and above
+_version_extra = ''
 #_version_extra = ''  # Uncomment this for full releases
 
 # Construct full version string from these.
@@ -32,8 +32,8 @@ long_description = """
 skedm
 ========
 
-Scikit Emperical Dynamic Modeling (sknla) can be used as a way to forecast time series,
-spatio-temporal 2D arrays, and even discrete spatial arrangements. More
+Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time
+series, spatio-temporal 2D arrays, and even discrete spatial arrangements. More
 importantly, skedm can provide insight into the underlying dynamics of a system.
 """
 
@@ -42,8 +42,8 @@ MAINTAINER = "Nick Cortale"
 MAINTAINER_EMAIL = "nickcortale@gmail.com"
 DESCRIPTION = description
 LONG_DESCRIPTION = long_description
-URL = "https://github.com/NickC1/skedm"
-DOWNLOAD_URL = "https://github.com/NickC1/skedm/tarball/0.1"
+URL = "https://github.com/nickc1/skedm"
+DOWNLOAD_URL = "https://github.com/nickc1/skedm/archive/v0.0.3.tar.gz"
 LICENSE = "MIT"
 AUTHOR = "Nick Cortale"
 AUTHOR_EMAIL = "nickcortale@gmail.com"
