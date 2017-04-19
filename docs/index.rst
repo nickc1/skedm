@@ -9,9 +9,9 @@ skedm
 
 |License Type| |Travis CI|
 
-**Scikit Emperical Dynamic Modeling**
+**Scikit Empirical Dynamic Modeling**
 
-Scikit Emperical Dynamic Modeling (skedm) can be used as a way to forecast time series, spatio-temporal 2D or 3D arrays, and even discrete spatial arrangements. More importantly, skedm can provide insight into the underlying dynamics of a system, specifically whether a system is nonlinear and deterministic or whether it is dominated by noise.
+Scikit Empirical Dynamic Modeling (skedm) can be used as a way to forecast time series, spatio-temporal 2D or 3D arrays, and even discrete spatial arrangements. More importantly, skedm can provide insight into the underlying dynamics of a system, specifically whether a system is nonlinear and deterministic or whether it is dominated by noise.
 
 For a quick explanation of this package, I suggest checking out the :ref:`example` section as well as the wikipedia article on `nonlinear analysis`_ . Additionally, `Dr. Sugihara's lab`_ has produced some good summary videos of the topic:
 
