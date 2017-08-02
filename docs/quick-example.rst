@@ -121,7 +121,7 @@ The next step is to evaluate the predictions with the ``score`` method. The scor
 
   for i in range(4):
       label = 'NN: ' + str(nn_list[i])
-      ax.plot(range(1,31),score[i],label=label)
+      ax.plot(range(1,31),scores[i],label=label)
 
   plt.legend(loc='lower left')
   ax.set_ylabel('Coefficient of Determination')
